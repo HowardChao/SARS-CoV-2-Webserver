@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<meta charset="utf-8">
+
+<head>
+    <script src="{% static 'js/pace.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dataanalysis_pace.css' %}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link href={% static 'css/mainstyles.cs s' %} rel="stylesheet" type="text/css" >
+    <script src={% static 'js/main.js' %}></script>
+    <title>Welcome | SARS-COV-Phylo</title>
+    {% block extraheader %}
+    {% endblock extraheader %}
+</head>
+
+<body data-spy="scroll" data-target="#side-nav">
+    <header>
+      <style>
+      #topheader .navbar-nav li > a {
+      	text-transform: capitalize;
+      	color: #333;
+      	transition: background-color .2s, color .2s;
+
+      	&:hover,
+      	&:focus {
+      		background-color: #333;
+      		color: #fff;
+      	}
+      }
+      #topheader .navbar-nav li.active > a {
+      	background-color: #333;
+      	color: #fff;
+      }
+      </style>
+      <script>
+      $( '#topheader .navbar-nav a' ).on( 'click', function () {
+      	$( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
+      	$( this ).parent( 'li' ).addClass( 'active' );
+      });
+      </script>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(#000000, #343A40);">
+            <img src="{% static "images/Coronavirus-Icon.png" %}" alt="My image" height="30" width="30">
+            <a class="navbar-brand" href={% url 'main-homepage' %} style="font-size: 22px; margin-left: 10px; font-weight:700">SARS-COV-Phylo </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+              <ul class="navbar-nav mr-auto">
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-plus"></i> Start New Project &nbsp&nbsp&nbsp</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-times"></i> Delete Project &nbsp&nbsp&nbsp</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-list-ul"></i> Check Project &nbsp&nbsp&nbsp</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-help' %}><i class="fas fa-question"></i> Help &nbsp&nbsp&nbsp<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-about' %}><i class="fas fa-info"></i> About &nbsp&nbsp&nbsp</a>
+                    </li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                  <li class="nav-item">
+                      <a class="nav-link" href="mailto:u7022787@anu.edu.au"><i class="far fa-envelope fa-1g"></i> Contact</a>
+                  </li>
+              </ul>
+        </nav>
+
+    </header>
+    {% block content %}
+    {% endblock content %}
+    <div class="w3-main" style="margin-top:100px; position: fixed; bottom: 0;  width:100%; z-index: 100;">
+    <div class="w3-container w3-dark-grey">
+        <div class="w3-row">
+        <p style="color: #e2e2e2;"><center style="font-size:15px;"><i style="font-weight:700">Developed by Division of Ecology and Evolution, The Australian National University.</i></center></p>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
