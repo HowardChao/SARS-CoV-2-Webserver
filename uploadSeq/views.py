@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import render
+from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.detail import DetailView
+from django.template import RequestContext
 from . import forms
+from . import models
 
 # class BasicUploadView(DetailView):
 #     def get(self, request):
@@ -17,23 +20,15 @@ from . import forms
 #         return render(request, 'uploadSeq/upload_sequences_page.html', {'form': form})
 
 def upload_file(request):
-    if request.method == 'POST':
-        myfile = request.FILES['fasta-file']
-        print("myfile: ", myfile)
-        form = forms.UploadFileForm(request.POST, request.FILES)
-        print("form: ", form)
-        print("Before form checking!! ", form.is_valid())
+    if request.method == 'POST' and 'fasta-files-upload' in request.POST:
+        form = forms.DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            print("After form checking!!")
-            handle_uploaded_file(request.FILES['file'])
-            # return HttpResponseRedirect('/success/url/')
+            doc = models.Document(fastafile = request.FILES['fastafile'])
+            doc.save()
     else:
-        form = forms.UploadFileForm()
-    return render(request, 'uploadSeq/upload_sequences_page.html', {'form': form})
-
-
-def handle_uploaded_file(f):
-    print("Writing out files!!")
-    with open('~/Desktop/TRRRRY.txt', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+        form = forms.DocumentForm()
+    return render(
+        request,
+        'uploadSeq/upload_sequences_page.html',
+        {'form': form}
+    )

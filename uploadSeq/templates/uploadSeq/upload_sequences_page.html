@@ -70,15 +70,13 @@
 
                 <div class="not-upload tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-multiple-sample" role="tabpanel" aria-labelledby="nav-multiple-sample-tab">
-                      <div class="row" style="margin-top:30px">
-                            <div class="col-auto" style="margin-bottom: 20px">
-                              <h4><i class="fas fa-flag"></i> &nbsp<b> Step 1: </b>  &nbsp Upload <b><i>FASTA</i></b> file</h4>
-                            </div>
-                          <div class="col"><hr></div>
-                      </div>
-                      <div style="margin-left: 15px; border: 1px dashed gray; border-radius: 8px">
-
-
+                    <div class="row" style="margin-top:30px">
+                        <div class="col-auto" style="margin-bottom: 20px">
+                          <h4><i class="fas fa-flag"></i> &nbsp<b> Step 1: </b>  &nbsp Upload <b><i>FASTA</i></b> file</h4>
+                        </div>
+                        <div class="col"><hr></div>
+                    </div>
+                    <div style="margin-left: 15px; border: 1px dashed gray; border-radius: 8px">
                         <div class="container">
                           <div class="row">
                             <div class="col-7">
@@ -89,142 +87,68 @@
                         </div>
                       </div>
 
-                      {% if sample_file_two_or_one == 0 and sample_file_validity is False %}
-                        <p class="card-text" style="margin-left: 30px; margin-bottom: 20px; margin-top: 10px; font-size: 18px"><i class="fas fa-exclamation-circle" style="color: red"></i> &nbsp&nbsp "samples.csv" is <b style="color: red; font-size: 24px">INVALID</b>&nbsp! &nbspPlease delete the invalid file and upload the new "samples.csv". </p>
-                      {% endif %}
-
                       <!-- <h1>{{samples_txt_file_name}}</h1> -->
                       {% if samples_txt_file_name == None %}
-                        <form method="post" enctype="multipart/form-data">
-                            <div id="samples-file-message-container"></div>
-                            <div id="multifile-descript-file-container"></div>
-                            {% csrf_token %}
-                            <div class="custom-file" style="margin-top: 20px">
-                                <input type="hidden" value="description" name="multifile-descript-file">
-                                <input type="file" name="fasta-file" class="custom-file-input" id="fasta-file">
+                      <form method="post" enctype="multipart/form-data">
+                          <div id="fasta-file-message-container"></div>
+                          {% csrf_token %}
+                          <div class="custom-file" style="margin-top: 20px">
+                              <input type="hidden" value="description" name="multifile-descript-file">
+                              <input type="file" name="fastafile" class="custom-file-input" id="description-file">
+                              <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf;" >Choose your <b>FASTA</b> file &nbsp <small>(with <b>FASTA</b> or <b>FA</b> suffix)</small></label>
+                          </div>
+                          <br><br>
+                          <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="submit">Upload 'samples.csv'</button>
+                          <script>
+                              $('#description-file').on('change',function(){
+                                  //get the file name
+                                  var fileName = $(this).val();
+                                  var cleanFileName = fileName.replace('C:\\fakepath\\', "");
+                                  //replace the "Choose a file" label
+                                  file_rule_name = "samples.csv";
+                                  console.log("cleanFileName: ", cleanFileName);
+                                  console.log("file_rule_name: ", file_rule_name);
+                                  console.log("cleanFileName == file_rule_name: ", cleanFileName == file_rule_name);
+                                  if (cleanFileName == file_rule_name) {
+                                    $(this).next('.custom-file-label').html('<i class="fas fa-check"></i> &nbsp&nbsp' + cleanFileName);
+                                    $('#description-file-label').css("color", "green");
+                                  } else {
+                                    $(this).next('.custom-file-label').html('<i class="fas fa-times"></i> &nbsp&nbsp' + cleanFileName);
+                                    $('#description-file-label').css("color", "red");
+                                  }
+                              })
 
-                                <label id="fasta-file-label" class="custom-file-label" for="fasta-file" style="color: #bfbfbf;" >Choose your <b>FASTA</b> file &nbsp <small>(with <b>FASTA</b> or <b>FA</b> suffix)</small></label>
-                            </div>
-                            <br><br>
-                            <button id="fasta-file-button" name="fasta-file" class="btn btn-success btn-lg btn-block" type="submit">Upload 'samples.csv'</button>
-                            <script>
-                                $('#fasta-file').on('change',function(){
-                                    //get the file name
-                                    var fileName = $(this).val();
-                                    var cleanFileName = fileName.replace('C:\\fakepath\\', "");
-                                    //replace the "Choose a file" label
-                                    file_rule_name = "samples.csv";
-                                    console.log("cleanFileName: ", cleanFileName);
-                                    console.log("file_rule_name: ", file_rule_name);
-                                    console.log("cleanFileName == file_rule_name: ", cleanFileName == file_rule_name);
-                                    if (cleanFileName == file_rule_name) {
-                                      $(this).next('.custom-file-label').html('<i class="fas fa-check"></i> &nbsp&nbsp' + cleanFileName);
-                                      $('#fasta-file-label').css("color", "green");
-                                    } else {
-                                      $(this).next('.custom-file-label').html('<i class="fas fa-times"></i> &nbsp&nbsp' + cleanFileName);
-                                      $('#fasta-file-label').css("color", "red");
-                                    }
-                                })
-
-                                $('#fasta-file-button').click(function(){
-                                    var myNode = document.getElementById("samples-file-message-container");
-                                    myNode.innerHTML = '';
-                                    file_1_size = document.getElementById("fasta-file").files.length
-                                    file_name1 = document.getElementById("fasta-file").value;
-                                    var cleanFileName = file_name1.replace('C:\\fakepath\\', "");
-                                    file_rule_name = "samples.csv";
-                                    checker = true;
-                                    if (file_1_size == 0) {
-                                        console.log("File 1 have not selected");
-                                        $('#samples-file-message-container').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><center>You do not select <strong>"samples.csv"</strong> !</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
-                                        checker = false;
-                                    }
-                                    if (file_1_size == 1 & cleanFileName != file_rule_name) {
-                                      console.log("file_1_size: ", file_1_size);
-                                      console.log("file_name1: ", cleanFileName);
-                                        $('#samples-file-message-container').append('<div class="alert alert-warning alert-dismissible fade show" role="alert"><center>Filename is <strong>INVALID</strong> ! (clue: must be <strong>"samples.csv"</strong>)</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
-                                        checker = false;
-                                    }
-                                    return checker
-                                })
-                            </script>
-                        </form>
-
-
+                              $('#fasta-files-upload-button').click(function(){
+                                  var myNode = document.getElementById("fasta-file-message-container");
+                                  myNode.innerHTML = '';
+                                  file_1_size = document.getElementById("description-file").files.length
+                                  file_name1 = document.getElementById("description-file").value;
+                                  var cleanFileName = file_name1.replace('C:\\fakepath\\', "");
+                                  file_rule_name = "samples.csv";
+                                  checker = true;
+                                  if (file_1_size == 0) {
+                                      console.log("File 1 have not selected");
+                                      $('#fasta-file-message-container').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><center>You do not select <strong>"samples.csv"</strong> !</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+                                      checker = false;
+                                  }
+                                  if (file_1_size == 1 & cleanFileName != file_rule_name) {
+                                    console.log("file_1_size: ", file_1_size);
+                                    console.log("file_name1: ", cleanFileName);
+                                      $('#fasta-file-message-container').append('<div class="alert alert-warning alert-dismissible fade show" role="alert"><center>Filename is <strong>INVALID</strong> ! (clue: must be <strong>"samples.csv"</strong>)</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+                                      checker = false;
+                                  }
+                                  return checker
+                              })
+                          </script>
+                      </form>
 
 
                       {% else %}
-                          {% if sample_file_validity %}
-                              <div class="row" style="margin-left:30px; margin-top: 20px">
-                                  <div class=".col-12 .col-md-8">
-                                    <div class="check_mark" style="margin-top:0px; transform: scale(0.3,0.3);">
-                                        <div class="sa-icon sa-success animate">
-                                            <span class="sa-line sa-tip animateSuccessTip"></span>
-                                            <span class="sa-line sa-long animateSuccessLong"></span>
-                                            <div class="sa-placeholder"></div>
-                                            <div class="sa-fix"></div>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div class=".col-6 .col-md-4">
-                                    <p style="font-size:18px;"><i><b style=" color: green;">Success!!</b></i><b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspYour Uploaded File:&nbsp <a href="{{uploaded_sample_file_url}}"> samples.csv</a></b></p>
-                                  </div>
-                              </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                              <form method="post" enctype="multipart/form-data" required="True" style="margin-right:50px;margin-left:80px;">
-                              {% csrf_token %}
-                                <div style="margin-right:50px;margin-left:50px;margin-bottom:15px; margin-top:30px">
-                                  <button id="multi_samples_workflow_setup" name="multi_samples_workflow_setup_button" type="submit" class="btn btn-success btn-lg btn-block">Go to workflow setup</button>
-                                </div>
-                              </form>
-
-<script>
-  $("#multi_samples_workflow_setup").click(function () {
-    // return false;
-    if ("{{check_uploaded_fastq_file_whole_ans}}" == "False") {
-      window.scrollTo(0,0);
-      var invalid_message = document.getElementById("go_to_workflow_error_message");
-      invalid_message.innerHTML = '<div style="font-size: 20px;" class="alert alert-danger alert-dismissible fade show" role="alert"><center><b>Compulsory Files</b> are incomplete! &nbsp&nbsp Please check "<b>Compulsory Files</b> section!" <center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-      return false;
-    }
-  });
-</script>
-
-                          {% else %}
-                              <form method="post" enctype="multipart/form-data" required="True" style="margin-right:50px;margin-left:50px;">
-                                  {% csrf_token %}
-                                  <div style="margin-right:50px;margin-left:50px;margin-bottom:15px">
-                                      <button id="delete-samples-file-button" name="remove-samples-file" class="btn btn-danger btn-lg btn-block" type="submit">Delete 'samples.csv'</button>
-                                  </div>
-                              </form>
-                          {% endif %}
 
                       {% endif %}
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
         </div>
     </div>
 </div>
