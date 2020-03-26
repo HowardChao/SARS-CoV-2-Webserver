@@ -38,8 +38,8 @@
                 <div class="col"><hr></div>
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-upload-fasta-file-tab" data-toggle="tab" href="#nav-upload-fasta-file" role="tab" aria-controls="nav-upload-fasta-file" aria-selected="true"><i class="fas fa-upload"></i> &nbsp Upload <b>FASTA</b> File</a>
-                    <a class="nav-item nav-link" id="nav-paste-fasta-sequences-tab" data-toggle="tab" href="#nav-paste-fasta-sequences" role="tab" aria-controls="nav-paste-fasta-sequences" aria-selected="false"><i class="fas fa-paste"></i> &nbsp Paste <b>FASTA</b> Sequences</a>
+                    <a class="nav-item nav-link active" id="nav-upload-fasta-file-tab" data-toggle="tab" href="#nav-upload-fasta-file" role="tab" aria-controls="nav-upload-fasta-file" aria-selected="true"><i class="fas fa-upload"></i> &nbsp <b>Upload <b>FASTA</b> File</b></a>
+                    <a class="nav-item nav-link" id="nav-paste-fasta-sequences-tab" data-toggle="tab" href="#nav-paste-fasta-sequences" role="tab" aria-controls="nav-paste-fasta-sequences" aria-selected="false"><i class="fas fa-paste"></i> &nbsp <b>Paste <b>FASTA</b> Sequences</b></a>
                   </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
@@ -53,7 +53,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-7">
-                                        <p class="card-text" style="margin-top: 7px;">The suffix of the uploaded file must be <b>".fasta"</b> or <b>".fa"</b>.
+                                        <p class="card-text" style="margin-top: 7px;">The filename extension must be <b>".fasta"</b>, <b>".fa"</b>, or <b>".fna"</b>.
                                         <p class="card-text" style="margin-bottom: 7px;"><i class="fas fa-dot-circle"></i> &nbsp Download Example File: &nbsp&nbsp <a href={{one_group_samples_csv}} download>sample1.fasta</a> &nbsp/&nbsp <a href={{two_group_samples_csv}} download>sample2.fa</a></p>
                                     </div>
                                 </div>
@@ -67,21 +67,42 @@
                             <div class="custom-file" style="margin-top: 20px">
                                 <input type="hidden" value="description" name="multifile-descript-file">
                                 <input type="file" name="fastafile" class="custom-file-input" id="description-file" style="width: 97%; margin: 0 auto;">
-                                <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf; width: 97%; margin: 0 auto;">Choose your <b>FASTA</b> file &nbsp <small>(with <b>FASTA</b> or <b>FA</b> suffix)</small></label>
+                                <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf; width: 97%; margin: 0 auto;">Choose your <b>FASTA</b> file &nbsp <small>(with <b>".fa"</b>, <b>".fasta"</b>, or <b>".fna"</b> suffix)</small></label>
                             </div>
                             <br><br>
-                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="submit" style="width: 97%; margin: 0 auto;">Upload 'samples.csv'</button>
+                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="button" style="width: 97%; margin: 0 auto;" data-toggle="modal" data-target="#fastaModal">Upload <b>FASTA</b> file</button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="fastaModal" tabindex="-1" role="dialog" aria-labelledby="fastaModalTitle" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="fastaModalTitle">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    dsfkasjhfladfaskldfhsakldaslk
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" name="fasta-files-upload-modal">Save changes</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                             <script>
                                 $('#description-file').on('change',function(){
                                     //get the file name
                                     var fileName = $(this).val();
                                     var cleanFileName = fileName.replace('C:\\fakepath\\', "");
+                                    var cleanFileSuffix = cleanFileName.split('.').pop();
                                     //replace the "Choose a file" label
-                                    file_rule_name = "samples.csv";
                                     console.log("cleanFileName: ", cleanFileName);
-                                    console.log("file_rule_name: ", file_rule_name);
-                                    console.log("cleanFileName == file_rule_name: ", cleanFileName == file_rule_name);
-                                    if (cleanFileName == file_rule_name) {
+                                    console.log("cleanFileSuffix: ", cleanFileSuffix);
+                                    if (cleanFileSuffix == "fasta" || cleanFileSuffix == "fa" || cleanFileSuffix == "fna") {
                                       $(this).next('.custom-file-label').html('<i class="fas fa-check"></i> &nbsp&nbsp' + cleanFileName);
                                       $('#description-file-label').css("color", "green");
                                     } else {
@@ -95,18 +116,18 @@
                                     myNode.innerHTML = '';
                                     file_1_size = document.getElementById("description-file").files.length
                                     file_name1 = document.getElementById("description-file").value;
-                                    var cleanFileName = file_name1.replace('C:\\fakepath\\', "");
-                                    file_rule_name = "samples.csv";
                                     checker = true;
                                     if (file_1_size == 0) {
                                         console.log("File 1 have not selected");
-                                        $('#fasta-file-message-container').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"><center>You do not select <strong>"samples.csv"</strong> !</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+                                        $('#fasta-file-message-container').append('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="width: 97%; margin: 0 auto;"><center>You do not select any <strong>FASTA</strong> file!</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
                                         checker = false;
                                     }
-                                    if (file_1_size == 1 & cleanFileName != file_rule_name) {
+                                    var cleanFileName = file_name1.replace('C:\\fakepath\\', "");
+                                    var cleanFileSuffix = cleanFileName.split('.').pop();
+                                    if (file_1_size == 1 & !(cleanFileSuffix == "fasta" || cleanFileSuffix == "fa" || cleanFileSuffix == "fna")) {
                                       console.log("file_1_size: ", file_1_size);
                                       console.log("file_name1: ", cleanFileName);
-                                        $('#fasta-file-message-container').append('<div class="alert alert-warning alert-dismissible fade show" role="alert"><center>Filename is <strong>INVALID</strong> ! (clue: must be <strong>"samples.csv"</strong>)</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+                                        $('#fasta-file-message-container').append('<div class="alert alert-warning alert-dismissible fade show" role="alert" style="width: 97%; margin: 0 auto;"><center>The filename extension is <strong>INVALID</strong> ! (clue: must be <strong>".fa"</strong>, <strong>".fasta"</strong>, or <strong>".fna"</strong>)</center><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
                                         checker = false;
                                     }
                                     return checker
@@ -116,6 +137,15 @@
                         {% else %}
                         {% endif %}
                     </div>
+                    {% if documents %}
+                         <ul>
+                         {% for document in documents %}
+                             <li><a href="{{ document.fastafile.url }}">{{ document.fastafile.name }}</a></li>
+                         {% endfor %}
+                         </ul>
+                     {% else %}
+                         <p>No documents.</p>
+                     {% endif %}
 
 
                     <div class="tab-pane fade" id="nav-paste-fasta-sequences" role="tabpanel" aria-labelledby="nav-paste-fasta-sequences-tab">
