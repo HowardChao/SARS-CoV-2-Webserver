@@ -35,33 +35,19 @@
                     </div>
                   </div>
                 </div>
-                <style>
-                  .nav-tabs > .nav-link {
-                    color: #cecece;
-                  }
-                  .nav-tabs > .nav-link.active {
-                    border-color: #444444;
-                    border-width: 3px;
-                    color: #444444;
-                    background-color: #dddddd;
-                  }
-                  .nav-tabs > a:hover {
-                    color: #3ea9dd;
-                  }
-                </style>
+                <div class="col"><hr></div>
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-upload-fasta-file-tab" data-toggle="tab" href="#nav-upload-fasta-file" role="tab" aria-controls="nav-upload-fasta-file" aria-selected="true" style="font-size: 20px">Upload <b>FASTA</b> File</a>
-                    <a class="nav-item nav-link" id="nav-paste-fasta-sequences-tab" data-toggle="tab" href="#nav-paste-fasta-sequences" role="tab" aria-controls="nav-paste-fasta-sequences" aria-selected="false" style="font-size: 20px">Paste <b>FASTA</b> Sequences</a>
+                    <a class="nav-item nav-link active" id="nav-upload-fasta-file-tab" data-toggle="tab" href="#nav-upload-fasta-file" role="tab" aria-controls="nav-upload-fasta-file" aria-selected="true"><i class="fas fa-upload"></i> &nbsp Upload <b>FASTA</b> File</a>
+                    <a class="nav-item nav-link" id="nav-paste-fasta-sequences-tab" data-toggle="tab" href="#nav-paste-fasta-sequences" role="tab" aria-controls="nav-paste-fasta-sequences" aria-selected="false"><i class="fas fa-paste"></i> &nbsp Paste <b>FASTA</b> Sequences</a>
                   </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-upload-fasta-file" role="tabpanel" aria-labelledby="nav-upload-fasta-file-tab">
                         <div class="row" style="margin-top:30px">
-                            <div class="col-auto" style="margin-bottom: 20px">
+                            <div class="col-auto" style="margin-bottom: 20px;">
                               <h4><i class="fas fa-flag"></i> &nbsp<b> Step 1: </b>  &nbsp Upload <b>FASTA</b> file</h4>
                             </div>
-                            <div class="col"><hr></div>
                         </div>
                         <div style="margin-left: 15px; border: 1px dashed gray; border-radius: 8px">
                             <div class="container">
@@ -80,11 +66,11 @@
                             {% csrf_token %}
                             <div class="custom-file" style="margin-top: 20px">
                                 <input type="hidden" value="description" name="multifile-descript-file">
-                                <input type="file" name="fastafile" class="custom-file-input" id="description-file">
-                                <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf;" >Choose your <b>FASTA</b> file &nbsp <small>(with <b>FASTA</b> or <b>FA</b> suffix)</small></label>
+                                <input type="file" name="fastafile" class="custom-file-input" id="description-file" style="width: 97%; margin: 0 auto;">
+                                <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf; width: 97%; margin: 0 auto;">Choose your <b>FASTA</b> file &nbsp <small>(with <b>FASTA</b> or <b>FA</b> suffix)</small></label>
                             </div>
                             <br><br>
-                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="submit">Upload 'samples.csv'</button>
+                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="submit" style="width: 97%; margin: 0 auto;">Upload 'samples.csv'</button>
                             <script>
                                 $('#description-file').on('change',function(){
                                     //get the file name
@@ -132,7 +118,13 @@
                     </div>
 
 
-                    <div class="tab-pane fade" id="nav-paste-fasta-sequences" role="tabpanel" aria-labelledby="nav-paste-fasta-sequences-tab">fsaldhflksdnvadskn</div>
+                    <div class="tab-pane fade" id="nav-paste-fasta-sequences" role="tabpanel" aria-labelledby="nav-paste-fasta-sequences-tab">
+                        <div class="row" style="margin-top:30px">
+                            <div class="col-auto" style="margin-bottom: 20px;">
+                              <h4><i class="fas fa-flag"></i> &nbsp<b> Step 1: </b>  &nbsp Paste <b>FASTA</b> Sequences</h4>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">sdajjasdkfjl.vc,xnmzx,.mnalr</div>
                 </div>
 

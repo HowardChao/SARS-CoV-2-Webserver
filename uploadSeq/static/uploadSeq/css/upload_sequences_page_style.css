@@ -1,0 +1,21 @@
+/* .container .row .nav-item {
+  font-size: 20px;
+} */
+
+.nav-tabs > .nav-link{
+  color: #cecece;
+  font-size: 18px;
+}
+
+.nav-tabs > .nav-link.active{
+  border-color: #444444;
+  border-width: 3px;
+  color: #444444;
+  background-color: #f8f9fa;
+  font-size: 18px;
+  border-bottom: none;
+}
+
+.nav-tabs > a:hover {
+  color: #3ea9dd;
+}
