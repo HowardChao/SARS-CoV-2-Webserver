@@ -21,22 +21,46 @@ from . import models
 #         return render(request, 'uploadSeq/upload_sequences_page.html', {'form': form})
 
 def upload_file(request):
-    if request.method == 'POST' and 'fasta-files-upload-modal' in request.POST:
+    documents = models.Document.objects.all()
+    example_fasta_covid_19_1 = "/media/example_fasta_files/covid_19.fasta"
+    example_fasta_covid_19_2 = "/media/example_fasta_files/covid_19_2.fasta"
+    if request.method == 'POST' and 'fasta-files-upload' in request.POST:
         form = forms.DocumentForm(request.POST, request.FILES)
-        print("form: ", form)
-        print("form.is_valid(): ", form.is_valid())
+        # print("form: ", form)
+        # print("form.is_valid(): ", form.is_valid())
         if form.is_valid():
             doc = models.Document(fastafile = request.FILES['fastafile'])
+            # print("request.FILES['fastafile']: ", request.FILES['fastafile'])
+            fasta_file_content = request.FILES['fastafile'].read().decode("utf-8")
             doc.save()
-            return HttpResponseRedirect(reverse('uploadSeq-upload'))
+            request.session['fasta_filename'] = request.FILES['fastafile'].name
+            request.session['fasta_file_content'] = fasta_file_content
+            return HttpResponseRedirect(reverse('uploadSeq-preview'))
+            # return render(
+            #     request,
+            #     'uploadSeq/preview_sequences_page.html',
+            #     {'example_fasta_1': example_fasta_covid_19_1, 'example_fasta_2': example_fasta_covid_19_2, 'fasta_filename': request.FILES['fastafile'], 'fasta_content': fasta_file_content, 'form': form}
+            # )
     else:
         form = forms.DocumentForm()
-    documents = models.Document.objects.all()
     # for document in documents:
     #     document.delete()
     return render(
         request,
         'uploadSeq/upload_sequences_page.html',
-        {'documents': documents, 'form': form}
+        {'example_fasta_1': example_fasta_covid_19_1, 'example_fasta_2': example_fasta_covid_19_2, 'form': form}
     )
     # return JsonResponse({'tmp': ''})
+
+def preview_file(request):
+    example_fasta_covid_19_1 = "/media/example_fasta_files/covid_19.fasta"
+    example_fasta_covid_19_2 = "/media/example_fasta_files/covid_19_2.fasta"
+    fasta_filename = request.session['fasta_filename']
+    fasta_file_content = request.session['fasta_file_content']
+    # print("fasta_filename: ", fasta_filename)
+    # print("fasta_file_content: ", fasta_file_content)
+    return render(
+        request,
+        'uploadSeq/preview_sequences_page.html',
+        {'example_fasta_1': example_fasta_covid_19_1, 'example_fasta_2': example_fasta_covid_19_2, 'fasta_filename': fasta_filename, 'fasta_file_content': fasta_file_content}
+    )

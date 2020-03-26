@@ -54,7 +54,7 @@
                                 <div class="row">
                                     <div class="col-7">
                                         <p class="card-text" style="margin-top: 7px;">The filename extension must be <b>".fasta"</b>, <b>".fa"</b>, or <b>".fna"</b>.
-                                        <p class="card-text" style="margin-bottom: 7px;"><i class="fas fa-dot-circle"></i> &nbsp Download Example File: &nbsp&nbsp <a href={{one_group_samples_csv}} download>sample1.fasta</a> &nbsp/&nbsp <a href={{two_group_samples_csv}} download>sample2.fa</a></p>
+                                        <p class="card-text" style="margin-bottom: 7px;"><i class="fas fa-dot-circle"></i> &nbsp Download Example File: &nbsp&nbsp <a href={{example_fasta_1}} download>covid_19.fasta</a> &nbsp / &nbsp <a href={{example_fasta_2}} download>covid_19_2.fasta</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -70,28 +70,28 @@
                                 <label id="description-file-label" class="custom-file-label" for="description-file" style="color: #bfbfbf; width: 97%; margin: 0 auto;">Choose your <b>FASTA</b> file &nbsp <small>(with <b>".fa"</b>, <b>".fasta"</b>, or <b>".fna"</b> suffix)</small></label>
                             </div>
                             <br><br>
-                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="button" style="width: 97%; margin: 0 auto;" data-toggle="modal" data-target="#fastaModal">Upload <b>FASTA</b> file</button>
+                            <button id="fasta-files-upload-button" name="fasta-files-upload" class="btn btn-success btn-lg btn-block" type="submit" style="width: 97%; margin: 0 auto;">Upload <b>FASTA</b> file</button>
 
                             <!-- Modal -->
-                            <div class="modal fade" id="fastaModal" tabindex="-1" role="dialog" aria-labelledby="fastaModalTitle" aria-hidden="true">
+                            <!-- <div class="modal fade" id="fastaModal" tabindex="-1" role="dialog" aria-labelledby="fastaModalTitle" aria-hidden="true">
                               <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h5 class="modal-title" id="fastaModalTitle">Modal title</h5>
+                                    <h5 class="modal-title" id="fastaModalTitle">""</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
                                   </div>
                                   <div class="modal-body">
-                                    dsfkasjhfladfaskldfhsakldaslk
+                                    <p style="font-family:monospace">{{fasta_content}}<p>
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary" name="fasta-files-upload-modal">Save changes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel & Close</button>
+                                    <button type="submit" class="btn btn-primary" name="fasta-files-upload-modal">Upload</button>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> -->
 
                             <script>
                                 $('#description-file').on('change',function(){
@@ -137,17 +137,6 @@
                         {% else %}
                         {% endif %}
                     </div>
-                    {% if documents %}
-                         <ul>
-                         {% for document in documents %}
-                             <li><a href="{{ document.fastafile.url }}">{{ document.fastafile.name }}</a></li>
-                         {% endfor %}
-                         </ul>
-                     {% else %}
-                         <p>No documents.</p>
-                     {% endif %}
-
-
                     <div class="tab-pane fade" id="nav-paste-fasta-sequences" role="tabpanel" aria-labelledby="nav-paste-fasta-sequences-tab">
                         <div class="row" style="margin-top:30px">
                             <div class="col-auto" style="margin-bottom: 20px;">
@@ -155,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">sdajjasdkfjl.vc,xnmzx,.mnalr</div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">TO-DO</div>
                 </div>
 
 

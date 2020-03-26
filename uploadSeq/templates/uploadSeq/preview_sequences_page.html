@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block extraheader %}
+{% load static %}
+{% load staticfiles %}
+<!-- pace animation -->
+<link rel="stylesheet" href="{% static 'css/uploadSeq.css'%}">
+<link rel="stylesheet" href="{% static 'uploadSeq/css/upload_sequences_page_style.css' %}">
+{# JQUERY FILE UPLOAD SCRIPTS #}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+{% endblock extraheader %}
+{% block content %}
+
+<div id="go_to_workflow_error_message"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="card bg-light mt-5 mb-3 w-100 p-3">
+            <div class="card-header"><p class="h2" style="font-weight: 700"><i class="fas fa-upload"></i>  &nbsp &nbsp Preview Uploaded Sequence</p></div>
+            <div class="card-body w-100">
+                <div class="row" style="margin-top:30px">
+                    <div class="col-auto" style="margin-bottom: 20px;">
+                      <h4><i class="fas fa-flag"></i> &nbsp Filename: <b>{{fasta_filename}}</b></h4>
+                    </div>
+                </div>
+                <div class="col"><hr></div>
+                <p style="font-family:monospace">{{fasta_file_content}}<p>
+
+                <a href={% url 'main-homepage' %}><button class="btn btn-success btn-lg btn-block" type="button" style="width: 97%; margin: 0 auto;">Back to Homepage</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-bottom: 100px">
+</div>
+
+
+
+<div style="margin-bottom: 100px">
+</div>
+{% endblock content %}

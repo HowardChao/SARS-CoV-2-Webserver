@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.upload_file, name='uploadSeq-upload'),
+    path('preview', views.preview_file, name='uploadSeq-preview')
 ]
 
 if settings.DEBUG:
