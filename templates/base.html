@@ -30,7 +30,6 @@
       	text-transform: capitalize;
       	color: #333;
       	transition: background-color .2s, color .2s;
-
       	&:hover,
       	&:focus {
       		background-color: #333;
@@ -48,7 +47,7 @@
       	$( this ).parent( 'li' ).addClass( 'active' );
       });
       </script>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(#000000, #343A40);">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(#001205, #00290c);">
             <img src="{% static "images/Coronavirus-Icon.png" %}" alt="My image" height="30" width="30">
             <a class="navbar-brand" href={% url 'main-homepage' %} style="font-size: 22px; margin-left: 10px; font-weight:700">SARS-COV-Phylo </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -57,13 +56,7 @@
             </button>
               <ul class="navbar-nav mr-auto">
                     <li class="nav-item nav-middle">
-                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-plus"></i> Start New Project &nbsp&nbsp&nbsp</a>
-                    </li>
-                    <li class="nav-item nav-middle">
-                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-times"></i> Delete Project &nbsp&nbsp&nbsp</a>
-                    </li>
-                    <li class="nav-item nav-middle">
-                        <a class="nav-link" href={% url 'main-homepage' %}><i class="fas fa-list-ul"></i> Check Project &nbsp&nbsp&nbsp</a>
+                        <a class="nav-link" href={% url 'uploadSeq-upload' %}><i class="fas fa-upload"></i>&nbsp&nbspUpload Sequences &nbsp&nbsp&nbsp</a>
                     </li>
                     <li class="nav-item nav-middle">
                         <a class="nav-link" href={% url 'main-help' %}><i class="fas fa-question"></i> Help &nbsp&nbsp&nbsp<span class="sr-only">(current)</span></a>
