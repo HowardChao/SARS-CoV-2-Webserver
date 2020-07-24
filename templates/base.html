@@ -17,7 +17,7 @@
         crossorigin="anonymous"></script>
     <link href={% static 'css/mainstyles.css' %} rel="stylesheet" type="text/css" >
     <script src={% static 'js/main.js' %}></script>
-    <title>Welcome | SARS-COV-Phylo</title>
+    <title>Welcome | VaccineDynamic</title>
     {% block extraheader %}
     {% endblock extraheader %}
 </head>
@@ -47,8 +47,8 @@
       });
       </script>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(#001205, #00290c);">
-            <img src="{% static "images/Coronavirus-Icon.png" %}" alt="My image" height="30" width="30">
-            <a class="navbar-brand" href={% url 'main-homepage' %} style="font-size: 22px; margin-left: 10px; font-weight:700">SARS-COV-Phylo </a>
+            <img src="{% static "images/vaccine.png" %}" alt="My image" height="30" width="30">
+            <a class="navbar-brand" href={% url 'main-homepage' %} style="font-size: 22px; margin-left: 10px; font-weight:700"> &nbsp;VaccineDynamic </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -64,6 +64,11 @@
                         <a class="nav-link" href={% url 'main-about' %}><i class="fas fa-info"></i> About &nbsp&nbsp&nbsp</a>
                     </li>
               </ul>
+              <ul class="nav navbar-nav navbar-right" style="margin: -8px">
+                  <li class="nav-item">
+                      <a class="nav-link" href="http://epm.ntu.edu.tw/web/index/index.jsp?lang=en" target="_blank" ><img src="{% static "images/IEPM.png" %}" alt="My image" height="40" width="40"></a>
+                  </li>
+              </ul>
               <ul class="nav navbar-nav navbar-right">
                   <li class="nav-item">
                       <a class="nav-link" href="mailto:u7022787@anu.edu.au"><i class="far fa-envelope fa-1g"></i> Contact</a>
@@ -74,10 +79,22 @@
     </header>
     {% block content %}
     {% endblock content %}
+    <div style="text-align: center;">
+      <a href="http://epm.ntu.edu.tw/web/index/index.jsp?lang=en" target="_blank">
+      <img src="{% static "images/IEPM_full.png" %}" alt="My image" height="80" style="margin-right: 20px">
+      </a>
+
+      <a href="https://www.ntu.edu.tw/english/index.html" target="_blank">
+      <img src="{% static "images/NTU_full.png" %}" alt="My image" height="80" style="margin-left: 20px">
+      </a>
+    </div>
+
+    <div style="margin-bottom: 100px">
+    </div>
     <div class="w3-main" style="margin-top:100px; position: fixed; bottom: 0;  width:100%; z-index: 100;">
     <div class="w3-container w3-dark-grey">
         <div class="w3-row">
-        <p style="color: #e2e2e2;"><center style="font-size:15px;"><i style="font-weight:700">Developed by Division of Ecology and Evolution, The Australian National University.</i></center></p>
+        <p style="color: #e2e2e2;"><center style="font-size:15px;"><i style="font-weight:700">Developed by Institute of Epidemiology and Preventive Medicine, National Taiwan University.</i></center></p>
         </div>
     </div>
     </div>
