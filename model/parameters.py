@@ -1,11 +1,27 @@
 from enum import Enum
 
-Healthy_Life_Expectancy = 71.2
-SevereAvgDeathAge = 40
+IDX_CASE_NUM = 5000
+SIMULATION_DAY = 180
+SIMULATION_TIME = 1000
+CYCLE_DAYS = 7
+
+HEALTH_LIFE_EXP = 71.2
+SEVERE_AVG_DEATH_AGE = 40
+
+class AgeGroupPerc(Enum):
+    YOUTH_GRP = 0.15
+    ADULT_GRP = 0.70
+    ELDER_GRP = 0.15
 
 class RouteStatus(Enum):
     TRANSMISSION = 'transmission'
     HOSPITALISED = 'hospitalised'
+
+class CurrStatus(Enum):
+    IN_MODEL = 'in_model'
+    RECOVERY = 'recovery'
+    DEATH = 'death'
+    CYCLE_REACHED = 'cycle_reached'
 
 class ContactRate(Enum):
     SAME_GRP = 0.6
@@ -50,7 +66,8 @@ class FatalityRate(Enum):
 class effectiveness(Enum):
     MILD = (-0.88)*7/365
     SEVERE = (-0.88)*7/365 + (-0.98)*5.4/365
-    DEATH = (-0.88)*7/365 + (-0.98)*5.4/365 + (-1)*(Healthy_Life_Expectancy-SevereAvgDeathAge)
+    DEATH = (-0.88)*7/365 + (-0.98)*5.4/365 + (-1)*(HEALTH_LIFE_EXP-SEVERE_AVG_DEATH_AGE)
+
 class VaccineExpen(Enum):
     YOUTH_TRIVALENT_VAC = 500
     ADULT_TRIVALENT_VAC = 500
