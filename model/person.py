@@ -1,29 +1,45 @@
 import uuid
 import random
-from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactRate, VaccineRate, InfectionRate, MedicineIntakeRate, SevereRate, FatalityRate, effectiveness
-
+from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactRate, VaccineRate, InfectionRate, MedicineIntakeRate, SevereRate, FatalityRate, effectiveness, AliveDeath
+from .parameters import IDX_SEEK_TREATMENT_PROB
 
 class Person():
-    def __init__(self, age):
+    def __init__(self, age, initial_idx_case=False):
 
         # RECOVERY = 'recovery'
         # DEATH = 'death'
         # CYCLE_REACHED
         self.id = str(uuid.uuid1())
         self.curr_status = CurrStatus.IN_MODEL
+        self.day = 1
         self.age = age
         self.age_group = self.set_age_group()
         self.route_status = RouteStatus.TRANSMISSION
-        self.vaccine_status = bool(random.getrandbits(1))
-        self.medicine_48 = bool(random.getrandbits(1))
+
         self.youth_contact_rate = self.set_contact_rate('youth')
         self.adult_contact_rate = self.set_contact_rate('adult')
         self.elder_contact_rate = self.set_contact_rate('elder')
+
         self.vaccine_rate = self.set_vaccine_rate()
+        self.vaccine_status = self.set_vaccine_status()
+
         self.infection_rate = self.set_infection_rate()
+        self.infection_status = self.set_infection_status(initial_idx_case)
+
+
         self.medicine_intake_rate = self.set_medicine_intake_rate()
+        self.medicine_intake_status = False
+        # self.set_medicine_intake_status()
+
+        # self.medicine_48_status = random.random() < IDX_INTAKE_MED_48_PROB
+
         self.severe_rate = self.set_severe_rate()
+        self.severe_status = False
+        # self.set_severe_status()
+
         self.fatality_rate = self.set_fatality_rate()
+        self.alive_or_death = AliveDeath.ALIVE
+        # self.set_alive_or_death_status()
         self.effectiveness_mild = effectiveness.MILD
         self.effectiveness_severe = effectiveness.SEVERE
         self.effectiveness_death = effectiveness.DEATH
@@ -31,22 +47,16 @@ class Person():
     ## The status of this function is dynamic
     def route_status_rand(self):
         if self.route_status is RouteStatus.TRANSMISSION:
-            rand_dice = bool(random.getrandbits(1))
+            rand_dice = random.random() > IDX_SEEK_TREATMENT_PROB
             if rand_dice is True:
                 pass
             elif rand_dice is False:
                 self.route_status = RouteStatus.HOSPITALISED
+                self.medicine_intake_status = self.set_medicine_intake_status()
+                self.severe_status = self.set_severe_status()
+                self.alive_or_death = self.set_alive_or_death_status()
         elif self.route_status is RouteStatus.HOSPITALISED:
             pass
-
-    ## The status of this function is dynamic
-    def vaccine_status_rand(self):
-        if self.vaccine_status is True:
-            pass
-        elif self.vaccine_status is False:
-            self.vaccine_status = bool(random.getrandbits(1))
-            if self.vaccine_status is True:
-                self.infection_rate = self.set_infection_rate()
 
     ## static
     def set_age_group(self):
@@ -90,6 +100,14 @@ class Person():
         elif self.age >= 65:
             return VaccineRate.ELDER_RT
 
+    ## The status of this function is dynamic
+    def set_vaccine_status(self):
+        rand_dice = random.random() < self.vaccine_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
+
     ## dynamic
     def set_infection_rate(self):
         if self.vaccine_status is True:
@@ -107,6 +125,18 @@ class Person():
             elif self.age >= 65:
                 return InfectionRate.ELDER_NV_RT
 
+    def set_infection_status(self, initial_idx_case):
+        if initial_idx_case is True:
+            # self.medicine_intake_status = self.set_medicine_intake_status()
+            # self.severe_status = self.set_severe_status()
+            # self.alive_or_death = self.set_alive_or_death_status()
+            return True
+        rand_dice = random.random() < self.infection_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
+
     ## static
     def set_medicine_intake_rate(self):
         if self.age <= 18:
@@ -116,21 +146,39 @@ class Person():
         elif self.age >= 65:
             return MedicineIntakeRate.ELDER_RT
 
+    def set_medicine_intake_status(self):
+        if self.infection_status is False:
+            return False
+        rand_dice = random.random() < self.medicine_intake_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
+
     def set_severe_rate(self):
-        if self.medicine_48 is True:
+        if self.medicine_intake_status is True:
             if self.age <= 18:
                 return SevereRate.YOUTH_48_RT
             elif self.age > 18 and self.age <65:
                 return SevereRate.ADULT_48_RT
             elif self.age >= 65:
                 return SevereRate.ELDER_48_RT
-        elif self.medicine_48 is False:
+        elif self.medicine_intake_status is False:
             if self.age <= 18:
                 return SevereRate.YOUTH_N48_RT
             elif self.age > 18 and self.age <65:
                 return SevereRate.ADULT_N48_RT
             elif self.age >= 65:
                 return SevereRate.ELDER_N48_RT
+
+    def set_severe_status(self):
+        if self.infection_status is False:
+            return False
+        rand_dice = random.random() < self.severe_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
 
     def set_fatality_rate(self):
         if self.age <= 18:
@@ -140,11 +188,31 @@ class Person():
         elif self.age >= 65:
             return FatalityRate.ELDER_RT
 
-    def death(self):
-        self.curr_status = CurrStatus.DEATH
+    def set_alive_or_death_status(self):
+        if self.infection_status is False:
+            return AliveDeath.ALIVE
+        rand_dice = random.random() < self.fatality_rate.value
+        if rand_dice:
+            self.curr_status = CurrStatus.DEATH
+            return AliveDeath.DEATH
+        else:
+            return AliveDeath.ALIVE
 
     def recovery(self):
         self.curr_status = CurrStatus.RECOVERY
+
+    def death(self):
+        self.curr_status = CurrStatus.DEATH
+
+    def cycle_reached(self):
+        self.curr_status = CurrStatus.CYCLE_REACHED
+
+    def one_day_passed(self):
+        self.day += 1
+        if self.day > 7:
+            self.cycle_reached()
+        if self.curr_status is not CurrStatus.DEATH:
+            self.recovery()
 
 
 # def HealthPerson(Person):

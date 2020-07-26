@@ -8,6 +8,10 @@ CYCLE_DAYS = 7
 HEALTH_LIFE_EXP = 71.2
 SEVERE_AVG_DEATH_AGE = 40
 
+IDX_SEEK_TREATMENT_PROB = 0.1
+# IDX_INTAKE_MED_48_PROB = 0.5
+
+
 class AgeGroupPerc(Enum):
     YOUTH_GRP = 0.15
     ADULT_GRP = 0.70
@@ -22,6 +26,10 @@ class CurrStatus(Enum):
     RECOVERY = 'recovery'
     DEATH = 'death'
     CYCLE_REACHED = 'cycle_reached'
+
+class AliveDeath(Enum):
+    ALIVE = 'alive'
+    DEATH = 'death'
 
 class ContactRate(Enum):
     SAME_GRP = 0.6
