@@ -11,7 +11,7 @@ class Person():
         # CYCLE_REACHED
         self.id = str(uuid.uuid1())
         self.curr_status = CurrStatus.IN_MODEL
-        self.day = 1
+        self.day = 0
         self.age = age
         self.age_group = self.set_age_group()
         self.route_status = RouteStatus.TRANSMISSION
@@ -191,12 +191,14 @@ class Person():
     def set_alive_or_death_status(self):
         if self.infection_status is False:
             return AliveDeath.ALIVE
-        rand_dice = random.random() < self.fatality_rate.value
-        if rand_dice:
-            self.curr_status = CurrStatus.DEATH
-            return AliveDeath.DEATH
         else:
-            return AliveDeath.ALIVE
+            rand_dice = random.random() < self.fatality_rate.value
+            if rand_dice:
+                self.death()
+                return AliveDeath.DEATH
+            else:
+                self.recovery()
+                return AliveDeath.ALIVE
 
     def recovery(self):
         self.curr_status = CurrStatus.RECOVERY
@@ -207,12 +209,12 @@ class Person():
     def cycle_reached(self):
         self.curr_status = CurrStatus.CYCLE_REACHED
 
-    def one_day_passed(self):
+    def day_passed(self):
         self.day += 1
         if self.day > 7:
             self.cycle_reached()
-        if self.curr_status is not CurrStatus.DEATH:
-            self.recovery()
+        # if self.curr_status is not CurrStatus.DEATH:
+        #     self.recovery()
 
 
 # def HealthPerson(Person):

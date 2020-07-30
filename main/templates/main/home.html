@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="jumbotron" style="background-image: url('/static/images/main-background.png'); background-position: 95% center;  background-repeat: no-repeat;" >
+<div class="jumbotron" style="background-image: url('/static/images/main-background.png'); background-position: 95% center;  background-repeat: no-repeat; background-size: 15%;" >
   <div style="margin-left: 100px;">
     <h1 class="display-4"><b>Welcome to <b style='font-weight:700'>VaccineDynamic</b></b></h1>
     <h5 class="lead" style="margin-top: 25px">Vaccine Cost-effectiveness Prediction Model</h5>
@@ -16,7 +16,470 @@
 </div>
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+<div style="margin: 40px">
+
+  <div class="chart-container" style="width: 100%; height:600px">
+    <canvas id="myChart"></canvas>
+  </div>
+  <script>
+
+    var endpoint = 'api/data/'
+    var defaultData = []
+    var labels = []
+    $.ajax({
+        method: 'GET',
+        url: endpoint,
+        success: function(data){
+            console.log(data)
+            labels = data.labels
+            defaultData = data.data
+            console.log(labels)
+            console.log(defaultData)
+            setChart();
+        },
+        error: function(error_data){
+          console.log('error');
+        }
+    })
+
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], // 換成自己的labels
+            datasets: [{
+                label: '# of Votes',
+                data: [{
+                    x: 10,
+                    y: 20
+                }, {
+                    x: 15,
+                    y: 10
+                }],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive:true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    // var myChart = new Chart(ctx, {
+    //     type: 'bar',
+    //     data: {
+    //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], // 換成自己的labels
+    //         datasets: [{
+    //             label: '# of Votes',
+    //             data: [12, 19, 3, 5, 2, 3], // 換成自己的data
+    //             backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.2)',
+    //                 'rgba(54, 162, 235, 0.2)',
+    //                 'rgba(255, 206, 86, 0.2)',
+    //                 'rgba(75, 192, 192, 0.2)',
+    //                 'rgba(153, 102, 255, 0.2)',
+    //                 'rgba(255, 159, 64, 0.2)'
+    //             ],
+    //             borderColor: [
+    //                 'rgba(255,99,132,1)',
+    //                 'rgba(54, 162, 235, 1)',
+    //                 'rgba(255, 206, 86, 1)',
+    //                 'rgba(75, 192, 192, 1)',
+    //                 'rgba(153, 102, 255, 1)',
+    //                 'rgba(255, 159, 64, 1)'
+    //             ],
+    //             borderWidth: 1
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             yAxes: [{
+    //                 ticks: {
+    //                     beginAtZero:true
+    //                 }
+    //             }]
+    //         }
+    //     }
+    // });
+  </script>
+  <button type="button" class="btn btn-success btn-lg btn-block" style="margin-bottom: 50px">Run the Model</button>
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Basic Model Parameters</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="5000" id="BMP_IDX_CASE_NUM">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="180" id="BMP_SIMULATION_DAY">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="1000" id="BMP_SIMULATION_TIME">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="7" id="BMP_CYCLE_DAYS">
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Age Group Percentage</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="5000" id="AGP_YOUTH_GRP">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="180" id="AGP_ADULT_GRP">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="1000" id="AGP_ELDER_GRP">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Contact Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.6" id="CR_SAME_GRP">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.2" id="CR_DIFF_GRP">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="VR_YOUTH_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="VR_ADULT_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="VR_ELDER_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Infection Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="IR_YOUTH_V_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="IR_ADULT_V_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="IR_ELDER_V_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="IR_YOUTH_NV_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="IR_ADULT_NV_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="IR_ELDER_NV_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="MIR_YOUTH_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="MIR_ADULT_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="MIR_ELDER_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Severe Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="SR_YOUTH_48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="SR_ADULT_48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="SR_ELDER_48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="SR_YOUTH_N48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="SR_ADULT_N48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="SR_ELDER_N48_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+
+  <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Fatality Rate</h4>
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.646" id="FR_YOUTH_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.093" id="FR_ADULT_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group row">
+        <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+        <div class="col-5">
+          <input class="form-control" type="number" value="0.445" id="FR_ELDER_RT">
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <br>
+
+  <button type="button" class="btn btn-success btn-lg btn-block" style="margin-bottom: 50px">Set Parameters</button>
+
+</div>
+
+class FatalityRate(Enum):
+    YOUTH_RT = 0.12
+    ADULT_RT = 0.14
+    ELDER_RT = 0.14
+
+class effectiveness(Enum):
+    MILD = (-0.88)*7/365
+    SEVERE = (-0.88)*7/365 + (-0.98)*5.4/365
+    DEATH = (-0.88)*7/365 + (-0.98)*5.4/365 + (-1)*(HEALTH_LIFE_EXP-SEVERE_AVG_DEATH_AGE)
+
+class VaccineExpen(Enum):
+    YOUTH_TRIVALENT_VAC = 500
+    ADULT_TRIVALENT_VAC = 500
+    ELDER_TRIVALENT_VAC = 500
+    YOUTH_HIGH_DOSE_VAC = 0
+    ADULT_HIGH_DOSE_VAC = 0
+    ELDER_HIGH_DOSE_VAC = 1656
+    YOUTH_ADJUVANTED_VAC = 0
+    ADULT_ADJUVANTED_VAC = 0
+    ELDER_ADJUVANTED_VAC = 1696
+
+class HealthExpen(Enum):
+    YOUTH_OUTPATIENT = 371
+    ADULT_OUTPATIENT = 372
+    ELDER_OUTPATIENT = 401
+    YOUTH_ANTI_VIRUS = 950
+    ADULT_ANTI_VIRUS = 950
+    ELDER_ANTI_VIRUS = 950
+    YOUTH_HOSPITALIZED = 45935
+    ADULT_HOSPITALIZED = 45935
+    ELDER_HOSPITALIZED = 45935
+
+
+
+More:
+HEALTH_LIFE_EXP = 71.2
+SEVERE_AVG_DEATH_AGE = 40
+IDX_SEEK_TREATMENT_PROB = 0.1
+
+
+
+
+<!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -41,5 +504,5 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
     </a>
-</div>
+</div> -->
 {% endblock content %}
