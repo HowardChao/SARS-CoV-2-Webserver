@@ -55,7 +55,7 @@ class VaccineModel():
         print("## Day ", str(self.day), " ##")
         print("##################")
         print('transmission_gp size: ', len(self.transmission_gp))
-        print('treatment_gp size: ', len(self.treatment_gp))
+        # print('treatment_gp size: ', len(self.treatment_gp))
 
         ## Step 1: choose route option
         new_transmission_gp = []
@@ -95,7 +95,7 @@ class VaccineModel():
                 _p.day_passed()
         self.transmission_gp = self.transmission_gp + new_transmission_gp
         print('     transmission_gp size: ', len(self.transmission_gp))
-        print('     treatment_gp size: ', len(self.treatment_gp))
+        # print('     treatment_gp size: ', len(self.treatment_gp))
         print('     death_gp size: ', len(self.death_gp))
         print('     recovery_gp size: ', len(self.recovery_gp))
         print('     cycle_reached_gp size: ', len(self.cycle_reached_gp))
