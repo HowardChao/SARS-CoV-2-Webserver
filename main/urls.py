@@ -6,5 +6,5 @@ urlpatterns = [
     path('help', views.help_view, name='main-help'),
     path('about', views.about_view, name='main-about'),
     path('index', views.IndexView.as_view(), name='index'),
-    path('api/data/', views.get_data, name='api-data'),
+    path('api-data/', views.get_data, name='api-data'),
 ]
