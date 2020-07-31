@@ -5,6 +5,7 @@ from django.views.generic import View
 from django.conf import settings
 
 from . import utils_func
+from . import tasks
 from .forms import RunModelForm
 
 from .model import parameters
@@ -13,8 +14,8 @@ from .model import vaccine
 from .model import model
 
 import json
-
 import os
+from django_q.tasks import async_task, result
 
 # global data
 # global labels
@@ -46,27 +47,11 @@ def home(request):
             print(form)
             print(form.is_valid())
             if form.is_valid():
-                transmission_gp_sz = []
-                labels = []
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
                 BMP_SIMULATION_DAY = form.cleaned_data["BMP_SIMULATION_DAY"]
 
-                md = model.VaccineModel()
-                transmission_gp_sz.append(len(md.transmission_gp))
-                labels.append("Day 0")
-                for i in range(10):
-                    md.one_day_passed()
-
-                    transmission_gp_sz.append(len(md.transmission_gp))
-                    with open(transmission_gp_sz_file, 'w') as f:
-                        json.dump(transmission_gp_sz, f)
-
-                    labels.append("Day "+str(i+1))
-                    with open(labels_file, 'w') as f:
-                        json.dump(labels, f)
-
-                # return render(request, template, content)
+                async_task(tasks.start_analysis, datadir)
     return render(request, template, content)
 
 def help_view(request):

@@ -6,6 +6,6 @@ from django import forms
 
 
 class RunModelForm(forms.Form):
-    try_ = forms.IntegerField()
+    # try_ = forms.IntegerField()
     BMP_IDX_CASE_NUM = forms.IntegerField()
     BMP_SIMULATION_DAY = forms.IntegerField()

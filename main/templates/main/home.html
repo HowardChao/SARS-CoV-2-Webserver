@@ -66,15 +66,19 @@
           }
       });
     }
+
+    var current_data = {}
+    var update_data = {}
+    console.log("current_data.data: ", current_data.data)
+    console.log("update_data.data: ", update_data.data)
     $.ajax({
         method: 'GET',
         url: 'api-data/{{analysis_code}}',
         success: function(data){
             console.log("Initial analysis_code: ", "{{analysis_code}}")
+            current_data = Object.assign({}, data);
+            update_data = Object.assign({}, data);
             setChart(data);
-
-            // console.log("current_data: ", current_data)
-            // console.log("update_data: ", update_data)
         },
         error: function(error_data){
           console.log('error');
@@ -89,28 +93,24 @@
           url: 'api-data/{{analysis_code}}',
           success: function(data){
               console.log("update analysis_code: ", "{{analysis_code}}")
-              // update_data = Object.assign({}, data);
-              // console.log("data.data: ", data.data)
-              // console.log("current_data.data: ", current_data.data)
-              // console.log("update_data.data: ", update_data.data)
-              setChart(data)
+              update_data = Object.assign({}, data);
           },
           error: function(error_data){
             console.log('error');
           }
       })
-      // if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
-      //   current_data = Object.assign({}, update_data);
-      //   setChart(current_data, "{{analysis_code}}");
-      // }
-    }, 5000)
+      if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
+        current_data = Object.assign({}, update_data);
+        setChart(current_data);
+      }
+    }, 1000)
   </script>
 
   <form enctype="multipart/form-data" required="True" method="post">
       {% csrf_token %}
       {{ form }}
-      <input class="form-control" type="number" value="5000" name="try_" id="try_">
-      <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px"> -->
+      <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
+      <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
   <!-- </form>
 
 
