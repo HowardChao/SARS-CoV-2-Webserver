@@ -1,7 +1,7 @@
 import uuid
 import random
-from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactRate, VaccineRate, InfectionRate, MedicineIntakeRate, SevereRate, FatalityRate, effectiveness, AliveDeath
-from .parameters import IDX_SEEK_TREATMENT_PROB
+from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactRate, VaccineRate, InfectionRate, SeekTreatmentRate, MedicineIntakeRate, SevereRate, FatalityRate, effectiveness, AliveDeath
+# from .parameters import IDX_SEEK_TREATMENT_PROB
 
 class Person():
     def __init__(self, age, initial_idx_case=False):
@@ -26,6 +26,8 @@ class Person():
         self.infection_rate = self.set_infection_rate()
         self.infection_status = self.set_infection_status(initial_idx_case)
 
+        self.seek_treatment_rate = self.set_seek_treatment_rate()
+        self.seek_treatment_status = False
 
         self.medicine_intake_rate = self.set_medicine_intake_rate()
         self.medicine_intake_status = False
@@ -47,11 +49,13 @@ class Person():
     ## The status of this function is dynamic
     def route_status_rand(self):
         if self.route_status is RouteStatus.TRANSMISSION:
-            rand_dice = random.random() > IDX_SEEK_TREATMENT_PROB
+            rand_dice = random.random() > self.seek_treatment_rate.value
             if rand_dice is True:
                 pass
             elif rand_dice is False:
+                # print("!!HAHAHAHAHAH")
                 self.route_status = RouteStatus.HOSPITALISED
+                self.seek_treatment_status = self.set_seek_treatment_status()
                 self.medicine_intake_status = self.set_medicine_intake_status()
                 self.severe_status = self.set_severe_status()
                 self.alive_or_death = self.set_alive_or_death_status()
@@ -138,6 +142,25 @@ class Person():
             return False
 
     ## static
+    def set_seek_treatment_rate(self):
+        if self.age <= 18:
+            return SeekTreatmentRate.YOUTH_RT
+        elif self.age > 18 and self.age <65:
+            return SeekTreatmentRate.ADULT_RT
+        elif self.age >= 65:
+            return SeekTreatmentRate.ELDER_RT
+
+    ## static
+    def set_seek_treatment_status(self):
+        if self.infection_status is False:
+            return False
+        rand_dice = random.random() < self.seek_treatment_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
+
+    ## static
     def set_medicine_intake_rate(self):
         if self.age <= 18:
             return MedicineIntakeRate.YOUTH_RT
@@ -187,6 +210,9 @@ class Person():
             return FatalityRate.ADULT_RT
         elif self.age >= 65:
             return FatalityRate.ELDER_RT
+
+
+
 
     def set_alive_or_death_status(self):
         if self.infection_status is False:

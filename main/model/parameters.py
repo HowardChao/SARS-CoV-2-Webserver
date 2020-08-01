@@ -8,7 +8,7 @@ CYCLE_DAYS = 7
 HEALTH_LIFE_EXP = 71.2
 SEVERE_AVG_DEATH_AGE = 40
 
-IDX_SEEK_TREATMENT_PROB = 0.1
+# IDX_SEEK_TREATMENT_PROB = 0.1
 # IDX_INTAKE_MED_48_PROB = 0.5
 
 
@@ -52,6 +52,11 @@ class InfectionRate(Enum):
     YOUTH_V_RT = 0.088
     ADULT_V_RT = 0.022
     ELDER_V_RT = 0.032
+
+class SeekTreatmentRate(Enum):
+    YOUTH_RT = 0.5
+    ADULT_RT = 0.5
+    ELDER_RT = 0.5
 
 class MedicineIntakeRate(Enum):
     YOUTH_RT = 0.5

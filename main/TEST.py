@@ -32,6 +32,8 @@ print("    infection rate: ", p.infection_rate.value)
 print("  infection status: ", p.infection_status)
 
 # print("  medicine_48_status: ", p.medicine_48_status)
+print(" seek treatment rate: ", p.seek_treatment_rate.value)
+print("seektreatment status: ", p.seek_treatment_status)
 print("medicine intake rate: ", p.medicine_intake_rate.value)
 print("medicine intake status: ", p.medicine_intake_status)
 print("         severe rate: ", p.severe_rate.value)
