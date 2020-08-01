@@ -23,7 +23,6 @@
     <canvas id="myChart"></canvas>
   </div>
   <script>
-
     console.log("analysis_code: ", "{{analysis_code}}")
     function setChart(data) {
       var ctx = document.getElementById("myChart");
@@ -69,8 +68,10 @@
 
     var current_data = {}
     var update_data = {}
+    var button_bool = true
     console.log("current_data.data: ", current_data.data)
     console.log("update_data.data: ", update_data.data)
+    console.log("'api-data/{{analysis_code}}',: ", 'api-data/{{analysis_code}}')
     $.ajax({
         method: 'GET',
         url: 'api-data/{{analysis_code}}',
@@ -81,10 +82,10 @@
             setChart(data);
         },
         error: function(error_data){
+          console.log("Initial analysis_code: ", "api-data/{{analysis_code}}")
           console.log('error');
         }
     })
-
 
 
     setInterval(function(){
@@ -94,9 +95,17 @@
           success: function(data){
               console.log("update analysis_code: ", "{{analysis_code}}")
               update_data = Object.assign({}, data);
+              button_bool = current_data.analysis_code == "Empty"
+              console.log("button_bool: ", button_bool)
+              if (!button_bool) {
+                var btn = document.getElementById('button_insert');
+                if (btn != null) {
+                  btn.remove();
+                }
+              }
           },
           error: function(error_data){
-            console.log('error');
+            console.log('error {{analysis_code}}');
           }
       })
       if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
@@ -104,13 +113,21 @@
         setChart(current_data);
       }
     }, 1000)
+
   </script>
+
 
   <form enctype="multipart/form-data" required="True" method="post">
       {% csrf_token %}
       {{ form }}
       <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
-      <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
+
+      <div id="button_insert">
+        <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
+      </div>
+      <!-- {% if button_bool %}
+      {% else %}
+      {% endif %} -->
   <!-- </form>
 
 

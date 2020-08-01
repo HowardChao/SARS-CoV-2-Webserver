@@ -24,24 +24,27 @@ from django_q.tasks import async_task, result
 
 def home(request):
     template = "main/home.html"
-    analysis_code = utils_func.analysis_code_generator()
-    print("analysis_code: ", analysis_code)
+    # analysis_code = utils_func.analysis_code_generator()
+    # print("analysis_code: ", analysis_code)
     content = {
-        'analysis_code': analysis_code,
+        'analysis_code': "Empty",
     }
-    utils_func.create_sample_directory(analysis_code)
-    datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', analysis_code)
-    transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
-    labels_file = os.path.join(datadir, "labels.json")
-
-    with open(transmission_gp_sz_file, 'w') as f:
-        json.dump([], f)
-    with open(labels_file, 'w') as f:
-        json.dump([], f)
 
     if request.method == 'POST':
         print("POST!")
         if "run_model" in request.POST:
+            analysis_code = utils_func.analysis_code_generator()
+            content = {
+                'analysis_code': analysis_code,
+            }
+            utils_func.create_sample_directory(analysis_code)
+            datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', analysis_code)
+            transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
+            labels_file = os.path.join(datadir, "labels.json")
+            with open(transmission_gp_sz_file, 'w') as f:
+                json.dump([], f)
+            with open(labels_file, 'w') as f:
+                json.dump([], f)
             print("run_model!")
             form = RunModelForm(request.POST)
             print(form)
@@ -50,7 +53,6 @@ def home(request):
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
                 BMP_SIMULATION_DAY = form.cleaned_data["BMP_SIMULATION_DAY"]
-
                 async_task(tasks.start_analysis, datadir)
     return render(request, template, content)
 
@@ -72,11 +74,19 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
 
     transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
     labels_file = os.path.join(datadir, "labels.json")
+    if os.path.isfile(transmission_gp_sz_file):
+        with open(transmission_gp_sz_file) as f:
+            data = json.load(f)
+    else:
+        data = []
 
-    with open(transmission_gp_sz_file) as f:
-        data = json.load(f)
-    with open(labels_file) as f:
-        labels = json.load(f)
+    if os.path.isfile(labels_file):
+        with open(labels_file) as f:
+            labels = json.load(f)
+    else:
+        labels = []
+
+    print("slug_analysis_code: ", slug_analysis_code)
 
     content = {
         'analysis_code': slug_analysis_code,
