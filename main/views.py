@@ -39,12 +39,16 @@ def home(request):
             }
             utils_func.create_sample_directory(analysis_code)
             datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', analysis_code)
-            transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
-            labels_file = os.path.join(datadir, "labels.json")
-            with open(transmission_gp_sz_file, 'w') as f:
-                json.dump([], f)
-            with open(labels_file, 'w') as f:
-                json.dump([], f)
+
+            json_file = os.path.join(datadir, "data.json")
+            # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
+            # labels_file = os.path.join(datadir, "labels.json")
+            with open(json_file, 'w') as f:
+                json.dump({}, f)
+            # with open(transmission_gp_sz_file, 'w') as f:
+            #     json.dump([], f)
+            # with open(labels_file, 'w') as f:
+            #     json.dump([], f)
             print("run_model!")
             form = RunModelForm(request.POST)
             print(form)
@@ -72,25 +76,50 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
     # labels = ["Red", "Blue", "Yellow", "Green", "Purple"]
     datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', slug_analysis_code)
 
-    transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
-    labels_file = os.path.join(datadir, "labels.json")
-    if os.path.isfile(transmission_gp_sz_file):
-        with open(transmission_gp_sz_file) as f:
-            data = json.load(f)
-    else:
-        data = []
+    json_file = os.path.join(datadir, "data.json")
 
-    if os.path.isfile(labels_file):
-        with open(labels_file) as f:
-            labels = json.load(f)
+    # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
+    # labels_file = os.path.join(datadir, "labels.json")
+
+    if os.path.isfile(json_file):
+        with open(json_file) as f:
+            data = json.load(f)
+            # json.dump({}, f)
     else:
-        labels = []
+        data = {
+            'labels': [],
+            'totalInfected_sz': [],
+            'currentInfected_sz': [],
+            'newInfected_sz': [],
+            'totalDeath_sz': [],
+            'newDeath_sz': [],
+            'totalRecovery_sz': [],
+            'newRecovery_sz': [],
+            'totalReachDay_sz': [],
+            'newReachDay_sz': [],
+        }
+
+    # if os.path.isfile(transmission_gp_sz_file):
+    #     with open(transmission_gp_sz_file) as f:
+    #         data = json.load(f)
+    # else:
+    #     data = []
+    #
+    # if os.path.isfile(labels_file):
+    #     with open(labels_file) as f:
+    #         labels = json.load(f)
+    # else:
+    #     labels = []
 
     print("slug_analysis_code: ", slug_analysis_code)
+    print("data: ", data)
 
-    content = {
-        'analysis_code': slug_analysis_code,
-        'data': data,
-        'labels': labels,
-    }
-    return JsonResponse(content)
+    data['analysis_code'] = slug_analysis_code
+    print("new data: ", data)
+
+    # content = {
+    #     'analysis_code': slug_analysis_code,
+    #     'data': data,
+    #     'labels': labels,
+    # }
+    return JsonResponse(data)

@@ -20,7 +20,20 @@ class VaccineModel():
         self.recovery_gp = []
         self.cycle_reached_gp = []
 
-        # self.youth_vaccine = []
+        ## Plotting Params
+        self.totalInfected = []
+        self.currentInfected = []
+        self.newInfected = []
+
+        self.totalDeath = []
+        self.newDeath = []
+
+        self.totalRecovery = []
+        self.newRecovery = []
+
+        self.totalReachDay = []
+        self.newReachDay = []
+
         self.initial_model()
 
     # Day 1
@@ -47,6 +60,19 @@ class VaccineModel():
             p.day_passed()
             self.transmission_gp.append(p)
         self.day += 1
+
+        self.totalInfected.append(self.idx_case_num)
+        self.currentInfected.append(self.idx_case_num)
+        self.newInfected.append(0)
+
+        self.totalDeath.append(0)
+        self.newDeath.append(0)
+
+        self.totalRecovery.append(0)
+        self.newRecovery.append(0)
+
+        self.totalReachDay.append(0)
+        self.newReachDay.append(0)
 
 
 
@@ -113,5 +139,21 @@ class VaccineModel():
         print('         self.cycle_reached_gp size: ', len(self.cycle_reached_gp))
         self.day += 1
 
+        #########################
+        ## update model params ##
+        #########################
+        self.totalInfected.append(len(self.transmission_gp) + len(self.death_gp) + len(self.recovery_gp) + len(self.cycle_reached_gp))
+
+        self.currentInfected.append(len(self.transmission_gp))
+        self.newInfected.append(len(new_transmission_gp))
+
+        self.totalDeath.append(len(self.death_gp))
+        self.newDeath.append(len(new_death_gp))
+
+        self.totalRecovery.append(len(self.recovery_gp))
+        self.newRecovery.append(len(new_recovery_gp))
+
+        self.totalReachDay.append(len(self.cycle_reached_gp))
+        self.newReachDay.append(len(new_cycle_reached_gp))
         # for _p in self.transmission_gp:
         #     if _p

@@ -19,20 +19,59 @@
 
 <div style="margin: 40px">
 
-  <div class="chart-container" style="width: 100%; height:600px">
-    <canvas id="myChart"></canvas>
+
+
+  <div class="row">
+    <div class="chart-container" style="width:30vw; height:300px">
+      <canvas id="totalInfected"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:30vw; height:300px">
+      <canvas id="currentInfected"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:30vw; height:300px">
+      <canvas id="newInfected"></canvas>
+    </div>
+
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="totalDeath"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="newDeath"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="totalRecovery"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="newRecovery"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="totalReachDay"></canvas>
+    </div>
+
+    <div class="chart-container" style="width:45vw; height:300px">
+      <canvas id="newReachDay"></canvas>
+    </div>
   </div>
+
+
   <script>
     console.log("analysis_code: ", "{{analysis_code}}")
-    function setChart(data) {
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
+    function setChart(data, chart_id) {
+      var ctx = document.getElementById(chart_id);
+      var mychart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: data.labels,
            datasets: [{
                // label: '# of Votes',
-               data: data.data,
+               data: data[chart_id+"_sz"],
                backgroundColor: [
                    'rgba(255, 99, 132, 0.2)',
                    'rgba(54, 162, 235, 0.2)',
@@ -79,7 +118,15 @@
             console.log("Initial analysis_code: ", "{{analysis_code}}")
             current_data = Object.assign({}, data);
             update_data = Object.assign({}, data);
-            setChart(data);
+            setChart(current_data, "totalInfected");
+            setChart(current_data, "currentInfected");
+            setChart(current_data, "newInfected");
+            setChart(current_data, "totalDeath");
+            setChart(current_data, "newDeath");
+            setChart(current_data, "totalRecovery");
+            setChart(current_data, "newRecovery");
+            setChart(current_data, "totalReachDay");
+            setChart(current_data, "newReachDay");
         },
         error: function(error_data){
           console.log("Initial analysis_code: ", "api-data/{{analysis_code}}")
@@ -97,6 +144,7 @@
               update_data = Object.assign({}, data);
               button_bool = current_data.analysis_code == "Empty"
               console.log("button_bool: ", button_bool)
+              console.log("current_data: ", data['totalInfected_sz'])
               if (!button_bool) {
                 var btn = document.getElementById('button_insert');
                 if (btn != null) {
@@ -110,7 +158,15 @@
       })
       if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
         current_data = Object.assign({}, update_data);
-        setChart(current_data);
+        setChart(current_data, "totalInfected");
+        setChart(current_data, "currentInfected");
+        setChart(current_data, "newInfected");
+        setChart(current_data, "totalDeath");
+        setChart(current_data, "newDeath");
+        setChart(current_data, "totalRecovery");
+        setChart(current_data, "newRecovery");
+        setChart(current_data, "totalReachDay");
+        setChart(current_data, "newReachDay");
       }
     }, 1000)
 
