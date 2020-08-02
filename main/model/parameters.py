@@ -19,7 +19,7 @@ class AgeGroupPerc(Enum):
 
 class RouteStatus(Enum):
     TRANSMISSION = 'transmission'
-    HOSPITALISED = 'hospitalised'
+    SEEKTREATMENT = 'seektreatment'
 
 class CurrStatus(Enum):
     IN_MODEL = 'in_model'
@@ -54,9 +54,9 @@ class InfectionRate(Enum):
     ELDER_V_RT = 0.032
 
 class SeekTreatmentRate(Enum):
-    YOUTH_RT = 0.5
-    ADULT_RT = 0.5
-    ELDER_RT = 0.5
+    YOUTH_RT = 0.2
+    ADULT_RT = 0.2
+    ELDER_RT = 0.2
 
 class MedicineIntakeRate(Enum):
     YOUTH_RT = 0.5

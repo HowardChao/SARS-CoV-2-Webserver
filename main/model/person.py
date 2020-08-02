@@ -5,10 +5,6 @@ from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactRate, VaccineR
 
 class Person():
     def __init__(self, age, initial_idx_case=False):
-
-        # RECOVERY = 'recovery'
-        # DEATH = 'death'
-        # CYCLE_REACHED
         self.id = str(uuid.uuid1())
         self.curr_status = CurrStatus.IN_MODEL
         self.day = 0
@@ -27,39 +23,53 @@ class Person():
         self.infection_status = self.set_infection_status(initial_idx_case)
 
         self.seek_treatment_rate = self.set_seek_treatment_rate()
+
         self.seek_treatment_status = False
 
         self.medicine_intake_rate = self.set_medicine_intake_rate()
         self.medicine_intake_status = False
-        # self.set_medicine_intake_status()
-
-        # self.medicine_48_status = random.random() < IDX_INTAKE_MED_48_PROB
 
         self.severe_rate = self.set_severe_rate()
         self.severe_status = False
-        # self.set_severe_status()
 
         self.fatality_rate = self.set_fatality_rate()
-        self.alive_or_death = AliveDeath.ALIVE
-        # self.set_alive_or_death_status()
         self.effectiveness_mild = effectiveness.MILD
         self.effectiveness_severe = effectiveness.SEVERE
         self.effectiveness_death = effectiveness.DEATH
 
-    ## The status of this function is dynamic
-    def route_status_rand(self):
+    ## static
+    def set_seek_treatment_rate(self):
+        if self.age <= 18:
+            return SeekTreatmentRate.YOUTH_RT
+        elif self.age > 18 and self.age <65:
+            return SeekTreatmentRate.ADULT_RT
+        elif self.age >= 65:
+            return SeekTreatmentRate.ELDER_RT
+
+    ## static
+    def set_seek_treatment_status(self):
+        if self.infection_status is False:
+            return False
+        rand_dice = random.random() < self.seek_treatment_rate.value
+        if rand_dice:
+            return True
+        else:
+            return False
+
+
+    ##########################
+    ## Outside Calling func ##
+    ##########################
+    def choose_route(self):
         if self.route_status is RouteStatus.TRANSMISSION:
-            rand_dice = random.random() > self.seek_treatment_rate.value
-            if rand_dice is True:
-                pass
-            elif rand_dice is False:
-                # print("!!HAHAHAHAHAH")
-                self.route_status = RouteStatus.HOSPITALISED
-                self.seek_treatment_status = self.set_seek_treatment_status()
+            self.seek_treatment_status = self.set_seek_treatment_status()
+            if self.seek_treatment_status is True:
+                self.route_status = RouteStatus.SEEKTREATMENT
                 self.medicine_intake_status = self.set_medicine_intake_status()
                 self.severe_status = self.set_severe_status()
-                self.alive_or_death = self.set_alive_or_death_status()
-        elif self.route_status is RouteStatus.HOSPITALISED:
+            elif self.seek_treatment_status is False:
+                pass
+        elif self.route_status is RouteStatus.SEEKTREATMENT:
             pass
 
     ## static
@@ -106,11 +116,12 @@ class Person():
 
     ## The status of this function is dynamic
     def set_vaccine_status(self):
-        rand_dice = random.random() < self.vaccine_rate.value
-        if rand_dice:
-            return True
-        else:
-            return False
+        if self.route_status is RouteStatus.TRANSMISSION:
+            rand_dice = random.random() < self.vaccine_rate.value
+            if rand_dice:
+                return True
+            else:
+                return False
 
     ## dynamic
     def set_infection_rate(self):
@@ -131,30 +142,8 @@ class Person():
 
     def set_infection_status(self, initial_idx_case):
         if initial_idx_case is True:
-            # self.medicine_intake_status = self.set_medicine_intake_status()
-            # self.severe_status = self.set_severe_status()
-            # self.alive_or_death = self.set_alive_or_death_status()
             return True
         rand_dice = random.random() < self.infection_rate.value
-        if rand_dice:
-            return True
-        else:
-            return False
-
-    ## static
-    def set_seek_treatment_rate(self):
-        if self.age <= 18:
-            return SeekTreatmentRate.YOUTH_RT
-        elif self.age > 18 and self.age <65:
-            return SeekTreatmentRate.ADULT_RT
-        elif self.age >= 65:
-            return SeekTreatmentRate.ELDER_RT
-
-    ## static
-    def set_seek_treatment_status(self):
-        if self.infection_status is False:
-            return False
-        rand_dice = random.random() < self.seek_treatment_rate.value
         if rand_dice:
             return True
         else:
@@ -170,11 +159,12 @@ class Person():
             return MedicineIntakeRate.ELDER_RT
 
     def set_medicine_intake_status(self):
-        if self.infection_status is False:
-            return False
-        rand_dice = random.random() < self.medicine_intake_rate.value
-        if rand_dice:
-            return True
+        if self.seek_treatment_status is True:
+            rand_dice = random.random() < self.medicine_intake_rate.value
+            if rand_dice:
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -195,11 +185,13 @@ class Person():
                 return SevereRate.ELDER_N48_RT
 
     def set_severe_status(self):
-        if self.infection_status is False:
-            return False
-        rand_dice = random.random() < self.severe_rate.value
-        if rand_dice:
-            return True
+        if self.seek_treatment_status is True:
+            rand_dice = random.random() < self.severe_rate.value
+            if rand_dice:
+                return True
+            else:
+                self.recovery()
+                return False
         else:
             return False
 
@@ -211,20 +203,8 @@ class Person():
         elif self.age >= 65:
             return FatalityRate.ELDER_RT
 
-
-
-
-    def set_alive_or_death_status(self):
-        if self.infection_status is False:
-            return AliveDeath.ALIVE
-        else:
-            rand_dice = random.random() < self.fatality_rate.value
-            if rand_dice:
-                self.death()
-                return AliveDeath.DEATH
-            else:
-                self.recovery()
-                return AliveDeath.ALIVE
+    def in_model(self):
+        self.curr_status = CurrStatus.IN_MODEL
 
     def recovery(self):
         self.curr_status = CurrStatus.RECOVERY
@@ -235,10 +215,30 @@ class Person():
     def cycle_reached(self):
         self.curr_status = CurrStatus.CYCLE_REACHED
 
+    def set_current_status(self):
+        if self.route_status is RouteStatus.TRANSMISSION:
+            if self.day > 7:
+                self.cycle_reached()
+            else:
+                self.in_model()
+        elif self.route_status is RouteStatus.SEEKTREATMENT:
+            if self.severe_status:
+                rand_dice = random.random() < self.fatality_rate.value
+                if rand_dice:
+                    self.death()
+                else:
+                    self.recovery()
+            else:
+                self.recovery()
+
+    ##########################
+    ## Outside Calling func ##
+    ##########################
     def day_passed(self):
         self.day += 1
-        if self.day > 7:
-            self.cycle_reached()
+        self.set_current_status()
+        # if self.day > 7:
+        #     self.cycle_reached()
         # if self.curr_status is not CurrStatus.DEATH:
         #     self.recovery()
 

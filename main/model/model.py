@@ -54,18 +54,17 @@ class VaccineModel():
         print("##################")
         print("## Day ", str(self.day), " ##")
         print("##################")
-        print('transmission_gp size: ', len(self.transmission_gp))
+        print('@@ Starting transmission_gp size: ', len(self.transmission_gp))
         # print('treatment_gp size: ', len(self.treatment_gp))
 
         ## Step 1: choose route option
+        Ori_transmission_gp = []
         new_transmission_gp = []
+        new_death_gp = []
+        new_recovery_gp = []
+        new_cycle_reached_gp = []
         for _p in self.transmission_gp:
-            # Day passed
-            # _p.day_passed()
-            # if _p.curr_status == CurrStatus.CYCLE_REACHED:
-            #     self.cycle_reached_gp.append(_p)
-            #     self.transmission_gp.remove(_p)
-            _p.route_status_rand()
+            _p.choose_route()
             if _p.route_status is RouteStatus.TRANSMISSION:
                 for contact_idx in range(6):
                     rand_age = np.random.choice(
@@ -76,29 +75,42 @@ class VaccineModel():
                                )[0]
                     p = Person(rand_age)
                     # InfectionRate
-                    if p.infection_status is True:
+                    if p.infection_status is True and _p.curr_status == CurrStatus.IN_MODEL:
+                        p.day_passed()
                         new_transmission_gp.append(p)
                         # self.transmission_gp.append(p)
+
                 _p.day_passed()
-                if _p.curr_status == CurrStatus.CYCLE_REACHED:
-                    self.cycle_reached_gp.append(_p)
-                    self.transmission_gp.remove(_p)
-            elif _p.route_status is RouteStatus.HOSPITALISED:
+                if _p.curr_status == CurrStatus.IN_MODEL:
+                    Ori_transmission_gp.append(_p)
+
+                elif _p.curr_status == CurrStatus.CYCLE_REACHED:
+                    new_cycle_reached_gp.append(_p)
+                    # self.transmission_gp.remove(_p)
+
+            elif _p.route_status is RouteStatus.SEEKTREATMENT:
+                _p.day_passed()
                 if _p.curr_status == CurrStatus.DEATH:
-                    self.death_gp.append(_p)
-                    # self.treatment_gp.remove(_p)
+                    new_death_gp.append(_p)
                 elif _p.curr_status == CurrStatus.RECOVERY:
-                    self.recovery_gp.append(_p)
-                    # self.treatment_gp.remove(_p)
-                # self.treatment_gp.append(_p)
-                self.transmission_gp.remove(_p)
-                _p.day_passed()
-        self.transmission_gp = self.transmission_gp + new_transmission_gp
-        print('     transmission_gp size: ', len(self.transmission_gp))
-        # print('     treatment_gp size: ', len(self.treatment_gp))
-        print('     death_gp size: ', len(self.death_gp))
-        print('     recovery_gp size: ', len(self.recovery_gp))
-        print('     cycle_reached_gp size: ', len(self.cycle_reached_gp))
+                    new_recovery_gp.append(_p)
+                # self.transmission_gp.remove(_p)
+        self.transmission_gp = Ori_transmission_gp + new_transmission_gp
+        self.death_gp = self.death_gp + new_death_gp
+        self.recovery_gp = self.recovery_gp + new_recovery_gp
+        self.cycle_reached_gp = self.cycle_reached_gp + new_cycle_reached_gp
+
+        print('     Ori_transmission_gp size      : ', len(Ori_transmission_gp))
+        print('     new_transmission_gp size      : ', len(new_transmission_gp))
+
+        print('         self.transmission_gp size : ', len(self.transmission_gp))
+
+        print('     new_death_gp                  : ', len(new_death_gp))
+        print('         self.death_gp size        : ', len(self.death_gp))
+        print('     new_recovery_gp               : ', len(new_recovery_gp))
+        print('         self.recovery_gp size     : ', len(self.recovery_gp))
+        print('     new_cycle_reached_gp          : ', len(new_cycle_reached_gp))
+        print('         self.cycle_reached_gp size: ', len(self.cycle_reached_gp))
         self.day += 1
 
         # for _p in self.transmission_gp:
