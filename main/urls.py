@@ -7,4 +7,5 @@ urlpatterns = [
     path('about', views.about_view, name='main-about'),
     path('index', views.IndexView.as_view(), name='index'),
     path('api-data/<slug:slug_analysis_code>', views.get_data, name='api-data'),
+    path('api-params-data/<slug:slug_analysis_code>', views.get_params_data, name='api-params-data'),
 ]

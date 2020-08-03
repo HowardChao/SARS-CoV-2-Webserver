@@ -49,7 +49,7 @@ def start_analysis(datadir):
         'newReachDay_sz': newReachDay_sz,
     }
 
-    for i in range(20):
+    for i in range(5):
         md.one_day_passed()
         totalInfected_sz = md.totalInfected
         currentInfected_sz = md.currentInfected

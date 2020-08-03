@@ -168,6 +168,7 @@
           url: 'api-data/{{analysis_code}}',
           success: function(data){
               console.log("update analysis_code: ", "{{analysis_code}}")
+              console.log("task_status: ", data.task_status)
               update_data = Object.assign({}, data);
               button_bool = current_data.analysis_code == "Empty"
               console.log("button_bool: ", button_bool)
@@ -177,6 +178,9 @@
                 if (btn != null) {
                   btn.remove();
                 }
+              }
+              if (update_data) {
+                // Start from here tomorrow
               }
           },
           error: function(error_data){
@@ -231,7 +235,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="180" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
+            <input class="form-control" type="number" value="12" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
           </div>
         </div>
       </div>
