@@ -21,7 +21,7 @@
 
 
 
-  <div class="row">
+  <div class="row" id="chart_pannel" style="margin-left: 40px">
     <div class="chart-container" style="width:30vw; height:300px">
       <canvas id="totalInfected"></canvas>
     </div>
@@ -65,28 +65,55 @@
     console.log("analysis_code: ", "{{analysis_code}}")
     function setChart(data, chart_id) {
       var ctx = document.getElementById(chart_id);
+      if (chart_id == "totalInfected") {
+        var backgroundColor = 'rgba(255, 99, 132, 0.2)'
+        var borderColor = 'rgba(255,99,132,1)'
+        var label = "Total Infected"
+      } else if (chart_id == "currentInfected") {
+        var backgroundColor = 'rgba(255, 99, 132, 0.2)'
+        var borderColor = 'rgba(255,99,132,1)'
+        var label = "Current Infected"
+      } else if (chart_id == "newInfected") {
+        var backgroundColor = 'rgba(255, 99, 132, 0.2)'
+        var borderColor = 'rgba(255,99,132,1)'
+        var label = "New Infected"
+      } else if (chart_id == "newDeath") {
+        var backgroundColor = 'rgba(54, 162, 235, 0.2)'
+        var borderColor = 'rgba(54, 162, 235, 1)'
+        var label = "New Death"
+      } else if (chart_id == "totalDeath") {
+        var backgroundColor = 'rgba(54, 162, 235, 0.2)'
+        var borderColor = 'rgba(54, 162, 235, 1)'
+        var label = "Total Death"
+      } else if (chart_id == "totalRecovery") {
+        var backgroundColor = 'rgba(255, 206, 86, 0.2)'
+        var borderColor = 'rgba(255, 206, 86, 1)'
+        var label = "Total Recovery"
+      } else if (chart_id == "newRecovery") {
+        var backgroundColor = 'rgba(255, 206, 86, 0.2)'
+        var borderColor = 'rgba(255, 206, 86, 1)'
+        var label = "New Recovery"
+      } else if (chart_id == "totalReachDay") {
+        var backgroundColor = 'rgba(75, 192, 192, 0.2)'
+        var borderColor = 'rgba(75, 192, 192, 1)'
+        var label = "Total Patients Reached Transmission Days"
+      } else if (chart_id == "newReachDay") {
+        var backgroundColor = 'rgba(75, 192, 192, 0.2)'
+        var borderColor = 'rgba(75, 192, 192, 1)'
+        var label = "New Patients Reached Transmission Days"
+      }
       var mychart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: data.labels,
            datasets: [{
-               // label: '# of Votes',
+               label: label,
                data: data[chart_id+"_sz"],
                backgroundColor: [
-                   'rgba(255, 99, 132, 0.2)',
-                   'rgba(54, 162, 235, 0.2)',
-                   'rgba(255, 206, 86, 0.2)',
-                   'rgba(75, 192, 192, 0.2)',
-                   'rgba(153, 102, 255, 0.2)',
-                   'rgba(255, 159, 64, 0.2)'
+                  backgroundColor
                ],
               borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
+                  borderColor
               ],
               borderWidth: 1
             }]
