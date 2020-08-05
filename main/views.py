@@ -30,6 +30,7 @@ def home(request):
     # print("analysis_code: ", analysis_code)
     content = {
         'analysis_code': "Empty",
+        'button_clicked': "False",
     }
 
     if request.method == 'POST':
@@ -38,6 +39,7 @@ def home(request):
             analysis_code = utils_func.analysis_code_generator()
             content = {
                 'analysis_code': analysis_code,
+                'button_clicked': "False",
             }
             utils_func.create_sample_directory(analysis_code)
             datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', analysis_code)
@@ -56,7 +58,10 @@ def home(request):
             print(form)
             print(form.is_valid())
             if form.is_valid():
-
+                content = {
+                    'analysis_code': analysis_code,
+                    'button_clicked': "True",
+                }
                 input_params_json_file = os.path.join(datadir, "input_params.json")
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]

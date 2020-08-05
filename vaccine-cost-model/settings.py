@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'django_q',
+    'compressor',
 ]
+
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'sarscov2.urls'
+ROOT_URLCONF = 'vaccine-cost-model.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'sarscov2.wsgi.application'
+WSGI_APPLICATION = 'vaccine-cost-model.wsgi.application'
 
 
 # Database
@@ -131,6 +137,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

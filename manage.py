@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sarscov2.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vaccine-cost-model.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

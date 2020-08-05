@@ -2,6 +2,16 @@
 {% load static %}
 
 {% block content %}
+
+
+{% load compress %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'main/style.scss' %}">
+{% endcompress %}
+
+<div class="wrap" id="loading_message">
+</div>
+
 <div class="jumbotron" style="background-image: url('/static/images/main-background.png'); background-position: 95% center;  background-repeat: no-repeat; background-size: 15%;" >
   <div style="margin-left: 100px;">
     <h1 class="display-4"><b>Welcome to <b style='font-weight:700'>VaccineDynamic</b></b></h1>
@@ -17,49 +27,13 @@
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
 
+
+
+
 <div style="margin: 40px">
 
-
-
-  <div class="row" id="chart_pannel" style="margin-left: 40px">
-    <div class="chart-container" style="width:30vw; height:300px">
-      <canvas id="totalInfected"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:30vw; height:300px">
-      <canvas id="currentInfected"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:30vw; height:300px">
-      <canvas id="newInfected"></canvas>
-    </div>
-
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="totalDeath"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="newDeath"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="totalRecovery"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="newRecovery"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="totalReachDay"></canvas>
-    </div>
-
-    <div class="chart-container" style="width:45vw; height:300px">
-      <canvas id="newReachDay"></canvas>
-    </div>
+  <div id="chart_pannel_container">
   </div>
-
 
   <script>
     console.log("analysis_code: ", "{{analysis_code}}")
@@ -134,7 +108,6 @@
 
     var current_data = {}
     var update_data = {}
-    var button_bool = true
     console.log("current_data.data: ", current_data.data)
     console.log("update_data.data: ", update_data.data)
     console.log("'api-data/{{analysis_code}}',: ", 'api-data/{{analysis_code}}')
@@ -143,76 +116,139 @@
         url: 'api-data/{{analysis_code}}',
         success: function(data){
             console.log("Initial analysis_code: ", "{{analysis_code}}")
-            current_data = Object.assign({}, data);
+            // current_data = Object.assign({}, data);
             update_data = Object.assign({}, data);
-            setChart(current_data, "totalInfected");
-            setChart(current_data, "currentInfected");
-            setChart(current_data, "newInfected");
-            setChart(current_data, "totalDeath");
-            setChart(current_data, "newDeath");
-            setChart(current_data, "totalRecovery");
-            setChart(current_data, "newRecovery");
-            setChart(current_data, "totalReachDay");
-            setChart(current_data, "newReachDay");
+            console.log("data: ", data)
+            console.log("data 2: ", data)
         },
         error: function(error_data){
           console.log("Initial analysis_code: ", "api-data/{{analysis_code}}")
           console.log('error');
         }
     })
+    if ("{{button_clicked}}" == "True") {
+      var interval = null;
+      interval = setInterval(background_fetch_data, 1000);
 
-
-    setInterval(function(){
-      $.ajax({
-          method: 'GET',
-          url: 'api-data/{{analysis_code}}',
-          success: function(data){
-              console.log("update analysis_code: ", "{{analysis_code}}")
-              console.log("task_status: ", data.task_status)
-              update_data = Object.assign({}, data);
-              button_bool = current_data.analysis_code == "Empty"
-              console.log("button_bool: ", button_bool)
-              console.log("current_data: ", data['totalInfected_sz'])
-              if (!button_bool) {
-                var btn = document.getElementById('button_insert');
-                if (btn != null) {
-                  btn.remove();
-                }
-              }
-              if (update_data) {
-                // Start from here tomorrow
-              }
-          },
-          error: function(error_data){
-            console.log('error {{analysis_code}}');
-          }
-      })
-      if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
-        current_data = Object.assign({}, update_data);
-        setChart(current_data, "totalInfected");
-        setChart(current_data, "currentInfected");
-        setChart(current_data, "newInfected");
-        setChart(current_data, "totalDeath");
-        setChart(current_data, "newDeath");
-        setChart(current_data, "totalRecovery");
-        setChart(current_data, "newRecovery");
-        setChart(current_data, "totalReachDay");
-        setChart(current_data, "newReachDay");
+      function update_chart_pannel() {
+        if (JSON.stringify(current_data) != JSON.stringify(update_data)) {
+          current_data = Object.assign({}, update_data);
+          setChart(current_data, "totalInfected");
+          setChart(current_data, "currentInfected");
+          setChart(current_data, "newInfected");
+          setChart(current_data, "totalDeath");
+          setChart(current_data, "newDeath");
+          setChart(current_data, "totalRecovery");
+          setChart(current_data, "newRecovery");
+          setChart(current_data, "totalReachDay");
+          setChart(current_data, "newReachDay");
+        }
       }
-    }, 1000)
+
+      function background_fetch_data(){
+        $.ajax({
+            method: 'GET',
+            url: 'api-data/{{analysis_code}}',
+            success: function(data){
+                console.log("1. update analysis_code: ", "{{analysis_code}}")
+                console.log("2. task_status: ", data.task_status)
+                update_data = Object.assign({}, data);
+                console.log("4. current_data: ", data['totalInfected_sz'])
+                if ("{{button_clicked}}" == "True") {
+                  var form_wrapper = document.getElementById('form_wrapper');
+                  if (form_wrapper != null) {
+                    var pannel_content = `
+                      <div class="row" id="chart_pannel" style="margin-left: 40px">
+                        <div class="chart-container" style="width:30vw; height:300px">
+                          <canvas id="totalInfected"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:30vw; height:300px">
+                          <canvas id="currentInfected"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:30vw; height:300px">
+                          <canvas id="newInfected"></canvas>
+                        </div>
+
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="totalDeath"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="newDeath"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="totalRecovery"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="newRecovery"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="totalReachDay"></canvas>
+                        </div>
+
+                        <div class="chart-container" style="width:45vw; height:300px">
+                          <canvas id="newReachDay"></canvas>
+                        </div>
+                      </div>`
+                      console.log('6. document.getElementById("chart_pannel_container"): ', document.getElementById("chart_pannel_container"))
+                      console.log("7. Append 'chart_pannel_container' !!!")
+                      console.log("8. pannel_content !!!: ", pannel_content)
+                    document.getElementById("chart_pannel_container").insertAdjacentHTML('afterbegin', pannel_content)
+                    form_wrapper.remove();
+                  }
+
+                  if ($('#loading_message').children().length == 0) {
+                    var load_msg_content = `
+                    <div class="loading" style="backdrop-filter: blur(8px); border-radius: 25px;">
+                      <div class="bounceball" ></div>
+                      &nbsp;
+                      <div class="bounceball2"></div>
+                      &nbsp;
+                      <div class="bounceball3"></div>
+                      <div class="text">&nbsp; RUNNING</div>
+                    </div>
+                    `
+                    document.getElementById("loading_message").insertAdjacentHTML('afterbegin', load_msg_content)
+                  }
+                }
+                if (data.task_status) {
+                  // Start from here tomorrow
+                  update_chart_pannel()
+
+                  if ($('#loading_message').children().length != 0) {
+                    const loading_message_node = document.getElementById("loading_message");
+                    loading_message_node.innerHTML = '';
+                  }
+
+                  clearInterval(interval); // stop the interval
+                }
+                update_chart_pannel()
+            },
+            error: function(error_data){
+              console.log('error {{analysis_code}}');
+            }
+        })
+      }
+    }
 
   </script>
 
 
+
+  <div id="form_wrapper">
   <form enctype="multipart/form-data" required="True" method="post">
       {% csrf_token %}
       {{ form }}
       <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
 
-      <div id="button_insert">
-        <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
-      </div>
-      <!-- {% if button_bool %}
+    <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
+              <!-- {% if button_bool %}
       {% else %}
       {% endif %} -->
   <!-- </form>
@@ -532,6 +568,8 @@
 
   </form>
 </div>
+</div>
+
 
 <!-- class FatalityRate(Enum):
     YOUTH_RT = 0.12
