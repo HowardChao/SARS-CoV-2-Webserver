@@ -9,6 +9,9 @@
     <link rel="stylesheet" type="text/x-scss" href="{% static 'main/style.scss' %}">
 {% endcompress %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+
+
 <div class="wrap" id="loading_message">
 </div>
 
@@ -24,6 +27,7 @@
     <br/>
   </div>
 </div>
+
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
 
@@ -31,9 +35,12 @@
 
 
 <div style="margin: 40px">
-
+  <div id="current_day_show">
+  </div>
   <div id="chart_pannel_container">
   </div>
+
+
 
   <script>
     console.log("analysis_code: ", "{{analysis_code}}")
@@ -144,6 +151,19 @@
           setChart(current_data, "newReachDay");
         }
       }
+      // <div>
+      //   <div class="chart-container" style="width:30vw; height:300px">
+      //     <canvas id="totalInfected"></canvas>
+      //   </div>
+      //   <div class="chart-container" style="width:30vw; height:300px">
+      //     <canvas id="currentInfected"></canvas>
+      //   </div>
+      //   <div class="chart-container" style="width:30vw; height:300px">
+      //     <canvas id="newInfected"></canvas>
+      //   </div>
+      // </div>
+      // <hr>
+
 
       function background_fetch_data(){
         $.ajax({
@@ -158,54 +178,133 @@
                   var form_wrapper = document.getElementById('form_wrapper');
                   if (form_wrapper != null) {
                     var pannel_content = `
-                      <div class="row" id="chart_pannel" style="margin-left: 40px">
-                        <div class="chart-container" style="width:30vw; height:300px">
-                          <canvas id="totalInfected"></canvas>
+                    <div id="chart_pannel" style="border-style: solid;">
+                      <div class="card" >
+                        <div class="card-header" id="infected_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#infected_card_collapse" aria-expanded="true" aria-controls="infected_card_collapse">
+                              Infected Line Chart
+                            </button>
+                          </h5>
                         </div>
-
-                        <div class="chart-container" style="width:30vw; height:300px">
-                          <canvas id="currentInfected"></canvas>
+                        <div id="infected_card_collapse" class="collapse show" aria-labelledby="infected_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="totalInfected"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="currentInfected"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="newInfected"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
 
-                        <div class="chart-container" style="width:30vw; height:300px">
-                          <canvas id="newInfected"></canvas>
+
+                      <div class="card" >
+                        <div class="card-header" id="death_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#death_card_collapse" aria-expanded="true" aria-controls="death_card_collapse">
+                              Death Line Chart
+                            </button>
+                          </h5>
                         </div>
-
-
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="totalDeath"></canvas>
+                        <div id="death_card_collapse" class="collapse show" aria-labelledby="death_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="totalDeath"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="newDeath"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
 
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="newDeath"></canvas>
-                        </div>
 
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="totalRecovery"></canvas>
+                      <div class="card" >
+                        <div class="card-header" id="recovery_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#recovery_card_collapse" aria-expanded="true" aria-controls="recovery_card_collapse">
+                              Recovery Line Chart
+                            </button>
+                          </h5>
                         </div>
+                        <div id="recovery_card_collapse" class="collapse show" aria-labelledby="recovery_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="totalRecovery"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="newRecovery"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="newRecovery"></canvas>
-                        </div>
 
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="totalReachDay"></canvas>
+                      <div class="card" >
+                        <div class="card-header" id="reachday_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#reachday_card_collapse" aria-expanded="true" aria-controls="reachday_card_collapse">
+                              Days Reached Line Chart
+                            </button>
+                          </h5>
                         </div>
+                        <div id="reachday_card_collapse" class="collapse show" aria-labelledby="reachday_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="totalReachDay"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="newReachDay"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                        <div class="chart-container" style="width:45vw; height:300px">
-                          <canvas id="newReachDay"></canvas>
-                        </div>
-                      </div>`
-                      console.log('6. document.getElementById("chart_pannel_container"): ', document.getElementById("chart_pannel_container"))
-                      console.log("7. Append 'chart_pannel_container' !!!")
+
+
+
+
+                    </div>`
                       console.log("8. pannel_content !!!: ", pannel_content)
                     document.getElementById("chart_pannel_container").insertAdjacentHTML('afterbegin', pannel_content)
+
                     form_wrapper.remove();
                   }
 
                   if ($('#loading_message').children().length == 0) {
                     var load_msg_content = `
-                    <div class="loading" style="backdrop-filter: blur(8px); border-radius: 25px;">
+                    <div class="loading" style="backdrop-filter: blur(4px); border-radius: 25px;">
                       <div class="bounceball" ></div>
                       &nbsp;
                       <div class="bounceball2"></div>
@@ -215,6 +314,10 @@
                     </div>
                     `
                     document.getElementById("loading_message").insertAdjacentHTML('afterbegin', load_msg_content)
+                  }
+                  if (data.labels != null) {
+                    var current_day = data.labels[data.labels.length - 1];
+                    document.getElementById("current_day_show").innerHTML = current_day;
                   }
                 }
                 if (data.task_status) {
@@ -263,7 +366,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="5000" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
+            <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
           </div>
         </div>
       </div>
@@ -271,7 +374,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="12" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
+            <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
           </div>
         </div>
       </div>
@@ -279,7 +382,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="1000" id="BMP_SIMULATION_TIME">
+            <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
           </div>
         </div>
       </div>
@@ -287,7 +390,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="7" id="BMP_CYCLE_DAYS">
+            <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
           </div>
         </div>
       </div>
@@ -300,7 +403,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="5000" id="AGP_YOUTH_GRP">
+            <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.1" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
           </div>
         </div>
       </div>
@@ -308,7 +411,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="180" id="AGP_ADULT_GRP">
+            <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
           </div>
         </div>
       </div>
@@ -316,7 +419,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="1000" id="AGP_ELDER_GRP">
+            <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
           </div>
         </div>
       </div>
@@ -332,7 +435,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.6" id="CR_SAME_GRP">
+            <input class="form-control" type="number" value="{{CR_SAME_GRP}}" id="CR_SAME_GRP" name="CR_SAME_GRP">
           </div>
         </div>
       </div>
@@ -340,7 +443,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.2" id="CR_DIFF_GRP">
+            <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
           </div>
         </div>
       </div>
@@ -357,7 +460,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="VR_YOUTH_RT">
+            <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
           </div>
         </div>
       </div>
@@ -365,7 +468,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="VR_ADULT_RT">
+            <input class="form-control" type="number" value="{{VR_ADULT_RT}}" id="VR_ADULT_RT" name="VR_ADULT_RT">
           </div>
         </div>
       </div>
@@ -373,7 +476,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="VR_ELDER_RT">
+            <input class="form-control" type="number" value="{{VR_ELDER_RT}}" id="VR_ELDER_RT" name="VR_ELDER_RT">
           </div>
         </div>
       </div>
@@ -388,7 +491,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="IR_YOUTH_V_RT">
+            <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
           </div>
         </div>
       </div>
@@ -396,7 +499,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="IR_ADULT_V_RT">
+            <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
           </div>
         </div>
       </div>
@@ -404,7 +507,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="IR_ELDER_V_RT">
+            <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
           </div>
         </div>
       </div>
@@ -416,7 +519,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="IR_YOUTH_NV_RT">
+            <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
           </div>
         </div>
       </div>
@@ -424,7 +527,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="IR_ADULT_NV_RT">
+            <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
           </div>
         </div>
       </div>
@@ -432,7 +535,38 @@
         <div class="form-group row">
           <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="IR_ELDER_NV_RT">
+            <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
+          </div>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    <br>
+
+    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate</h4>
+    <div class="row">
+      <div class="col">
+        <div class="form-group row">
+          <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+          <div class="col-5">
+            <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group row">
+          <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+          <div class="col-5">
+            <input class="form-control" type="number" value="{{STR_ADULT_RT}}" id="STR_ADULT_RT" name="STR_ADULT_RT">
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group row">
+          <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+          <div class="col-5">
+            <input class="form-control" type="number" value="{{STR_ELDER_RT}}" id="STR_ELDER_RT" name="STR_ELDER_RT">
           </div>
         </div>
       </div>
@@ -442,13 +576,16 @@
     <br>
 
 
+
+
+
     <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate</h4>
     <div class="row">
       <div class="col">
         <div class="form-group row">
           <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="MIR_YOUTH_RT">
+            <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
           </div>
         </div>
       </div>
@@ -456,7 +593,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="MIR_ADULT_RT">
+            <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
           </div>
         </div>
       </div>
@@ -464,7 +601,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="MIR_ELDER_RT">
+            <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
           </div>
         </div>
       </div>
@@ -479,7 +616,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="SR_YOUTH_48_RT">
+            <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
           </div>
         </div>
       </div>
@@ -487,7 +624,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="SR_ADULT_48_RT">
+            <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
           </div>
         </div>
       </div>
@@ -495,7 +632,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="SR_ELDER_48_RT">
+            <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
           </div>
         </div>
       </div>
@@ -507,7 +644,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="SR_YOUTH_N48_RT">
+            <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
           </div>
         </div>
       </div>
@@ -515,7 +652,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="SR_ADULT_N48_RT">
+            <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
           </div>
         </div>
       </div>
@@ -523,7 +660,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="SR_ELDER_N48_RT">
+            <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
           </div>
         </div>
       </div>
@@ -533,13 +670,13 @@
     <br>
 
 
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Fatality Rate</h4>
+    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality Rate</h4>
     <div class="row">
       <div class="col">
         <div class="form-group row">
           <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.646" id="FR_YOUTH_RT">
+            <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
           </div>
         </div>
       </div>
@@ -547,7 +684,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.093" id="FR_ADULT_RT">
+            <input class="form-control" type="number" value="{{FR_ADULT_RT}}" id="FR_ADULT_RT" name="FR_ADULT_RT">
           </div>
         </div>
       </div>
@@ -555,7 +692,7 @@
         <div class="form-group row">
           <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
           <div class="col-5">
-            <input class="form-control" type="number" value="0.445" id="FR_ELDER_RT">
+            <input class="form-control" type="number" value="{{FR_ELDER_RT}}" id="FR_ELDER_RT" name="FR_ELDER_RT">
           </div>
         </div>
       </div>

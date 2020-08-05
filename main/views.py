@@ -31,6 +31,47 @@ def home(request):
     content = {
         'analysis_code': "Empty",
         'button_clicked': "False",
+        'BMP_IDX_CASE_NUM': parameters.IDX_CASE_NUM,
+        'BMP_SIMULATION_DAY': parameters.SIMULATION_DAY,
+        'BMP_SIMULATION_TIME': parameters.SIMULATION_TIME,
+        'BMP_CYCLE_DAYS': parameters.CYCLE_DAYS,
+
+        'AGP_YOUTH_GRP': parameters.AgeGroupPerc.YOUTH_GRP.value,
+        'AGP_ADULT_GRP': parameters.AgeGroupPerc.ADULT_GRP.value,
+        'AGP_ELDER_GRP': parameters.AgeGroupPerc.ELDER_GRP.value,
+
+        'CR_SAME_GRP': parameters.ContactRate.SAME_GRP.value,
+        'CR_DIFF_GRP': parameters.ContactRate.DIFF_GRP.value,
+
+        'VR_YOUTH_RT': parameters.VaccineRate.YOUTH_RT.value,
+        'VR_ADULT_RT': parameters.VaccineRate.ADULT_RT.value,
+        'VR_ELDER_RT': parameters.VaccineRate.ELDER_RT.value,
+
+        'IR_YOUTH_NV_RT': parameters.InfectionRate.YOUTH_NV_RT.value,
+        'IR_ADULT_NV_RT': parameters.InfectionRate.ADULT_NV_RT.value,
+        'IR_ELDER_NV_RT': parameters.InfectionRate.ELDER_NV_RT.value,
+        'IR_YOUTH_V_RT': parameters.InfectionRate.YOUTH_V_RT.value,
+        'IR_ADULT_V_RT': parameters.InfectionRate.ADULT_V_RT.value,
+        'IR_ELDER_V_RT': parameters.InfectionRate.ELDER_V_RT.value,
+
+        'STR_YOUTH_RT': parameters.SeekTreatmentRate.YOUTH_RT.value,
+        'STR_ADULT_RT': parameters.SeekTreatmentRate.ADULT_RT.value,
+        'STR_ELDER_RT': parameters.SeekTreatmentRate.ELDER_RT.value,
+
+        'MIR_YOUTH_RT': parameters.MedicineIntakeRate.YOUTH_RT.value,
+        'MIR_ADULT_RT': parameters.MedicineIntakeRate.ADULT_RT.value,
+        'MIR_ELDER_RT': parameters.MedicineIntakeRate.ELDER_RT.value,
+
+        'SR_YOUTH_48_RT': parameters.SevereRate.YOUTH_48_RT.value,
+        'SR_ADULT_48_RT': parameters.SevereRate.ADULT_48_RT.value,
+        'SR_ELDER_48_RT': parameters.SevereRate.ELDER_48_RT.value,
+        'SR_YOUTH_N48_RT': parameters.SevereRate.YOUTH_N48_RT.value,
+        'SR_ADULT_N48_RT': parameters.SevereRate.ADULT_N48_RT.value,
+        'SR_ELDER_N48_RT': parameters.SevereRate.ELDER_N48_RT.value,
+
+        'FR_YOUTH_RT': parameters.FatalityRate.YOUTH_RT.value,
+        'FR_ADULT_RT': parameters.FatalityRate.ADULT_RT.value,
+        'FR_ELDER_RT': parameters.FatalityRate.ELDER_RT.value,
     }
 
     if request.method == 'POST':
@@ -66,13 +107,82 @@ def home(request):
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
                 BMP_SIMULATION_DAY = form.cleaned_data["BMP_SIMULATION_DAY"]
+                BMP_SIMULATION_TIME = form.cleaned_data["BMP_SIMULATION_TIME"]
+                BMP_CYCLE_DAYS = form.cleaned_data["BMP_CYCLE_DAYS"]
+
+                AGP_YOUTH_GRP = form.cleaned_data["AGP_YOUTH_GRP"]
+                AGP_ADULT_GRP = form.cleaned_data["AGP_ADULT_GRP"]
+                AGP_ELDER_GRP = form.cleaned_data["AGP_ELDER_GRP"]
+
+                CR_SAME_GRP = form.cleaned_data["CR_SAME_GRP"]
+                CR_DIFF_GRP = form.cleaned_data["CR_DIFF_GRP"]
+
+                VR_YOUTH_RT = form.cleaned_data["VR_YOUTH_RT"]
+                VR_ADULT_RT = form.cleaned_data["VR_ADULT_RT"]
+                VR_ELDER_RT = form.cleaned_data["VR_ELDER_RT"]
+
+                IR_YOUTH_NV_RT = form.cleaned_data["IR_YOUTH_NV_RT"]
+                IR_ADULT_NV_RT = form.cleaned_data["IR_ADULT_NV_RT"]
+                IR_ELDER_NV_RT = form.cleaned_data["IR_ELDER_NV_RT"]
+                IR_YOUTH_V_RT = form.cleaned_data["IR_YOUTH_V_RT"]
+                IR_ADULT_V_RT = form.cleaned_data["IR_ADULT_V_RT"]
+                IR_ELDER_V_RT = form.cleaned_data["IR_ELDER_V_RT"]
+
+                STR_YOUTH_RT = form.cleaned_data["STR_YOUTH_RT"]
+                STR_ADULT_RT = form.cleaned_data["STR_ADULT_RT"]
+                STR_ELDER_RT = form.cleaned_data["STR_ELDER_RT"]
+
+                MIR_YOUTH_RT = form.cleaned_data["MIR_YOUTH_RT"]
+                MIR_ADULT_RT = form.cleaned_data["MIR_ADULT_RT"]
+                MIR_ELDER_RT = form.cleaned_data["MIR_ELDER_RT"]
+
+                SR_YOUTH_48_RT = form.cleaned_data["SR_YOUTH_48_RT"]
+                SR_ADULT_48_RT = form.cleaned_data["SR_ADULT_48_RT"]
+                SR_ELDER_48_RT = form.cleaned_data["SR_ELDER_48_RT"]
+                SR_YOUTH_N48_RT = form.cleaned_data["SR_YOUTH_N48_RT"]
+                SR_ADULT_N48_RT = form.cleaned_data["SR_ADULT_N48_RT"]
+                SR_ELDER_N48_RT = form.cleaned_data["SR_ELDER_N48_RT"]
+
+                FR_YOUTH_RT = form.cleaned_data["FR_YOUTH_RT"]
+                FR_ADULT_RT = form.cleaned_data["FR_ADULT_RT"]
+                FR_ELDER_RT = form.cleaned_data["FR_ELDER_RT"]
+
                 with open(input_params_json_file, 'w') as f:
                     json.dump({
                         "BMP_IDX_CASE_NUM": BMP_IDX_CASE_NUM,
                         "BMP_SIMULATION_DAY": BMP_SIMULATION_DAY,
+                        "BMP_SIMULATION_TIME": BMP_SIMULATION_TIME,
+                        "BMP_CYCLE_DAYS": BMP_CYCLE_DAYS,
+                        "AGP_YOUTH_GRP": AGP_YOUTH_GRP,
+                        "AGP_ADULT_GRP": AGP_ADULT_GRP,
+                        "AGP_ELDER_GRP": AGP_ELDER_GRP,
+                        "CR_SAME_GRP": CR_SAME_GRP,
+                        "CR_DIFF_GRP": CR_DIFF_GRP,
+                        "VR_YOUTH_RT":  VR_YOUTH_RT,
+                        "VR_ADULT_RT": VR_ADULT_RT,
+                        "VR_ELDER_RT": VR_ELDER_RT,
+                        "IR_YOUTH_NV_RT": IR_YOUTH_NV_RT,
+                        "IR_ADULT_NV_RT": IR_ADULT_NV_RT,
+                        "IR_ELDER_NV_RT": IR_ELDER_NV_RT,
+                        "IR_YOUTH_V_RT": IR_YOUTH_V_RT,
+                        "IR_ADULT_V_RT": IR_ADULT_V_RT,
+                        "IR_ELDER_V_RT": IR_ELDER_V_RT,
+                        "STR_YOUTH_RT": STR_YOUTH_RT,
+                        "STR_ADULT_RT": STR_ADULT_RT,
+                        "STR_ELDER_RT": STR_ELDER_RT,
+                        "MIR_YOUTH_RT": MIR_YOUTH_RT,
+                        "MIR_ADULT_RT": MIR_ADULT_RT,
+                        "MIR_ELDER_RT": MIR_ELDER_RT,
+                        "SR_YOUTH_48_RT": SR_YOUTH_48_RT,
+                        "SR_ADULT_48_RT": SR_ADULT_48_RT,
+                        "SR_ELDER_48_RT": SR_ELDER_48_RT,
+                        "SR_YOUTH_N48_RT": SR_YOUTH_N48_RT,
+                        "SR_ADULT_N48_RT": SR_ADULT_N48_RT,
+                        "SR_ELDER_N48_RT": SR_ELDER_N48_RT,
+                        "FR_YOUTH_RT": FR_YOUTH_RT,
+                        "FR_ADULT_RT": FR_ADULT_RT,
+                        "FR_ELDER_RT": FR_ELDER_RT,
                     }, f)
-                # a = AsyncTask(tasks.start_analysis, datadir, group="id_"+analysis_code)
-                # print("!!!! A: ", a)
                 a = async_task(tasks.start_analysis, datadir, task_name="id_"+analysis_code)
                 print("!!!! A: ", a)
     return render(request, template, content)

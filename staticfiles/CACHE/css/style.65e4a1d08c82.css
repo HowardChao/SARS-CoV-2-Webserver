@@ -1,0 +1,151 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+/* line 1, main/static/main/style.scss */
+nav#list-example.col-sm-3 {
+  top: 20px;
+  position: fixed; }
+
+/* line 6, main/static/main/style.scss */
+div#list-item-1 {
+  padding-top: 200px;
+  padding-bottom: 200px; }
+
+/* line 10, main/static/main/style.scss */
+#content {
+  position: absolute;
+  bottom: 72px;
+  left: 72px;
+  width: 300px;
+  height: 100px; }
+
+/* line 17, main/static/main/style.scss */
+#blurredbackground {
+  position: absolute;
+  /*matches #content position*/
+  bottom: 72px;
+  left: 72px;
+  /*matches #content position*/
+  width: 300px;
+  /*matches #content width*/
+  height: 100px;
+  /*matches #content height*/
+  -webkit-filter: blur(10px);
+  filter: blur(10px);
+  z-index: -1; }
+
+/* Style the button that is used to open and close the collapsible content */
+/* line 28, main/static/main/style.scss */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px; }
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+/* line 41, main/static/main/style.scss */
+.active, .collapsible:hover {
+  background-color: #ccc; }
+
+/* Style the collapsible content. Note: hidden by default */
+/* line 46, main/static/main/style.scss */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1; }
+
+/* line 60, main/static/main/style.scss */
+body {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  font-family: Montserrat; }
+
+/* line 67, main/static/main/style.scss */
+.wrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+
+/* line 74, main/static/main/style.scss */
+.text {
+  color: #fbae17;
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 60px;
+  font-weight: 1000; }
+
+/* line 82, main/static/main/style.scss */
+.bounceball {
+  position: relative;
+  display: inline-block;
+  height: 50px;
+  width: 25px; }
+  /* line 87, main/static/main/style.scss */
+  .bounceball:before {
+    position: absolute;
+    content: '';
+    display: block;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fbae17;
+    transform-origin: 50%;
+    animation: bounce 500ms alternate infinite ease; }
+
+/* line 101, main/static/main/style.scss */
+.bounceball2 {
+  position: relative;
+  display: inline-block;
+  height: 50px;
+  width: 25px; }
+  /* line 106, main/static/main/style.scss */
+  .bounceball2:before {
+    position: absolute;
+    content: '';
+    display: block;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fbae17;
+    transform-origin: 50%;
+    animation: bounce 500ms alternate 100ms infinite ease; }
+
+/* line 120, main/static/main/style.scss */
+.bounceball3 {
+  position: relative;
+  display: inline-block;
+  height: 50px;
+  width: 25px; }
+  /* line 125, main/static/main/style.scss */
+  .bounceball3:before {
+    position: absolute;
+    content: '';
+    display: block;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fbae17;
+    transform-origin: 50%;
+    animation: bounce 500ms alternate 200ms infinite ease; }
+
+@keyframes bounce {
+  0% {
+    top: 40px;
+    height: 5px;
+    border-radius: 60px 60px 20px 20px;
+    transform: scaleX(1.5); }
+  35% {
+    height: 25px;
+    border-radius: 50%;
+    transform: scaleX(1); }
+  100% {
+    top: 0; } }
