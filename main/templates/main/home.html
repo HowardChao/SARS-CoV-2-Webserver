@@ -8,7 +8,7 @@
 {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'main/style.scss' %}">
 {% endcompress %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
 
 
@@ -35,7 +35,7 @@
 
 
 <div style="margin: 40px">
-  <div id="current_day_show">
+  <div id="current_day_show" style="font-size: 28px;">
   </div>
   <div id="chart_pannel_container">
   </div>
@@ -178,12 +178,12 @@
                   var form_wrapper = document.getElementById('form_wrapper');
                   if (form_wrapper != null) {
                     var pannel_content = `
-                    <div id="chart_pannel" style="border-style: solid;">
+                    <div id="chart_pannel" style="border: 3px solid #a8a8a8;">
                       <div class="card" >
                         <div class="card-header" id="infected_card_header">
                           <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#infected_card_collapse" aria-expanded="true" aria-controls="infected_card_collapse">
-                              Infected Line Chart
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#infected_card_collapse" aria-expanded="true" aria-controls="infected_card_collapse" style="text-decoration: none; color:rgba(255, 99, 132, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Infected Line Chart
                             </button>
                           </h5>
                         </div>
@@ -214,8 +214,8 @@
                       <div class="card" >
                         <div class="card-header" id="death_card_header">
                           <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#death_card_collapse" aria-expanded="true" aria-controls="death_card_collapse">
-                              Death Line Chart
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#death_card_collapse" aria-expanded="true" aria-controls="death_card_collapse" style="text-decoration: none; color:rgba(54, 162, 235, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Death Line Chart
                             </button>
                           </h5>
                         </div>
@@ -241,8 +241,8 @@
                       <div class="card" >
                         <div class="card-header" id="recovery_card_header">
                           <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#recovery_card_collapse" aria-expanded="true" aria-controls="recovery_card_collapse">
-                              Recovery Line Chart
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#recovery_card_collapse" aria-expanded="true" aria-controls="recovery_card_collapse" style="text-decoration: none; color:rgba(255, 206, 86, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Recovery Line Chart
                             </button>
                           </h5>
                         </div>
@@ -268,8 +268,8 @@
                       <div class="card" >
                         <div class="card-header" id="reachday_card_header">
                           <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#reachday_card_collapse" aria-expanded="true" aria-controls="reachday_card_collapse">
-                              Days Reached Line Chart
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#reachday_card_collapse" aria-expanded="true" aria-controls="reachday_card_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Days Reached Line Chart
                             </button>
                           </h5>
                         </div>
