@@ -15,7 +15,7 @@
 <div class="wrap" id="loading_message">
 </div>
 
-<div class="jumbotron" style="background-image: url('/static/images/main-background.png'); background-position: 95% center;  background-repeat: no-repeat; background-size: 15%;" >
+<div class="jumbotron" style="background-image: url('/static/images/main-background.png'); background-position: 95% center;  background-repeat: no-repeat; background-size: 15%;">
   <div style="margin-left: 100px;">
     <h1 class="display-4"><b>Welcome to <b style='font-weight:700'>VaccineDynamic</b></b></h1>
     <h5 class="lead" style="margin-top: 25px">Vaccine Cost-effectiveness Prediction Model</h5>
@@ -25,17 +25,21 @@
     <b>Institute of Epidemiology and Preventive Medicine, National Taiwan University
     </b>
     <br/>
+
   </div>
+</div>
+
+<div id="alert-holding-div">
 </div>
 
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
 
 
-
-
 <div style="margin: 40px">
-  <div id="current_day_show" style="font-size: 28px;">
+  <div id="current_day_show" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+  </div>
+  <div id="chart_title_show" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
   </div>
   <div id="chart_pannel_container">
   </div>
@@ -151,19 +155,6 @@
           setChart(current_data, "newReachDay");
         }
       }
-      // <div>
-      //   <div class="chart-container" style="width:30vw; height:300px">
-      //     <canvas id="totalInfected"></canvas>
-      //   </div>
-      //   <div class="chart-container" style="width:30vw; height:300px">
-      //     <canvas id="currentInfected"></canvas>
-      //   </div>
-      //   <div class="chart-container" style="width:30vw; height:300px">
-      //     <canvas id="newInfected"></canvas>
-      //   </div>
-      // </div>
-      // <hr>
-
 
       function background_fetch_data(){
         $.ajax({
@@ -317,12 +308,502 @@
                   }
                   if (data.labels != null) {
                     var current_day = data.labels[data.labels.length - 1];
-                    document.getElementById("current_day_show").innerHTML = current_day;
+                    document.getElementById("current_day_show").innerHTML = '<i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp;' + current_day;
                   }
+
+                  if ($('#chart_title_show').children().length == 0) {
+                    document.getElementById("chart_title_show").innerHTML = '<i class="fas fa-pen" style="margin-left: 10px"></i> &nbsp; Simulation Charts';
+                  }
+// <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label"></label>
+                  if ($('#simulation_model_result').children().length == 0) {
+                    $.ajax({
+                        method: 'GET',
+                        url: 'api-params-data/{{analysis_code}}',
+                        success: function(params_data){
+                            // current_data = Object.assign({}, data);
+                            var load_simulation_model_result = `
+                              <div style="font-size: 28px; margin-top: 30px; margin-bottom: 10px; font-weight: 700">
+                                <i class="fa fa-keyboard"></i> &nbsp; Input Parameters
+                              </div>
+
+                              <div style="border: 3px solid #a8a8a8;">
+                                <div class="card">
+                                  <div class="card-header" id="basic_model_parameters_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#basic_model_parameters_card_collapse" aria-expanded="true" aria-controls="basic_model_parameters_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Basic Model Parameters
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="basic_model_parameters_card_collapse" class="collapse show" aria-labelledby="basic_model_parameters_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.BMP_IDX_CASE_NUM +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.BMP_SIMULATION_DAY +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.BMP_SIMULATION_TIME +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Cycle days:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.BMP_CYCLE_DAYS +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="age_group_percentage_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#age_group_percentage_card_collapse" aria-expanded="true" aria-controls="age_group_percentage_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Age Group Percentage
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="age_group_percentage_card_collapse" class="collapse show" aria-labelledby="age_group_percentage_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.AGP_YOUTH_GRP +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.AGP_ADULT_GRP +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.AGP_ELDER_GRP +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="contact_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#contact_rate_card_collapse" aria-expanded="true" aria-controls="contact_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Contact Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="contact_rate_card_collapse" class="collapse show" aria-labelledby="contact_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.CR_SAME_GRP +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.CR_DIFF_GRP +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="vaccine_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#vaccine_rate_card_collapse" aria-expanded="true" aria-controls="vaccine_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="vaccine_rate_card_collapse" class="collapse show" aria-labelledby="vaccine_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.VR_YOUTH_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.VR_ADULT_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.VR_ELDER_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="infection_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#infection_rate_card_collapse" aria-expanded="true" aria-controls="infection_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Infection Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="infection_rate_card_collapse" class="collapse show" aria-labelledby="infection_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_YOUTH_V_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_ADULT_V_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_ELDER_V_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_YOUTH_NV_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_ADULT_NV_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.IR_ELDER_NV_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="seek_treatment_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#seek_treatment_rate_card_collapse" aria-expanded="true" aria-controls="seek_treatment_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="seek_treatment_rate_card_collapse" class="collapse show" aria-labelledby="seek_treatment_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.STR_YOUTH_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.STR_ADULT_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.STR_ELDER_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="medicine_intake_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#medicine_intake_rate_card_collapse" aria-expanded="true" aria-controls="medicine_intake_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="medicine_intake_rate_card_collapse" class="collapse show" aria-labelledby="medicine_intake_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.MIR_YOUTH_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.MIR_ADULT_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.MIR_ELDER_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="card" >
+                                  <div class="card-header" id="severe_rate_header">
+                                    <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#severe_rate_card_collapse" aria-expanded="true" aria-controls="severe_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Severe Rate
+                                      </button>
+                                    </h5>
+                                  </div>
+                                  <div id="severe_rate_card_collapse" class="collapse show" aria-labelledby="severe_rate_header" data-parent="#accordion">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_YOUTH_48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_ADULT_48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_ELDER_48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Idex case number:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_YOUTH_N48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation day:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_ADULT_N48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                          <div class="form-group row">
+                                            <div class="col-8" style="text-align: right">
+                                              Simulation times:
+                                            </div>
+                                            <div class="col-4">`+
+                                              params_data.SR_ELDER_N48_RT +
+                                            `</div>
+                                          </div>
+                                        </div>
+                                        <div class="col">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            `
+                            document.getElementById("simulation_model_result").insertAdjacentHTML('beforeend', load_simulation_model_result)
+                        },
+                        error: function(error_data){
+                          console.log('error');
+                        }
+                    })
+                  }
+
+
                 }
                 if (data.task_status) {
                   // Start from here tomorrow
                   update_chart_pannel()
+
+                  var alert_holding_html = `
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top:-30px; text-align: center; font-size: 20px">
+                    <strong>Simulation is finished successfully!</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  `
+                  document.getElementById("alert-holding-div").innerHTML = alert_holding_html;
+
 
                   if ($('#loading_message').children().length != 0) {
                     const loading_message_node = document.getElementById("loading_message");
@@ -345,366 +826,369 @@
 
 
   <div id="form_wrapper">
-  <form enctype="multipart/form-data" required="True" method="post">
-      {% csrf_token %}
-      {{ form }}
-      <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
+    <form enctype="multipart/form-data" required="True" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
 
-    <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
-              <!-- {% if button_bool %}
-      {% else %}
-      {% endif %} -->
-  <!-- </form>
-
-
-  <!-- <form enctype="multipart/form-data" required="True" method="post">
-      {% csrf_token %}
-      {{ form }} -->
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Basic Model Parameters</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Age Group Percentage</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.1" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
+      <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
+                <!-- {% if button_bool %}
+        {% else %}
+        {% endif %} -->
+    <!-- </form>
 
 
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Contact Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{CR_SAME_GRP}}" id="CR_SAME_GRP" name="CR_SAME_GRP">
+    <!-- <form enctype="multipart/form-data" required="True" method="post">
+        {% csrf_token %}
+        {{ form }} -->
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Basic Model Parameters</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
+            </div>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
+      <hr>
 
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Age Group Percentage</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.1" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{VR_ADULT_RT}}" id="VR_ADULT_RT" name="VR_ADULT_RT">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{VR_ELDER_RT}}" id="VR_ELDER_RT" name="VR_ELDER_RT">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
-
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Infection Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
-          </div>
+        <div class="col">
         </div>
       </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
-
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{STR_ADULT_RT}}" id="STR_ADULT_RT" name="STR_ADULT_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{STR_ELDER_RT}}" id="STR_ELDER_RT" name="STR_ELDER_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
+      <br>
 
 
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Contact Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{CR_SAME_GRP}}" id="CR_SAME_GRP" name="CR_SAME_GRP">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
+
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{VR_ADULT_RT}}" id="VR_ADULT_RT" name="VR_ADULT_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{VR_ELDER_RT}}" id="VR_ELDER_RT" name="VR_ELDER_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
+
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Infection Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
+
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{STR_ADULT_RT}}" id="STR_ADULT_RT" name="STR_ADULT_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{STR_ELDER_RT}}" id="STR_ELDER_RT" name="STR_ELDER_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
 
 
 
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
-
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Severe Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
 
 
-    <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality Rate</h4>
-    <div class="row">
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{FR_ADULT_RT}}" id="FR_ADULT_RT" name="FR_ADULT_RT">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="form-group row">
-          <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-          <div class="col-5">
-            <input class="form-control" type="number" value="{{FR_ELDER_RT}}" id="FR_ELDER_RT" name="FR_ELDER_RT">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
+            </div>
           </div>
         </div>
+        <div class="col">
+        </div>
       </div>
-      <div class="col">
-      </div>
-    </div>
-    <br>
-<!--
-    <input type="submit" id="parameters_submit_btn" name="parameters_submit_btn" class="btn btn-success btn-lg btn-block" value="Set Parameters" style="margin-bottom: 50px"> -->
+      <br>
 
-  </form>
-</div>
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Severe Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
+
+
+      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality Rate</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{FR_ADULT_RT}}" id="FR_ADULT_RT" name="FR_ADULT_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+            <div class="col-5">
+              <input class="form-control" type="number" value="{{FR_ELDER_RT}}" id="FR_ELDER_RT" name="FR_ELDER_RT">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+      <br>
+  <!--
+      <input type="submit" id="parameters_submit_btn" name="parameters_submit_btn" class="btn btn-success btn-lg btn-block" value="Set Parameters" style="margin-bottom: 50px"> -->
+
+    </form>
+  </div>
+
+  <div id="simulation_model_result">
+  </div>
 </div>
 
 

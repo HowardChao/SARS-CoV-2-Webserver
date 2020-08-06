@@ -7,7 +7,7 @@ from .model import model
 
 logger = logging.getLogger(__name__)
 
-def start_analysis(datadir):
+def start_analysis(datadir, cycle_days):
     # print("Inside start_analysis: ", start_analysis)
     # totalInfected_sz_file = os.path.join(datadir, "totalInfected_sz.json")
     # currentInfected_sz_file = os.path.join(datadir, "currentInfected_sz.json")
@@ -49,7 +49,7 @@ def start_analysis(datadir):
         'newReachDay_sz': newReachDay_sz,
     }
 
-    for i in range(5):
+    for i in range(cycle_days):
         md.one_day_passed()
         totalInfected_sz = md.totalInfected
         currentInfected_sz = md.currentInfected

@@ -183,7 +183,7 @@ def home(request):
                         "FR_ADULT_RT": FR_ADULT_RT,
                         "FR_ELDER_RT": FR_ELDER_RT,
                     }, f)
-                a = async_task(tasks.start_analysis, datadir, task_name="id_"+analysis_code)
+                a = async_task(tasks.start_analysis, datadir, BMP_SIMULATION_DAY, task_name="id_"+analysis_code)
                 print("!!!! A: ", a)
     return render(request, template, content)
 
