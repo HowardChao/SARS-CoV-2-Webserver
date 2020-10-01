@@ -35,7 +35,7 @@
 
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
-<script>
+<!-- <script>
 
 
   var bodySelection = d3.select("body");
@@ -273,7 +273,7 @@
   //
   //   return svg.node();
   // }
-</script>
+</script> -->
 
 
 <div style="margin: 40px">
@@ -1124,7 +1124,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.1" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
+              <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.01" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
             </div>
           </div>
         </div>
@@ -1132,7 +1132,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
+              <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" step="0.01" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
             </div>
           </div>
         </div>
@@ -1140,7 +1140,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
+              <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" step="0.01" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
             </div>
           </div>
         </div>
@@ -1156,7 +1156,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{CR_SAME_GRP}}" id="CR_SAME_GRP" name="CR_SAME_GRP">
+              <input class="form-control" type="number" value="{{CR_SAME_GRP}}" step="0.01" id="CR_SAME_GRP" name="CR_SAME_GRP">
             </div>
           </div>
         </div>
@@ -1164,7 +1164,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
+              <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" step="0.01" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
             </div>
           </div>
         </div>
@@ -1181,7 +1181,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
+              <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" step="0.001" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
             </div>
           </div>
         </div>
@@ -1189,7 +1189,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_ADULT_RT}}" id="VR_ADULT_RT" name="VR_ADULT_RT">
+              <input class="form-control" type="number" value="{{VR_ADULT_RT}}" step="0.001" id="VR_ADULT_RT" name="VR_ADULT_RT">
             </div>
           </div>
         </div>
@@ -1197,7 +1197,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_ELDER_RT}}" id="VR_ELDER_RT" name="VR_ELDER_RT">
+              <input class="form-control" type="number" value="{{VR_ELDER_RT}}" step="0.001" id="VR_ELDER_RT" name="VR_ELDER_RT">
             </div>
           </div>
         </div>
@@ -1212,7 +1212,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
+              <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" step="0.001" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
             </div>
           </div>
         </div>
@@ -1220,7 +1220,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
+              <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" step="0.001" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
             </div>
           </div>
         </div>
@@ -1228,7 +1228,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
+              <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" step="0.001" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
             </div>
           </div>
         </div>
@@ -1240,7 +1240,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
+              <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" step="0.001" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
             </div>
           </div>
         </div>
@@ -1248,7 +1248,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
+              <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" step="0.001" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
             </div>
           </div>
         </div>
@@ -1256,7 +1256,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
+              <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" step="0.001" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
             </div>
           </div>
         </div>
@@ -1271,7 +1271,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
+              <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" step="0.01" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
             </div>
           </div>
         </div>
@@ -1279,7 +1279,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_ADULT_RT}}" id="STR_ADULT_RT" name="STR_ADULT_RT">
+              <input class="form-control" type="number" value="{{STR_ADULT_RT}}" step="0.01" id="STR_ADULT_RT" name="STR_ADULT_RT">
             </div>
           </div>
         </div>
@@ -1287,7 +1287,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_ELDER_RT}}" id="STR_ELDER_RT" name="STR_ELDER_RT">
+              <input class="form-control" type="number" value="{{STR_ELDER_RT}}" step="0.01" id="STR_ELDER_RT" name="STR_ELDER_RT">
             </div>
           </div>
         </div>
@@ -1306,7 +1306,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
+              <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" step="0.01" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
             </div>
           </div>
         </div>
@@ -1314,7 +1314,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
+              <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" step="0.01" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
             </div>
           </div>
         </div>
@@ -1322,7 +1322,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
+              <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" step="0.01" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
             </div>
           </div>
         </div>
@@ -1337,7 +1337,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
+              <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" step="0.000001" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
             </div>
           </div>
         </div>
@@ -1345,7 +1345,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
+              <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" step="0.000001" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
             </div>
           </div>
         </div>
@@ -1353,7 +1353,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
+              <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" step="0.000001" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
             </div>
           </div>
         </div>
@@ -1365,7 +1365,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
+              <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" step="0.000001" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
             </div>
           </div>
         </div>
@@ -1373,7 +1373,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
+              <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" step="0.000001" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
             </div>
           </div>
         </div>
@@ -1381,7 +1381,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
+              <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" step="0.000001" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
             </div>
           </div>
         </div>
@@ -1397,7 +1397,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
+              <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" step="0.01" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
             </div>
           </div>
         </div>
@@ -1405,7 +1405,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_ADULT_RT}}" id="FR_ADULT_RT" name="FR_ADULT_RT">
+              <input class="form-control" type="number" value="{{FR_ADULT_RT}}" step="0.01" id="FR_ADULT_RT" name="FR_ADULT_RT">
             </div>
           </div>
         </div>
@@ -1413,7 +1413,7 @@
           <div class="form-group row">
             <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
             <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_ELDER_RT}}" id="FR_ELDER_RT" name="FR_ELDER_RT">
+              <input class="form-control" type="number" value="{{FR_ELDER_RT}}" step="0.01" id="FR_ELDER_RT" name="FR_ELDER_RT">
             </div>
           </div>
         </div>
