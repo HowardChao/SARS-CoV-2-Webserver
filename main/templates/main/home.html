@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
 
-
 <div class="wrap" id="loading_message">
 </div>
 
@@ -29,11 +28,252 @@
   </div>
 </div>
 
+
+
 <div id="alert-holding-div">
 </div>
 
 <!-- <img src="{% static "images/pathogen_workflow.png" %}" alt="My image" style="width:100%"> -->
 
+<script>
+
+
+  var bodySelection = d3.select("body");
+  var svgSelection = bodySelection.append("svg").attr("width", 50).attr("height", 50);
+  var circleSelection = svgSelection.append("circle").attr("cx", 25).attr("cy", 25).attr("r", 25).style("fill", "purple");
+
+  var theData = [ 1, 2, 3 ]
+  var p = d3.select("body").selectAll("p").data(theData).enter().append("p").text("hello ");
+  console.log("p:: ", p);
+
+
+  var treeData = {
+      name: '/',
+      contents: [
+          {
+              name: 'Applications',
+              contents: [
+                  { name: 'Mail.app' },
+                  { name: 'iPhoto.app' },
+                  { name: 'Keynote.app' },
+                  { name: 'iTunes.app' },
+                  { name: 'XCode.app' },
+                  { name: 'Numbers.app' },
+                  { name: 'Pages.app' },
+              ],
+          },
+          {
+              name: 'System',
+              contents: [],
+          },
+          {
+              name: 'Library',
+              contents: [
+                  {
+                      name: 'Application Support',
+                      contents: [{ name: 'Adobe' }, { name: 'Apple' }, { name: 'Google' }, { name: 'Microsoft' }],
+                  },
+                  {
+                      name: 'Languages',
+                      contents: [{ name: 'Ruby' }, { name: 'Python' }, { name: 'Javascript' }, { name: 'C#' }],
+                  },
+                  {
+                      name: 'Developer',
+                      contents: [{ name: '4.2' }, { name: '4.3' }, { name: '5.0' }, { name: 'Documentation' }],
+                  },
+              ],
+          },
+          {
+              name: 'opt',
+              contents: [],
+          },
+          {
+              name: 'Users',
+              contents: [{ name: 'pavanpodila' }, { name: 'admin' }, { name: 'test-user' }],
+          },
+      ],
+  };
+
+  // var tree = d3.layout.tree().sort(null).size([size.height, size.width - maxLabelLength * options.fontSize]).children(function(d) {
+  //       return !d.contents || d.contents.length === 0 ? null : d.contents;
+  //   });
+
+  var nodes = tree.nodes(treeData);
+  var links = tree.links(nodes);
+
+  var width = 960,
+      height = 500;
+
+  var color = d3.scale.category20();
+
+  var force = d3.layout.force()
+      .charge(-120)
+      .linkDistance(30)
+      .size([width, height]);
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+  d3.json("https://gist.githubusercontent.com/mbostock/4062045/raw/4176c7d0c0c5ce15630d16072da0af67bb50eb6a/miserables.json", function(error, graph) {
+    if (error) throw error;
+
+    force
+        .nodes(graph.nodes)
+        .links(graph.links)
+        .start();
+
+    var link = svg.selectAll(".link")
+        .data(graph.links)
+      .enter().append("line")
+        .attr("class", "link")
+        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+    var node = svg.selectAll(".node")
+        .data(graph.nodes)
+      .enter().append("circle")
+        .attr("class", "node")
+        .attr("r", 5)
+        .style("fill", function(d) { return color(d.group); })
+        .call(force.drag);
+
+    node.append("title")
+        .text(function(d) { return d.name; });
+
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+    });
+  });
+  // chart = {
+  //
+  //   const root = d3.hierarchy(data);
+  //
+  //   root.x0 = dy / 2;
+  //   root.y0 = 0;
+  //   root.descendants().forEach((d, i) => {
+  //     d.id = i;
+  //     d._children = d.children;
+  //     if (d.depth && d.data.name.length !== 7) d.children = null;
+  //   });
+  //
+  //   const svg = d3.create("svg")
+  //       .attr("viewBox", [-margin.left, -margin.top, width, dx])
+  //       .style("font", "10px sans-serif")
+  //       .style("user-select", "none");
+  //
+  //   const gLink = svg.append("g")
+  //       .attr("fill", "none")
+  //       .attr("stroke", "#555")
+  //       .attr("stroke-opacity", 0.4)
+  //       .attr("stroke-width", 1.5);
+  //
+  //   const gNode = svg.append("g")
+  //       .attr("cursor", "pointer")
+  //       .attr("pointer-events", "all");
+  //
+  //   function update(source) {
+  //     const duration = d3.event && d3.event.altKey ? 2500 : 250;
+  //     const nodes = root.descendants().reverse();
+  //     const links = root.links();
+  //
+  //     // Compute the new tree layout.
+  //     tree(root);
+  //
+  //     let left = root;
+  //     let right = root;
+  //     root.eachBefore(node => {
+  //       if (node.x < left.x) left = node;
+  //       if (node.x > right.x) right = node;
+  //     });
+  //
+  //     const height = right.x - left.x + margin.top + margin.bottom;
+  //
+  //     const transition = svg.transition()
+  //         .duration(duration)
+  //         .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+  //         .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
+  //
+  //     // Update the nodes…
+  //     const node = gNode.selectAll("g")
+  //       .data(nodes, d => d.id);
+  //
+  //     // Enter any new nodes at the parent's previous position.
+  //     const nodeEnter = node.enter().append("g")
+  //         .attr("transform", d => `translate(${source.y0},${source.x0})`)
+  //         .attr("fill-opacity", 0)
+  //         .attr("stroke-opacity", 0)
+  //         .on("click", d => {
+  //           d.children = d.children ? null : d._children;
+  //           update(d);
+  //         });
+  //
+  //     nodeEnter.append("circle")
+  //         .attr("r", 2.5)
+  //         .attr("fill", d => d._children ? "#555" : "#999")
+  //         .attr("stroke-width", 10);
+  //
+  //     nodeEnter.append("text")
+  //         .attr("dy", "0.31em")
+  //         .attr("x", d => d._children ? -6 : 6)
+  //         .attr("text-anchor", d => d._children ? "end" : "start")
+  //         .text(d => d.data.name)
+  //       .clone(true).lower()
+  //         .attr("stroke-linejoin", "round")
+  //         .attr("stroke-width", 3)
+  //         .attr("stroke", "white");
+  //
+  //     // Transition nodes to their new position.
+  //     const nodeUpdate = node.merge(nodeEnter).transition(transition)
+  //         .attr("transform", d => `translate(${d.y},${d.x})`)
+  //         .attr("fill-opacity", 1)
+  //         .attr("stroke-opacity", 1);
+  //
+  //     // Transition exiting nodes to the parent's new position.
+  //     const nodeExit = node.exit().transition(transition).remove()
+  //         .attr("transform", d => `translate(${source.y},${source.x})`)
+  //         .attr("fill-opacity", 0)
+  //         .attr("stroke-opacity", 0);
+  //
+  //     // Update the links…
+  //     const link = gLink.selectAll("path")
+  //       .data(links, d => d.target.id);
+  //
+  //     // Enter any new links at the parent's previous position.
+  //     const linkEnter = link.enter().append("path")
+  //         .attr("d", d => {
+  //           const o = {x: source.x0, y: source.y0};
+  //           return diagonal({source: o, target: o});
+  //         });
+  //
+  //     // Transition links to their new position.
+  //     link.merge(linkEnter).transition(transition)
+  //         .attr("d", diagonal);
+  //
+  //     // Transition exiting nodes to the parent's new position.
+  //     link.exit().transition(transition).remove()
+  //         .attr("d", d => {
+  //           const o = {x: source.x, y: source.y};
+  //           return diagonal({source: o, target: o});
+  //         });
+  //
+  //     // Stash the old positions for transition.
+  //     root.eachBefore(d => {
+  //       d.x0 = d.x;
+  //       d.y0 = d.y;
+  //     });
+  //   }
+  //
+  //   update(root);
+  //
+  //   return svg.node();
+  // }
+</script>
 
 
 <div style="margin: 40px">
