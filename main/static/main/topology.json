@@ -2,24 +2,28 @@
   "parent":"null",
   "name":"Index Case",
   "edge_name":"Index Case",
+  "pb":"0.5",
   "color":"gray",
   "children":[
     {
       "parent":"Index Case",
       "name":"Contact another person",
       "edge_name":"Contact another person",
+      "pb":"0.5",
       "color":"gray",
       "children":[
         {
           "parent":"Contact another person",
           "name":"Vaccinated",
           "edge_name":"Vaccinated",
+          "pb":"0.5",
           "color":"gray",
           "children":[
             {
               "parent":"Vaccinated",
               "name":"Infected",
               "edge_name":"Infected",
+              "pb":"0.5",
               "color":"#fc7303",
               "children":[
               ]
@@ -28,6 +32,7 @@
               "parent":"Vaccinated",
               "name":"Not infected",
               "edge_name":"Not infected",
+              "pb":"0.5",
               "color":"#44ab00",
               "children":[
               ]
@@ -38,12 +43,14 @@
           "parent":"Contact another person",
           "name":"Not vaccinated",
           "edge_name":"Not vaccinated",
+          "pb":"0.5",
           "color":"gray",
           "children":[
             {
               "parent":"Not vaccinated",
               "name":"Infected",
               "edge_name":"Infected",
+              "pb":"0.5",
               "color":"#fc7303",
               "children":[
               ]
@@ -52,6 +59,7 @@
               "parent":"Not vaccinated",
               "name":"Not infected",
               "edge_name":"Not infected",
+              "pb":"0.5",
               "color":"#44ab00",
               "children":[
               ]
@@ -64,24 +72,28 @@
       "parent":"null",
       "name":"Seek medical treatment",
       "edge_name":"Seek medical treatment",
+      "pb":"0.5",
       "color":"gray",
       "children":[
         {
           "parent":"Seek medical treatment",
           "name":"Taken Antiviral",
           "edge_name":"Taken Antiviral",
+          "pb":"0.5",
           "color":"gray",
           "children":[
             {
               "parent":"Taken Antiviral",
               "name":"Hospitalization",
               "edge_name":"Hospitalization",
+              "pb":"0.5",
               "color":"gray",
               "children":[
                 {
                   "parent":"Hospitalization",
                   "name":"Death",
                   "edge_name":"Death",
+                  "pb":"0.5",
                   "color":"red",
                   "children":[
                   ]
@@ -90,6 +102,7 @@
                   "parent":"Hospitalization",
                   "name":"Recovery",
                   "edge_name":"Recovery",
+                  "pb":"0.5",
                   "color":"green",
                   "children":[
                   ]
@@ -100,6 +113,7 @@
               "parent":"Taken Antiviral",
               "name":"Recovery",
               "edge_name":"Recovery",
+              "pb":"0.5",
               "color":"green",
               "children":[
               ]
@@ -110,18 +124,21 @@
           "parent":"Seek medical treatment",
           "name":"Not taken Antiviral",
           "edge_name":"Not taken Antiviral",
+          "pb":"0.5",
           "color":"gray",
           "children":[
             {
               "parent":"Not taken Antiviral",
               "name":"Hospitalization",
               "edge_name":"Hospitalization",
+              "pb":"0.5",
               "color":"gray",
               "children":[
                 {
                   "parent":"Hospitalization",
                   "name":"Death",
                   "edge_name":"Death",
+                  "pb":"0.5",
                   "color":"red",
                   "children":[
                   ]
@@ -130,6 +147,7 @@
                   "parent":"Hospitalization",
                   "name":"Recovery",
                   "edge_name":"Recovery",
+                  "pb":"0.5",
                   "color":"green",
                   "children":[
                   ]
@@ -140,6 +158,7 @@
               "parent":"Not taken Antiviral",
               "name":"Recovery",
               "edge_name":"Recovery",
+              "pb":"0.5",
               "color":"green",
               "children":[
               ]
