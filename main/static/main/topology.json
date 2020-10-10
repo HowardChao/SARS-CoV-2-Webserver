@@ -1,38 +1,38 @@
 {
   "parent":"null",
   "name":"Index Case",
-  "edge_name":"Index Case",
-  "pb":"0.5",
+  "id":"Index Case",
+  "pb":"[0.5]",
   "color":"gray",
   "children":[
     {
       "parent":"Index Case",
       "name":"Contact another person",
-      "edge_name":"Contact another person",
-      "pb":"0.5",
+      "id":"Contact another person",
+      "pb":"[Contact Rate]",
       "color":"gray",
       "children":[
         {
           "parent":"Contact another person",
           "name":"Vaccinated",
-          "edge_name":"Vaccinated",
-          "pb":"0.5",
+          "id":"Vaccinated",
+          "pb":"[Vaccine Rate]",
           "color":"gray",
           "children":[
             {
               "parent":"Vaccinated",
-              "name":"Infected",
-              "edge_name":"Infected",
-              "pb":"0.5",
+              "name":"Infected (vaccinated)",
+              "id":"Infected (vaccinated)",
+              "pb":"[Infected Rate]",
               "color":"#fc7303",
               "children":[
               ]
             },
             {
               "parent":"Vaccinated",
-              "name":"Not infected",
-              "edge_name":"Not infected",
-              "pb":"0.5",
+              "name":"Not infected (vaccinated)",
+              "id":"Not infected (vaccinated)",
+              "pb":"[1 - Infected Rate]",
               "color":"#44ab00",
               "children":[
               ]
@@ -42,24 +42,24 @@
         {
           "parent":"Contact another person",
           "name":"Not vaccinated",
-          "edge_name":"Not vaccinated",
-          "pb":"0.5",
+          "id":"Not vaccinated",
+          "pb":"[1 - Vaccine Rate]",
           "color":"gray",
           "children":[
             {
               "parent":"Not vaccinated",
-              "name":"Infected",
-              "edge_name":"Infected",
-              "pb":"0.5",
+              "name":"Infected (not vaccinated)",
+              "id":"Infected (not vaccinated)",
+              "pb":"[Infected Rate]",
               "color":"#fc7303",
               "children":[
               ]
             },
             {
               "parent":"Not vaccinated",
-              "name":"Not infected",
-              "edge_name":"Not infected",
-              "pb":"0.5",
+              "name":"Not infected (not vaccinated)",
+              "id":"Not infected (not vaccinated)",
+              "pb":"[1 - Infected Rate]",
               "color":"#44ab00",
               "children":[
               ]
@@ -71,38 +71,38 @@
     {
       "parent":"null",
       "name":"Seek medical treatment",
-      "edge_name":"Seek medical treatment",
-      "pb":"0.5",
+      "id":"Seek medical treatment",
+      "pb":"[1 - Contact Rate]",
       "color":"gray",
       "children":[
         {
           "parent":"Seek medical treatment",
           "name":"Taken Antiviral",
-          "edge_name":"Taken Antiviral",
-          "pb":"0.5",
+          "id":"Taken Antiviral",
+          "pb":"[Seek Treatment Rate]",
           "color":"gray",
           "children":[
             {
               "parent":"Taken Antiviral",
               "name":"Hospitalization",
-              "edge_name":"Hospitalization",
-              "pb":"0.5",
+              "id":"Hospitalization (antiviral)",
+              "pb":"[Severe Rate Rate]",
               "color":"gray",
               "children":[
                 {
                   "parent":"Hospitalization",
-                  "name":"Death",
-                  "edge_name":"Death",
-                  "pb":"0.5",
+                  "name":"Death (antiviral, hospitalized)",
+                  "id":"Death (antiviral, hospitalized)",
+                  "pb":"[Death Rate]",
                   "color":"red",
                   "children":[
                   ]
                 },
                 {
                   "parent":"Hospitalization",
-                  "name":"Recovery",
-                  "edge_name":"Recovery",
-                  "pb":"0.5",
+                  "name":"Recovery (antiviral, hospitalized)",
+                  "id":"Recovery (antiviral, hospitalized)",
+                  "pb":"[1 - Death Rate]",
                   "color":"green",
                   "children":[
                   ]
@@ -111,9 +111,9 @@
             },
             {
               "parent":"Taken Antiviral",
-              "name":"Recovery",
-              "edge_name":"Recovery",
-              "pb":"0.5",
+              "name":"Recovery (antiviral, not hospitalized)",
+              "id":"Recovery (antiviral, not hospitalized)",
+              "pb":"[1 - Severe Rate Rate]",
               "color":"green",
               "children":[
               ]
@@ -123,31 +123,31 @@
         {
           "parent":"Seek medical treatment",
           "name":"Not taken Antiviral",
-          "edge_name":"Not taken Antiviral",
-          "pb":"0.5",
+          "id":"Not taken Antiviral",
+          "pb":"[1 - Seek Treatment Rate]",
           "color":"gray",
           "children":[
             {
               "parent":"Not taken Antiviral",
               "name":"Hospitalization",
-              "edge_name":"Hospitalization",
-              "pb":"0.5",
+              "id":"Hospitalization (no antiviral)",
+              "pb":"[Severe Rate Rate]",
               "color":"gray",
               "children":[
                 {
                   "parent":"Hospitalization",
-                  "name":"Death",
-                  "edge_name":"Death",
-                  "pb":"0.5",
+                  "name":"Death (no antiviral, hospitalized)",
+                  "id":"Death (no antiviral, hospitalized)",
+                  "pb":"[Death Rate]",
                   "color":"red",
                   "children":[
                   ]
                 },
                 {
                   "parent":"Hospitalization",
-                  "name":"Recovery",
-                  "edge_name":"Recovery",
-                  "pb":"0.5",
+                  "name":"Recovery (no antiviral, hospitalized)",
+                  "id":"Recovery (no antiviral, hospitalized)",
+                  "pb":"[1 - Death Rate]",
                   "color":"green",
                   "children":[
                   ]
@@ -156,9 +156,9 @@
             },
             {
               "parent":"Not taken Antiviral",
-              "name":"Recovery",
-              "edge_name":"Recovery",
-              "pb":"0.5",
+              "name":"Recovery (no antiviral, not hospitalized)",
+              "id":"Recovery (no antiviral, not hospitalized)",
+              "pb":"[1 - Severe Rate Rate]",
               "color":"green",
               "children":[
               ]

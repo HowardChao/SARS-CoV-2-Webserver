@@ -19,10 +19,101 @@ from django_q.tasks import async_task, result, fetch, AsyncTask, result_group
 import django_q
 
 import inspect
+import copy
 # global data
 # global labels
 # data = []
 # labels = []
+
+def iterate(group, input_json, data):
+    in_nput_json = copy.deepcopy(input_json)
+
+# STR_YOUTH_RT = form.cleaned_data["STR_YOUTH_RT"]
+# STR_ADULT_RT = form.cleaned_data["STR_ADULT_RT"]
+# STR_ELDER_RT = form.cleaned_data["STR_ELDER_RT"]
+#
+# MIR_YOUTH_RT = form.cleaned_data["MIR_YOUTH_RT"]
+# MIR_ADULT_RT = form.cleaned_data["MIR_ADULT_RT"]
+# MIR_ELDER_RT = form.cleaned_data["MIR_ELDER_RT"]
+#
+# SR_YOUTH_48_RT = form.cleaned_data["SR_YOUTH_48_RT"]
+# SR_ADULT_48_RT = form.cleaned_data["SR_ADULT_48_RT"]
+# SR_ELDER_48_RT = form.cleaned_data["SR_ELDER_48_RT"]
+# SR_YOUTH_N48_RT = form.cleaned_data["SR_YOUTH_N48_RT"]
+# SR_ADULT_N48_RT = form.cleaned_data["SR_ADULT_N48_RT"]
+# SR_ELDER_N48_RT = form.cleaned_data["SR_ELDER_N48_RT"]
+#
+# FR_YOUTH_RT = form.cleaned_data["FR_YOUTH_RT"]
+# FR_ADULT_RT = form.cleaned_data["FR_ADULT_RT"]
+# FR_ELDER_RT = form.cleaned_data["FR_ELDER_RT"]
+
+    if in_nput_json['id'] == "Index Case":
+        in_nput_json['pb'] = "1"
+    elif in_nput_json['id'] == "Contact another person":
+        in_nput_json['pb'] = "(" + str(data["CR_SAME_GRP"]) + ", " + str(data["CR_DIFF_GRP"]) + ")"
+    elif in_nput_json['id'] == "Vaccinated":
+        in_nput_json['pb'] = str(data["VR_"+group+"_RT"])
+    elif in_nput_json['id'] == "Infected (vaccinated)":
+        in_nput_json['pb'] = str(data["IR_"+group+"_V_RT"])
+    elif in_nput_json['id'] == "Not infected (vaccinated)":
+        in_nput_json['pb'] = str(1 - float(data["IR_"+group+"_V_RT"]))
+    elif in_nput_json['id'] == "Not vaccinated":
+        in_nput_json['pb'] = str(1 - float(data["VR_"+group+"_RT"]))
+    elif in_nput_json['id'] == "Infected (not vaccinated)":
+        in_nput_json['pb'] = str(data["IR_"+group+"_NV_RT"])
+    elif in_nput_json['id'] == "Not infected (not vaccinated)":
+        in_nput_json['pb'] = str(1 - float(data["IR_"+group+"_NV_RT"]))
+    elif in_nput_json['id'] == "Seek medical treatment":
+        in_nput_json['pb'] = str(data["STR_"+group+"_RT"])
+    elif in_nput_json['id'] == "Taken Antiviral":
+        in_nput_json['pb'] = str(data["MIR_"+group+"_RT"])
+    elif in_nput_json['id'] == "Hospitalization (antiviral)":
+        in_nput_json['pb'] = str(data["SR_"+group+"_48_RT"])
+    elif in_nput_json['id'] == "Death (antiviral, hospitalized)":
+        in_nput_json['pb'] = str(data["FR_"+group+"_RT"])
+    elif in_nput_json['id'] == "Recovery (antiviral, hospitalized)":
+        in_nput_json['pb'] = str(1 - float(data["FR_"+group+"_RT"]))
+    elif in_nput_json['id'] == "Recovery (antiviral, not hospitalized)":
+        in_nput_json['pb'] = str(1 - float(data["SR_"+group+"_48_RT"]))
+    elif in_nput_json['id'] == "Not taken Antiviral":
+        in_nput_json['pb'] = str(1 - float(data["MIR_"+group+"_RT"]))
+    elif in_nput_json['id'] == "Hospitalization (no antiviral)":
+        in_nput_json['pb'] = str(data["SR_"+group+"_N48_RT"])
+    elif in_nput_json['id'] == "Death (no antiviral, hospitalized)":
+        in_nput_json['pb'] = str(data["FR_"+group+"_RT"])
+    elif in_nput_json['id'] == "Recovery (no antiviral, hospitalized)":
+        in_nput_json['pb'] = str(1 - float(data["FR_"+group+"_RT"]))
+    elif in_nput_json['id'] == "Recovery (no antiviral, not hospitalized)":
+        in_nput_json['pb'] = str(1 - float(data["SR_"+group+"_N48_RT"]))
+    print("in_nput_json: ", in_nput_json)
+    if len(in_nput_json['children']) != 0:
+        for idx, value in enumerate(in_nput_json['children']):
+            print("   > > > : ", idx)
+            in_nput_json['children'][idx] = iterate(group, value, data)
+    return in_nput_json
+
+    # for (k, v) in input_json.items():
+    #     print("      Key: " + k)
+    #     if k == "name":
+    #         print("      v", v)
+    #     elif k == "Vaccinated":
+    #         pass
+    #     elif k == "Vaccinated":
+    #         pass
+    #     elif k == "Contact another person":
+    #         pass
+    #     elif k == "Contact another person":
+    #         pass
+    #     elif k == "Contact another person":
+    #         pass
+    #     elif k == "Contact another person":
+    #         pass
+    #     elif k == "Contact another person":
+    #         pass
+    #     elif k == "children":
+    #         for elem in v:
+    #             iterate(elem)
+
 
 def home(request):
     template = "main/home.html"
@@ -90,6 +181,28 @@ def home(request):
             # labels_file = os.path.join(datadir, "labels.json")
             with open(json_file, 'w') as f:
                 json.dump({}, f)
+
+            # for (k, v) in YOUTH_json.items():
+            #     print("      Key: " + k)
+            #     if k == "name":
+            #         print("  v", v)
+            #     elif k == "children":
+            #         pass
+
+                #   "name":"Index Case",
+                #   "edge_name":"Index Case",
+                #   "pb":"[0.5]",
+                # # print("      Value: " + v)
+                # # print("      Value: " + str(v))
+            # with open(YOUTH_json, 'w') as f:
+            #     json.dump({}, f)
+
+            # with open(ADULT_json, 'w') as f:
+            #     json.dump({}, f)
+            #
+            # with open(ELDER_json, 'w') as f:
+            #     json.dump({}, f)
+
             # with open(transmission_gp_sz_file, 'w') as f:
             #     json.dump([], f)
             # with open(labels_file, 'w') as f:
@@ -99,10 +212,6 @@ def home(request):
             print(form)
             print(form.is_valid())
             if form.is_valid():
-                content = {
-                    'analysis_code': analysis_code,
-                    'button_clicked': "True",
-                }
                 input_params_json_file = os.path.join(datadir, "input_params.json")
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
@@ -147,8 +256,33 @@ def home(request):
                 FR_ADULT_RT = form.cleaned_data["FR_ADULT_RT"]
                 FR_ELDER_RT = form.cleaned_data["FR_ELDER_RT"]
 
+                global_json = os.path.join(settings.STATIC_MAIN_APP, 'main/topology.json')
+                with open(global_json, 'r') as f:
+                    data = json.load(f)
+                    YOUTH_json = copy.deepcopy(data)
+                    ADULT_json = copy.deepcopy(data)
+                    ELDER_json = copy.deepcopy(data)
+
+                YOUTH_json_file = os.path.join(datadir, "YOUTH.json")
+                ADULT_json_file = os.path.join(datadir, "ADULT.json")
+                ELDER_json_file = os.path.join(datadir, "ELDER.json")
+
+                YOUTH_json_new = iterate("YOUTH", YOUTH_json, form.cleaned_data)
+                ADULT_json_new = iterate("ADULT", ADULT_json, form.cleaned_data)
+                ELDER_json_new = iterate("ELDER", ELDER_json, form.cleaned_data)
+
+                with open(YOUTH_json_file, 'w') as f:
+                    json.dump(YOUTH_json_new, f)
+                with open(ADULT_json_file, 'w') as f:
+                    json.dump(ADULT_json_new, f)
+                with open(ELDER_json_file, 'w') as f:
+                    json.dump(ELDER_json_new, f)
+
                 with open(input_params_json_file, 'w') as f:
                     json.dump({
+                        "YOUTH_json_file": YOUTH_json_file,
+                        "ADULT_json_file": ADULT_json_file,
+                        "ELDER_json_file": ELDER_json_file,
                         "BMP_IDX_CASE_NUM": BMP_IDX_CASE_NUM,
                         "BMP_SIMULATION_DAY": BMP_SIMULATION_DAY,
                         "BMP_SIMULATION_TIME": BMP_SIMULATION_TIME,
@@ -183,8 +317,16 @@ def home(request):
                         "FR_ADULT_RT": FR_ADULT_RT,
                         "FR_ELDER_RT": FR_ELDER_RT,
                     }, f)
+
                 a = async_task(tasks.start_analysis, datadir, BMP_SIMULATION_DAY, task_name="id_"+analysis_code)
                 print("!!!! A: ", a)
+                content = {
+                    'analysis_code': analysis_code,
+                    'button_clicked': "True",
+                    "YOUTH_json_file": os.path.join('media', 'tmp', analysis_code, "YOUTH.json"),
+                    "ADULT_json_file": os.path.join('media', 'tmp', analysis_code, "ADULT.json"),
+                    "ELDER_json_file": os.path.join('media', 'tmp', analysis_code, "ELDER.json"),
+                }
     return render(request, template, content)
 
 # def check_task_status(analysis_code):

@@ -55,9 +55,9 @@
       stroke-width: 2.5px;
   }
   .link text {
-    font: 18px sans-serif;
+    font: 13px sans-serif;
     font-weight: bold;
-    fill: #4287f5;
+    fill: #9c9c9c;
   }
 
 </style>
@@ -138,7 +138,7 @@
 
         // Normalize for fixed-depth.
         nodes.forEach(function (d) {
-            d.y = d.depth * 400;
+            d.y = d.depth * 350;
         });
 
         // Update the nodes…
@@ -165,22 +165,29 @@
         nodeEnter.append("text")
             .attr("x", function (d) {
             return d.children || d._children ? -13 : 13;
-        })
+          })
             .attr("dy", ".35em")
             .attr("text-anchor", function (d) {
             return d.children || d._children ? "end" : "start";
-        })
+          })
+            .style("fill-opacity", 1e-6)
             .text(function (d) {
             return d.name;
-        })
-            .style("fill-opacity", 1e-6)
+          })
+            .attr("vector-effect", "non-scaling-stroke")
             .style("border", "red")
             .attr("fill", function (d) {
-            return (d.name == "Death" || d.name == "Recovery" || d.name == "Infected" || d.name == "Not infected")  ? "#00298f" : "black";
+            return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? "#4287f5" : "#00298f";
           })
             .style("font-size", function (d) {
-            return (d.name == "Death" || d.name == "Recovery" || d.name == "Infected" || d.name == "Not infected")  ? 22 : 22;
+            return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? 15 : 20;
           });
+        // nodeEnter.append("text")
+        //   .attr("x", function (d) {
+        //     return d.children || d._children ? -13 : 13;
+        //   })
+        //   .attr("dy", "1.35em")
+        //   .text("line 2")
           //   .style("font-weight", function (d) {
           //   return (d.name == "Death" || d.name == "Recovery" || d.name == "Infected" || d.name == "Not infected")  ? "light" : "light";
           // });
@@ -270,13 +277,34 @@
             .insert("g")
             .attr("class", "link")
             .append("text")
-            .attr("x", "-45px")
+            .attr("x", "-65px")
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
+            // .attr("transform", function (d,i)
+            //    {return "skewX(" + -25 + ")"; })
             .text(function (d) {
-            //console.log(d.target.name);
-            return d.target.pb;
-        });
+              return d.target.pb;
+            })
+        // linktext.append("text")
+        //     .attr("x", "-45px")
+        //     .attr("dy", "1.35em")
+        //     .attr("text-anchor", "middle")
+        //     .text(function (d) {
+        //     //console.log(d.target.name);
+        //       return "t2";
+        //     });
+
+        // linktext.enter()
+        //     .insert("g")
+        //     .attr("class", "link")
+        //     .append("text")
+        //     .attr("x", "-45px")
+        //     .attr("dy", "1.35em")
+        //     .attr("text-anchor", "middle")
+        //     .text(function (d) {
+        //     //console.log(d.target.name);
+        //     return "t2";
+        // });
 
         linktext.transition()
             .duration(duration)
@@ -315,7 +343,15 @@
   </div>
   <div id="chart_title_show" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
   </div>
-  <div id="chart_pannel_container">
+  <div id="chart_pannel_container" style="margin-bottom: 30px;">
+  </div>
+  <div id="groups_model_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+  </div>
+  <div id="model_pannel_container" style="margin-bottom: 30px;">
+  </div>
+  <div id="model_params_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+  </div>
+  <div id="model_params_result">
   </div>
 
 
@@ -390,7 +426,6 @@
           }
       });
     }
-
     var current_data = {}
     var update_data = {}
     console.log("current_data.data: ", current_data.data)
@@ -442,6 +477,65 @@
                 if ("{{button_clicked}}" == "True") {
                   var form_wrapper = document.getElementById('form_wrapper');
                   if (form_wrapper != null) {
+                    form_wrapper.remove();
+
+
+
+
+
+                    var model_pannel_content = `
+                    <div id="model_pannel" style="border: 3px solid #a8a8a8;">
+                      <div class="card" >
+                        <div class="card-header" id="youth_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#youth_card_collapse" aria-expanded="true" aria-controls="youth_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; ≤ 18 Age Group Model
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="youth_card_collapse" class="collapse" aria-labelledby="youth_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div id="youth_model">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card" >
+                        <div class="card-header" id="adult_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#adult_card_collapse" aria-expanded="true" aria-controls="adult_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; 19 - 64 Age Group Model
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="adult_card_collapse" class="collapse" aria-labelledby="adult_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div id="adult_model">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card" >
+                        <div class="card-header" id="edler_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#elder_card_collapse" aria-expanded="true" aria-controls="elder_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; ≥ 65 Age Group Model
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="elder_card_collapse" class="collapse" aria-labelledby="elder_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div id="elder_model">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      `
+                      console.log("8. model_pannel_content !!!: ", model_pannel_content)
+                    document.getElementById("model_pannel_container").insertAdjacentHTML('afterbegin', model_pannel_content)
+
                     var pannel_content = `
                     <div id="chart_pannel" style="border: 3px solid #a8a8a8;">
                       <div class="card" >
@@ -558,8 +652,6 @@
                     </div>`
                       console.log("8. pannel_content !!!: ", pannel_content)
                     document.getElementById("chart_pannel_container").insertAdjacentHTML('afterbegin', pannel_content)
-
-                    form_wrapper.remove();
                   }
 
                   if ($('#loading_message').children().length == 0) {
@@ -583,18 +675,37 @@
                   if ($('#chart_title_show').children().length == 0) {
                     document.getElementById("chart_title_show").innerHTML = '<i class="fas fa-pen" style="margin-left: 10px"></i> &nbsp; Simulation Charts';
                   }
-// <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label"></label>
-                  if ($('#simulation_model_result').children().length == 0) {
+                  if ($('#groups_model_title').children().length == 0) {
+                    document.getElementById("groups_model_title").innerHTML = '<i class="fas fa-network-wired" style="margin-left: 10px"></i> &nbsp; Age Groups Models';
+                  }
+                  console.log("$('#youth_model').children().length == 0", $('#youth_model').children().length == 0)
+                  console.log("$('#adult_model').children().length == 0", $('#adult_model').children().length == 0)
+                  console.log("$('#elder_model').children().length == 0", $('#elder_model').children().length == 0)
+                  // console.log("YOUTH_json_file: {{YOUTH_json_file}}",)
+                  if ($('#youth_model').children().length == 0) {
+                    tree("#youth_model", "{{YOUTH_json_file}}")
+                  }
+                  // console.log("ADULT_json_file: {{ADULT_json_file}}",)
+                  if ($('#adult_model').children().length == 0) {
+                    tree("#adult_model", "{{ADULT_json_file}}")
+                  }
+                  // console.log("ELDER_json_file: {{ELDER_json_file}}",)
+                  if ($('#elder_model').children().length == 0) {
+                    tree("#elder_model", "{{ELDER_json_file}}")
+                  }
+                  // tree("#adult_model", "{{ADULT_json_file}}")
+                  // tree("#elder_model", "{{ELDER_json_file}}")
+                  if ($('#model_params_title').children().length == 0) {
+                    document.getElementById("model_params_title").innerHTML = '<i class="fa fa-keyboard" style="margin-left: 10px"></i> &nbsp; Input Parameters';
+                  }
+
+                  if ($('#model_params_result').children().length == 0) {
                     $.ajax({
                         method: 'GET',
                         url: 'api-params-data/{{analysis_code}}',
                         success: function(params_data){
                             // current_data = Object.assign({}, data);
-                            var load_simulation_model_result = `
-                              <div style="font-size: 28px; margin-top: 30px; margin-bottom: 10px; font-weight: 700">
-                                <i class="fa fa-keyboard"></i> &nbsp; Input Parameters
-                              </div>
-
+                            var load_model_params_result = `
                               <div style="border: 3px solid #a8a8a8;">
                                 <div class="card">
                                   <div class="card-header" id="basic_model_parameters_header">
@@ -604,13 +715,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="basic_model_parameters_card_collapse" class="collapse show" aria-labelledby="basic_model_parameters_header" data-parent="#accordion">
+                                  <div id="basic_model_parameters_card_collapse" class="collapse" aria-labelledby="basic_model_parameters_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              Index case number::
                                             </div>
                                             <div class="col-4">`+
                                               params_data.BMP_IDX_CASE_NUM +
@@ -620,7 +731,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              Simulation day::
                                             </div>
                                             <div class="col-4">`+
                                               params_data.BMP_SIMULATION_DAY +
@@ -630,7 +741,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              Simulation times::
                                             </div>
                                             <div class="col-4">`+
                                               params_data.BMP_SIMULATION_TIME +
@@ -660,13 +771,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="age_group_percentage_card_collapse" class="collapse show" aria-labelledby="age_group_percentage_header" data-parent="#accordion">
+                                  <div id="age_group_percentage_card_collapse" class="collapse" aria-labelledby="age_group_percentage_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.AGP_YOUTH_GRP +
@@ -676,7 +787,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.AGP_ADULT_GRP +
@@ -686,7 +797,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.AGP_ELDER_GRP +
@@ -708,13 +819,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="contact_rate_card_collapse" class="collapse show" aria-labelledby="contact_rate_header" data-parent="#accordion">
+                                  <div id="contact_rate_card_collapse" class="collapse" aria-labelledby="contact_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              Same age group:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.CR_SAME_GRP +
@@ -724,7 +835,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              Different age group:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.CR_DIFF_GRP +
@@ -748,13 +859,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="vaccine_rate_card_collapse" class="collapse show" aria-labelledby="vaccine_rate_header" data-parent="#accordion">
+                                  <div id="vaccine_rate_card_collapse" class="collapse" aria-labelledby="vaccine_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.VR_YOUTH_RT +
@@ -764,7 +875,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.VR_ADULT_RT +
@@ -774,7 +885,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.VR_ELDER_RT +
@@ -796,13 +907,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="infection_rate_card_collapse" class="collapse show" aria-labelledby="infection_rate_header" data-parent="#accordion">
+                                  <div id="infection_rate_card_collapse" class="collapse" aria-labelledby="infection_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18 with vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_YOUTH_V_RT +
@@ -812,7 +923,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64 with vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_ADULT_V_RT +
@@ -822,7 +933,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65 with vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_ELDER_V_RT +
@@ -836,7 +947,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18 no vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_YOUTH_NV_RT +
@@ -846,7 +957,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64 no vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_ADULT_NV_RT +
@@ -856,7 +967,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65 no vaccine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.IR_ELDER_NV_RT +
@@ -878,13 +989,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="seek_treatment_rate_card_collapse" class="collapse show" aria-labelledby="seek_treatment_rate_header" data-parent="#accordion">
+                                  <div id="seek_treatment_rate_card_collapse" class="collapse" aria-labelledby="seek_treatment_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.STR_YOUTH_RT +
@@ -894,7 +1005,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.STR_ADULT_RT +
@@ -904,7 +1015,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.STR_ELDER_RT +
@@ -926,13 +1037,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="medicine_intake_rate_card_collapse" class="collapse show" aria-labelledby="medicine_intake_rate_header" data-parent="#accordion">
+                                  <div id="medicine_intake_rate_card_collapse" class="collapse" aria-labelledby="medicine_intake_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.MIR_YOUTH_RT +
@@ -942,7 +1053,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.MIR_ADULT_RT +
@@ -952,7 +1063,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.MIR_ELDER_RT +
@@ -974,13 +1085,13 @@
                                       </button>
                                     </h5>
                                   </div>
-                                  <div id="severe_rate_card_collapse" class="collapse show" aria-labelledby="severe_rate_header" data-parent="#accordion">
+                                  <div id="severe_rate_card_collapse" class="collapse" aria-labelledby="severe_rate_header" data-parent="#accordion">
                                     <div class="card-body">
                                       <div class="row">
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18 with medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_YOUTH_48_RT +
@@ -990,7 +1101,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64 with medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_ADULT_48_RT +
@@ -1000,7 +1111,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65 with medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_ELDER_48_RT +
@@ -1014,7 +1125,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Idex case number:
+                                              ≤ 18 no medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_YOUTH_N48_RT +
@@ -1024,7 +1135,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation day:
+                                              19 - 64 no medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_ADULT_N48_RT +
@@ -1034,7 +1145,7 @@
                                         <div class="col">
                                           <div class="form-group row">
                                             <div class="col-8" style="text-align: right">
-                                              Simulation times:
+                                              ≥ 65 no medicine:
                                             </div>
                                             <div class="col-4">`+
                                               params_data.SR_ELDER_N48_RT +
@@ -1049,7 +1160,7 @@
                                 </div>
                               </div>
                             `
-                            document.getElementById("simulation_model_result").insertAdjacentHTML('beforeend', load_simulation_model_result)
+                            document.getElementById("model_params_result").insertAdjacentHTML('beforeend', load_model_params_result)
                         },
                         error: function(error_data){
                           console.log('error');
@@ -1089,7 +1200,6 @@
         })
       }
     }
-
   </script>
 
 
@@ -1476,9 +1586,6 @@
       <input type="submit" id="parameters_submit_btn" name="parameters_submit_btn" class="btn btn-success btn-lg btn-block" value="Set Parameters" style="margin-bottom: 50px"> -->
 
     </form>
-  </div>
-
-  <div id="simulation_model_result">
   </div>
 </div>
 
