@@ -681,15 +681,15 @@
                   console.log("$('#youth_model').children().length == 0", $('#youth_model').children().length == 0)
                   console.log("$('#adult_model').children().length == 0", $('#adult_model').children().length == 0)
                   console.log("$('#elder_model').children().length == 0", $('#elder_model').children().length == 0)
-                  // console.log("YOUTH_json_file: {{YOUTH_json_file}}",)
+                  console.log("YOUTH_json_file: {{YOUTH_json_file}}",)
                   if ($('#youth_model').children().length == 0) {
                     tree("#youth_model", "{{YOUTH_json_file}}")
                   }
-                  // console.log("ADULT_json_file: {{ADULT_json_file}}",)
+                  console.log("ADULT_json_file: {{ADULT_json_file}}",)
                   if ($('#adult_model').children().length == 0) {
                     tree("#adult_model", "{{ADULT_json_file}}")
                   }
-                  // console.log("ELDER_json_file: {{ELDER_json_file}}",)
+                  console.log("ELDER_json_file: {{ELDER_json_file}}",)
                   if ($('#elder_model').children().length == 0) {
                     tree("#elder_model", "{{ELDER_json_file}}")
                   }
@@ -815,7 +815,7 @@
                                   <div class="card-header" id="contact_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#contact_rate_card_collapse" aria-expanded="true" aria-controls="contact_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Contact Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Contact rate
                                       </button>
                                     </h5>
                                   </div>
@@ -855,7 +855,7 @@
                                   <div class="card-header" id="vaccine_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#vaccine_rate_card_collapse" aria-expanded="true" aria-controls="vaccine_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Vaccine rate
                                       </button>
                                     </h5>
                                   </div>
@@ -903,7 +903,7 @@
                                   <div class="card-header" id="infection_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#infection_rate_card_collapse" aria-expanded="true" aria-controls="infection_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Infection Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Infection rate
                                       </button>
                                     </h5>
                                   </div>
@@ -985,7 +985,7 @@
                                   <div class="card-header" id="seek_treatment_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#seek_treatment_rate_card_collapse" aria-expanded="true" aria-controls="seek_treatment_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Outpatient rate (Seek treatment rate)
                                       </button>
                                     </h5>
                                   </div>
@@ -1033,7 +1033,7 @@
                                   <div class="card-header" id="medicine_intake_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#medicine_intake_rate_card_collapse" aria-expanded="true" aria-controls="medicine_intake_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Medicine intake rate
                                       </button>
                                     </h5>
                                   </div>
@@ -1081,7 +1081,7 @@
                                   <div class="card-header" id="severe_rate_header">
                                     <h5 class="mb-0">
                                       <button class="btn btn-link" data-toggle="collapse" data-target="#severe_rate_card_collapse" aria-expanded="true" aria-controls="severe_rate_card_collapse" style="text-decoration: none; color:#262626; font-weight:bold; font-size:20px">
-                                        <i class="fa fa-dot-circle"></i> &nbsp; Severe Rate
+                                        <i class="fa fa-dot-circle"></i> &nbsp; Hospitalization rate (Severe rate)
                                       </button>
                                     </h5>
                                   </div>
@@ -1233,355 +1233,978 @@
         <!-- <input class="form-control" type="number" value="5000" name="try_" id="try_"> -->
 
       <input type="submit" id="run_model" name="run_model" class="btn btn-success btn-lg btn-block" value="Run the Model" style="margin-bottom: 50px">
-                <!-- {% if button_bool %}
-        {% else %}
-        {% endif %} -->
-    <!-- </form>
 
 
-    <!-- <form enctype="multipart/form-data" required="True" method="post">
-        {% csrf_token %}
-        {{ form }} -->
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Basic Model Parameters</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
-            </div>
-          </div>
+      <div class="card" >
+        <div class="card-header" id="basic_para_card_header">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#basic_para_collapse" aria-expanded="true" aria-controls="basic_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+              <i class="fas fa-dot-circle"></i> &nbsp; Basic Model Parameters
+            </button>
+          </h5>
         </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
+        <div id="basic_para_collapse" class="collapse" aria-labelledby="basic_para_card_header" data-parent="#accordion">
+          <div class="card-body">
+            <div id="basic_para_model">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <hr>
 
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Age Group Percentage</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.01" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
+      <div class="card" >
+        <div class="card-header" id="age_para_card_header">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#age_para_collapse" aria-expanded="true" aria-controls="age_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+              <i class="fas fa-dot-circle"></i> &nbsp; Age Group Percentage
+            </button>
+          </h5>
+        </div>
+        <div id="age_para_collapse" class="collapse" aria-labelledby="age_para_card_header" data-parent="#accordion">
+          <div class="card-body">
+            <div id="age_para_model">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.01" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" step="0.01" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
+                    <div class="col-5">
+                      <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" step="0.01" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" step="0.01" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" step="0.01" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
-            </div>
-          </div>
-        </div>
-        <div class="col">
         </div>
       </div>
-      <br>
+
+      <div class="card" >
+        <div class="card-header" id="tran_para_card_header">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#trans_para_collapse" aria-expanded="true" aria-controls="trans_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+              <i class="fas fa-dot-circle"></i> &nbsp; Transmission Model Parameters
+            </button>
+          </h5>
+        </div>
+        <div id="trans_para_collapse" class="collapse" aria-labelledby="tran_para_card_header" data-parent="#accordion">
+          <div class="card-body">
+            <div id="trans_para_model">
+              <div style="margin-left: 50px">
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact rate</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CR_SAME_GRP}}" step="0.01" id="CR_SAME_GRP" name="CR_SAME_GRP">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" step="0.01" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccine rate</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" step="0.001" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VR_ADULT_RT}}" step="0.001" id="VR_ADULT_RT" name="VR_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VR_ELDER_RT}}" step="0.001" id="VR_ELDER_RT" name="VR_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Infection rate</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" step="0.001" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" step="0.001" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" step="0.001" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" step="0.001" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" step="0.001" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" step="0.001" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Outpatient rate (Seek treatment rate)</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" step="0.01" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{STR_ADULT_RT}}" step="0.01" id="STR_ADULT_RT" name="STR_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{STR_ELDER_RT}}" step="0.01" id="STR_ELDER_RT" name="STR_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine intake rate</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" step="0.01" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" step="0.01" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" step="0.01" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Hospitalization rate (Severe rate)</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" step="0.000001" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" step="0.000001" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" step="0.000001" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" step="0.000001" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" step="0.000001" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" step="0.000001" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
 
 
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Contact Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{CR_SAME_GRP}}" step="0.01" id="CR_SAME_GRP" name="CR_SAME_GRP">
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality rate</h4>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" step="0.01" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{FR_ADULT_RT}}" step="0.01" id="FR_ADULT_RT" name="FR_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{FR_ELDER_RT}}" step="0.01" id="FR_ELDER_RT" name="FR_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <br>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" step="0.01" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-        <div class="col">
         </div>
       </div>
-      <br>
 
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccine Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="VR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_YOUTH_RT}}" step="0.001" id="VR_YOUTH_RT" name="VR_YOUTH_RT">
+      <div class="card" >
+        <div class="card-header" id="cost_para_card_header">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#cost_para_collapse" aria-expanded="true" aria-controls="cost_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+              <i class="fas fa-dot-circle"></i> &nbsp; Cost-effectiveness Model Parameters
+            </button>
+          </h5>
+        </div>
+        <div id="cost_para_collapse" class="collapse" aria-labelledby="cost_para_card_header" data-parent="#accordion">
+          <div class="card-body">
+            <div id="cost_para_model">
+              <div style="margin-left: 50px">
+
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality cost</h4>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Earning lost per death
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ELPD_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ELPD_YOUTH_RT}}" step="0.01" id="ELPD_YOUTH_RT" name="ELPD_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ELPD_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ELPD_ADULT_RT}}" step="0.01" id="ELPD_ADULT_RT" name="ELPD_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ELPD_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ELPD_ELDER_RT}}" step="0.01" id="ELPD_ELDER_RT" name="ELPD_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total hospitalization cost</h4>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Average length of stay (d)
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ALOS_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ALOS_YOUTH_RT}}" step="1" id="ALOS_YOUTH_RT" name="ALOS_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ALOS_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ALOS_ADULT_RT}}" step="1" id="ALOS_ADULT_RT" name="ALOS_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ALOS_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ALOS_ELDER_RT}}" step="1" id="ALOS_ELDER_RT" name="ALOS_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Cost per bed per day
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CPBPD_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CPBPD_YOUTH_RT}}" step="0.01" id="CPBPD_YOUTH_RT" name="ALOS_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CPBPD_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CPBPD_ADULT_RT}}" step="0.01" id="CPBPD_ADULT_RT" name="CPBPD_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CPBPD_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CPBPD_ELDER_RT}}" step="0.01" id="CPBPD_ELDER_RT" name="CPBPD_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Hospitalization loss per day
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="HVLPD_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{HVLPD_YOUTH_RT}}" step="0.01" id="HVLPD_YOUTH_RT" name="HVLPD_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="HVLPD_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{HVLPD_ADULT_RT}}" step="0.01" id="HVLPD_ADULT_RT" name="HVLPD_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="HVLPD_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{HVLPD_ELDER_RT}}" step="0.01" id="HVLPD_ELDER_RT" name="HVLPD_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Transportation cost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCH_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCH_YOUTH_RT}}" step="0.01" id="TCH_YOUTH_RT" name="TCH_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCH_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCH_ADULT_RT}}" step="0.01" id="TCH_ADULT_RT" name="TCH_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCH_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCH_ELDER_RT}}" step="0.01" id="TCH_ELDER_RT" name="TCH_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total outpatient cost</h4>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Average days lost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ADL_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ADL_YOUTH_RT}}" step="0.01" id="ADL_YOUTH_RT" name="ADL_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ADL_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ADL_ADULT_RT}}" step="0.01" id="ADL_ADULT_RT" name="ADL_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="ADL_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{ADL_ELDER_RT}}" step="0.01" id="ADL_ELDER_RT" name="ADL_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Treatment cost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TRCO_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TRCO_YOUTH_RT}}" step="0.01" id="TRCO_YOUTH_RT" name="TRCO_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TRCO_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TRCO_ADULT_RT}}" step="0.01" id="TRCO_ADULT_RT" name="TRCO_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TRCO_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TRCO_ELDER_RT}}" step="0.01" id="TRCO_ELDER_RT" name="TRCO_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Outpatient value loss per day
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="OVLPD_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{OVLPD_YOUTH_RT}}" step="0.01" id="OVLPD_YOUTH_RT" name="OVLPD_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="OVLPD_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{OVLPD_ADULT_RT}}" step="0.01" id="OVLPD_ADULT_RT" name="OVLPD_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="OVLPD_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{OVLPD_ELDER_RT}}" step="0.01" id="OVLPD_ELDER_RT" name="OVLPD_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Transportation cost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCO_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCO_YOUTH_RT}}" step="0.01" id="TCO_YOUTH_RT" name="TCO_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCO_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCO_ADULT_RT}}" step="0.01" id="TCO_ADULT_RT" name="TCO_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCO_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCO_ELDER_RT}}" step="0.01" id="TCO_ELDER_RT" name="TCO_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total vaccination cost</h4>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Cost of vaccine
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCV_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCV_YOUTH_RT}}" step="0.01" id="TCV_YOUTH_RT" name="TCV_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCV_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCV_ADULT_RT}}" step="0.01" id="TCV_ADULT_RT" name="TCV_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="TCV_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{TCV_ELDER_RT}}" step="0.01" id="TCV_ELDER_RT" name="TCV_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Vaccination value loss per hour
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVLPR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVLPR_YOUTH_RT}}" step="0.01" id="VVLPR_YOUTH_RT" name="VVLPR_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVLPR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVLPR_ADULT_RT}}" step="0.01" id="VVLPR_ADULT_RT" name="VVLPR_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVLPR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVLPR_ELDER_RT}}" step="0.01" id="VVLPR_ELDER_RT" name="VVLPR_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Transportation cost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VTC_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VTC_YOUTH_RT}}" step="0.01" id="VTC_YOUTH_RT" name="VTC_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VTC_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VTC_ADULT_RT}}" step="0.01" id="VTC_ADULT_RT" name="VTC_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VTC_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VTC_ELDER_RT}}" step="0.01" id="VTC_ELDER_RT" name="VTC_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Vaccine effectiveness (%)
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVE_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVE_YOUTH_RT}}" step="0.01" id="VVE_YOUTH_RT" name="VVE_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVE_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVE_ADULT_RT}}" step="0.01" id="VVE_ADULT_RT" name="VVE_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VVE_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VVE_ELDER_RT}}" step="0.01" id="VVE_ELDER_RT" name="VVE_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total costs of vaccine side effects</h4>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Side effects rate (%)
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSER_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSER_YOUTH_RT}}" step="0.01" id="VSER_YOUTH_RT" name="VSER_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSER_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSER_ADULT_RT}}" step="0.01" id="VSER_ADULT_RT" name="VSER_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSER_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSER_ELDER_RT}}" step="0.01" id="VSER_ELDER_RT" name="VSER_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Mean OPD frequency
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSER_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEOPD_YOUTH_RT}}" step="0.01" id="VSEOPD_YOUTH_RT" name="VSEOPD_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEOPD_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEOPD_ADULT_RT}}" step="0.01" id="VSEOPD_ADULT_RT" name="VSEOPD_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEOPD_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEOPD_ELDER_RT}}" step="0.01" id="VSEOPD_ELDER_RT" name="VSEOPD_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Direct cost Fee per OPD
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEDC_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEDC_YOUTH_RT}}" step="0.01" id="VSEDC_YOUTH_RT" name="VSEDC_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEDC_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEDC_ADULT_RT}}" step="0.01" id="VSEDC_ADULT_RT" name="VSEDC_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEDC_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEDC_ELDER_RT}}" step="0.01" id="VSEDC_ELDER_RT" name="VSEDC_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Production loss due to SE
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEPL_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEPL_YOUTH_RT}}" step="0.01" id="VSEPL_YOUTH_RT" name="VSEPL_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEPL_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEPL_ADULT_RT}}" step="0.01" id="VSEPL_ADULT_RT" name="VSEPL_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSEPL_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSEPL_ELDER_RT}}" step="0.01" id="VSEPL_ELDER_RT" name="VSEPL_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h5 style="margin-left:60px">
+                      Transportation cost
+                    </h5>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSETC_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSETC_YOUTH_RT}}" step="0.01" id="VSETC_YOUTH_RT" name="VSETC_YOUTH_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSETC_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSETC_ADULT_RT}}" step="0.01" id="VSETC_ADULT_RT" name="VSETC_ADULT_RT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="VSETC_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{VSETC_ELDER_RT}}" step="0.01" id="VSETC_ELDER_RT" name="VSETC_ELDER_RT">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="VR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_ADULT_RT}}" step="0.001" id="VR_ADULT_RT" name="VR_ADULT_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="VR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{VR_ELDER_RT}}" step="0.001" id="VR_ELDER_RT" name="VR_ELDER_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
         </div>
       </div>
-      <br>
 
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Infection Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_YOUTH_V_RT" class="col-7 col-form-label"> ≤ 18 with vaccine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_YOUTH_V_RT}}" step="0.001" id="IR_YOUTH_V_RT" name="IR_YOUTH_V_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_ADULT_V_RT" class="col-7 col-form-label"> 19 - 64 with vaccine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ADULT_V_RT}}" step="0.001" id="IR_ADULT_V_RT" name="IR_ADULT_V_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_ELDER_V_RT" class="col-7 col-form-label">  ≥ 65 with vaccine</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ELDER_V_RT}}" step="0.001" id="IR_ELDER_V_RT" name="IR_ELDER_V_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_YOUTH_NV_RT" class="col-7 col-form-label"> ≤ 18 no vaccine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_YOUTH_NV_RT}}" step="0.001" id="IR_YOUTH_NV_RT" name="IR_YOUTH_NV_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_ADULT_NV_RT" class="col-7 col-form-label"> 19 - 64 no vaccine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ADULT_NV_RT}}" step="0.001" id="IR_ADULT_NV_RT" name="IR_ADULT_NV_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="IR_ELDER_NV_RT" class="col-7 col-form-label">  ≥ 65 no vaccine</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{IR_ELDER_NV_RT}}" step="0.001" id="IR_ELDER_NV_RT" name="IR_ELDER_NV_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <br>
-
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Seek Treatment Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="STR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_YOUTH_RT}}" step="0.01" id="STR_YOUTH_RT" name="STR_YOUTH_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="STR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_ADULT_RT}}" step="0.01" id="STR_ADULT_RT" name="STR_ADULT_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="STR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{STR_ELDER_RT}}" step="0.01" id="STR_ELDER_RT" name="STR_ELDER_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <br>
-
-
-
-
-
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Medicine Intake Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="MIR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_YOUTH_RT}}" step="0.01" id="MIR_YOUTH_RT" name="MIR_YOUTH_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="MIR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_ADULT_RT}}" step="0.01" id="MIR_ADULT_RT" name="MIR_ADULT_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="MIR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{MIR_ELDER_RT}}" step="0.01" id="MIR_ELDER_RT" name="MIR_ELDER_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <br>
-
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Severe Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_YOUTH_48_RT" class="col-7 col-form-label"> ≤ 18 with medicine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_YOUTH_48_RT}}" step="0.000001" id="SR_YOUTH_48_RT" name="SR_YOUTH_48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_ADULT_48_RT" class="col-7 col-form-label"> 19 - 64 with medicine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ADULT_48_RT}}" step="0.000001" id="SR_ADULT_48_RT" name="SR_ADULT_48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_ELDER_48_RT" class="col-7 col-form-label">  ≥ 65 with medicine</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ELDER_48_RT}}" step="0.000001" id="SR_ELDER_48_RT" name="SR_ELDER_48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_YOUTH_N48_RT" class="col-7 col-form-label"> ≤ 18 no medicine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_YOUTH_N48_RT}}" step="0.000001" id="SR_YOUTH_N48_RT" name="SR_YOUTH_N48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_ADULT_N48_RT" class="col-7 col-form-label"> 19 - 64 no medicine </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ADULT_N48_RT}}" step="0.000001" id="SR_ADULT_N48_RT" name="SR_ADULT_N48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="SR_ELDER_N48_RT" class="col-7 col-form-label">  ≥ 65 no medicine</label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{SR_ELDER_N48_RT}}" step="0.000001" id="SR_ELDER_N48_RT" name="SR_ELDER_N48_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <br>
-
-
-      <h4 style="margin-bottom:20px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality Rate</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="FR_YOUTH_RT" class="col-7 col-form-label"> ≤ 18 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_YOUTH_RT}}" step="0.01" id="FR_YOUTH_RT" name="FR_YOUTH_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="FR_ADULT_RT" class="col-7 col-form-label"> 19 - 64  </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_ADULT_RT}}" step="0.01" id="FR_ADULT_RT" name="FR_ADULT_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group row">
-            <label style="text-align: right" for="FR_ELDER_RT" class="col-7 col-form-label">  ≥ 65 </label>
-            <div class="col-5">
-              <input class="form-control" type="number" value="{{FR_ELDER_RT}}" step="0.01" id="FR_ELDER_RT" name="FR_ELDER_RT">
-            </div>
-          </div>
-        </div>
-        <div class="col">
-        </div>
-      </div>
-      <br>
   <!--
       <input type="submit" id="parameters_submit_btn" name="parameters_submit_btn" class="btn btn-success btn-lg btn-block" value="Set Parameters" style="margin-bottom: 50px"> -->
 
