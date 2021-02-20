@@ -1,12 +1,12 @@
 {
   "parent":"null",
-  "name":"Index Case",
+  "name":"Infected Individuals",
   "id":"Index Case",
   "pb":"[0.5]",
-  "color":"gray",
+  "color":"#fc7303",
   "children":[
     {
-      "parent":"Index Case",
+      "parent":"Index Case [Infected Individuals]",
       "name":"Contact another person",
       "id":"Contact another person",
       "pb":"[Contact Rate]",
@@ -21,7 +21,7 @@
           "children":[
             {
               "parent":"Vaccinated",
-              "name":"Infected (vaccinated)",
+              "name":"Infected (vaccinated) ==> Back to Model (Root)",
               "id":"Infected (vaccinated)",
               "pb":"[Infected Rate]",
               "color":"#fc7303",
@@ -48,7 +48,7 @@
           "children":[
             {
               "parent":"Not vaccinated",
-              "name":"Infected (not vaccinated)",
+              "name":"Infected (not vaccinated) ==> Back to Model (Root)",
               "id":"Infected (not vaccinated)",
               "pb":"[Infected Rate]",
               "color":"#fc7303",
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "parent":"null",
+      "parent":"Index Case [Infected Individuals]",
       "name":"Seek medical treatment",
       "id":"Seek medical treatment",
       "pb":"[1 - Contact Rate]",
@@ -77,43 +77,25 @@
       "children":[
         {
           "parent":"Seek medical treatment",
-          "name":"Taken Antiviral",
-          "id":"Taken Antiviral",
-          "pb":"[Seek Treatment Rate]",
+          "name":"Hospitalization",
+          "id":"Hospitalization",
+          "pb":"[1 - OPD Rate]",
           "color":"gray",
           "children":[
             {
-              "parent":"Taken Antiviral",
-              "name":"Hospitalization",
-              "id":"Hospitalization (antiviral)",
-              "pb":"[Severe Rate Rate]",
-              "color":"gray",
+              "parent":"Hospitalization",
+              "name":"Death (hospitalized)",
+              "id":"Death (hospitalized)",
+              "pb":"[Death Rate]",
+              "color":"red",
               "children":[
-                {
-                  "parent":"Hospitalization",
-                  "name":"Death (antiviral, hospitalized)",
-                  "id":"Death (antiviral, hospitalized)",
-                  "pb":"[Death Rate]",
-                  "color":"red",
-                  "children":[
-                  ]
-                },
-                {
-                  "parent":"Hospitalization",
-                  "name":"Recovery (antiviral, hospitalized)",
-                  "id":"Recovery (antiviral, hospitalized)",
-                  "pb":"[1 - Death Rate]",
-                  "color":"green",
-                  "children":[
-                  ]
-                }
               ]
             },
             {
-              "parent":"Taken Antiviral",
-              "name":"Recovery (antiviral, not hospitalized)",
-              "id":"Recovery (antiviral, not hospitalized)",
-              "pb":"[1 - Severe Rate Rate]",
+              "parent":"Hospitalization",
+              "name":"Recovery (hospitalized)",
+              "id":"Recovery (hospitalized)",
+              "pb":"[1 - Death Rate]",
               "color":"green",
               "children":[
               ]
@@ -122,32 +104,50 @@
         },
         {
           "parent":"Seek medical treatment",
-          "name":"Not taken Antiviral",
-          "id":"Not taken Antiviral",
-          "pb":"[1 - Seek Treatment Rate]",
+          "name":"OPD",
+          "id":"OPD",
+          "pb":"[OPD Rate]",
           "color":"gray",
           "children":[
             {
-              "parent":"Not taken Antiviral",
-              "name":"Hospitalization",
-              "id":"Hospitalization (no antiviral)",
-              "pb":"[Severe Rate Rate]",
+              "parent":"OPD",
+              "name":"Taken Antiviral",
+              "id":"Taken Antiviral",
+              "pb":"[Seek Treatment Rate]",
               "color":"gray",
               "children":[
                 {
-                  "parent":"Hospitalization",
-                  "name":"Death (no antiviral, hospitalized)",
-                  "id":"Death (no antiviral, hospitalized)",
-                  "pb":"[Death Rate]",
-                  "color":"red",
+                  "parent":"Taken Antiviral",
+                  "name":"Hospitalization",
+                  "id":"Hospitalization (OPD, antiviral)",
+                  "pb":"[Severe Rate Rate]",
+                  "color":"gray",
                   "children":[
+                    {
+                      "parent":"Hospitalization",
+                      "name":"Death (OPD, antiviral, hospitalized)",
+                      "id":"Death (OPD, antiviral, hospitalized)",
+                      "pb":"[Death Rate]",
+                      "color":"red",
+                      "children":[
+                      ]
+                    },
+                    {
+                      "parent":"Hospitalization",
+                      "name":"Recovery (OPD, antiviral, hospitalized)",
+                      "id":"Recovery (OPD, antiviral, hospitalized)",
+                      "pb":"[1 - Death Rate]",
+                      "color":"green",
+                      "children":[
+                      ]
+                    }
                   ]
                 },
                 {
-                  "parent":"Hospitalization",
-                  "name":"Recovery (no antiviral, hospitalized)",
-                  "id":"Recovery (no antiviral, hospitalized)",
-                  "pb":"[1 - Death Rate]",
+                  "parent":"Taken Antiviral",
+                  "name":"Recovery (OPD, antiviral, not hospitalized)",
+                  "id":"Recovery (OPD, antiviral, not hospitalized)",
+                  "pb":"[1 - Severe Rate Rate]",
                   "color":"green",
                   "children":[
                   ]
@@ -155,12 +155,48 @@
               ]
             },
             {
-              "parent":"Not taken Antiviral",
-              "name":"Recovery (no antiviral, not hospitalized)",
-              "id":"Recovery (no antiviral, not hospitalized)",
-              "pb":"[1 - Severe Rate Rate]",
-              "color":"green",
+              "parent":"OPD",
+              "name":"Not taken Antiviral",
+              "id":"Not taken Antiviral",
+              "pb":"[1 - Seek Treatment Rate]",
+              "color":"gray",
               "children":[
+                {
+                  "parent":"Not taken Antiviral",
+                  "name":"Hospitalization",
+                  "id":"Hospitalization (OPD, no antiviral)",
+                  "pb":"[Severe Rate Rate]",
+                  "color":"gray",
+                  "children":[
+                    {
+                      "parent":"Hospitalization",
+                      "name":"Death (OPD, no antiviral, hospitalized)",
+                      "id":"Death (OPD, no antiviral, hospitalized)",
+                      "pb":"[Death Rate]",
+                      "color":"red",
+                      "children":[
+                      ]
+                    },
+                    {
+                      "parent":"Hospitalization",
+                      "name":"Recovery (OPD, no antiviral, hospitalized)",
+                      "id":"Recovery (OPD, no antiviral, hospitalized)",
+                      "pb":"[1 - Death Rate]",
+                      "color":"green",
+                      "children":[
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "parent":"Not taken Antiviral",
+                  "name":"Recovery (OPD, no antiviral, not hospitalized)",
+                  "id":"Recovery (OPD, no antiviral, not hospitalized)",
+                  "pb":"[1 - Severe Rate Rate]",
+                  "color":"green",
+                  "children":[
+                  ]
+                }
               ]
             }
           ]

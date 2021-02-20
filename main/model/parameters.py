@@ -31,50 +31,122 @@ class AliveDeath(Enum):
     ALIVE = 'alive'
     DEATH = 'death'
 
-class ContactRate(Enum):
-    SAME_GRP = 0.6
-    DIFF_GRP = 0.2
-
 class AgeGroup(Enum):
     YOUTH_GRP = 'youth'
     ADULT_GRP = 'adult'
     ELDER_GRP = 'elder'
 
-class VaccineRate(Enum):
-    YOUTH_RT = 0.646
-    ADULT_RT = 0.093
-    ELDER_RT = 0.445
+class ContactPersonSeekTreatment_Rate(Enum):
+    YOUTH_CP_RT = 0.8
+    ADULT_CP_RT = 0.8
+    ELDER_CP_RT = 0.8
+    YOUTH_ST_RT = 1 - YOUTH_CP_RT
+    ADULT_ST_RT = 1 - ADULT_CP_RT
+    ELDER_ST_RT = 1 - ELDER_CP_RT
 
-class InfectionRate(Enum):
-    YOUTH_NV_RT = 0.146
-    ADULT_NV_RT = 0.037
-    ELDER_NV_RT = 0.053
-    YOUTH_V_RT = 0.088
-    ADULT_V_RT = 0.022
-    ELDER_V_RT = 0.032
+class ContactGroup_Rate(Enum):
+    SAME_GRP = 0.8
+    DIFF_GRP = 1 - SAME_GRP
 
-class SeekTreatmentRate(Enum):
-    YOUTH_RT = 0.2
-    ADULT_RT = 0.2
-    ELDER_RT = 0.2
+class Vaccine_Rate(Enum):
+    YOUTH_V_RT = 0.646
+    ADULT_V_RT = 0.093
+    ELDER_V_RT = 0.445
+    YOUTH_NV_RT = 1 - YOUTH_V_RT
+    ADULT_NV_RT = 1 - ADULT_V_RT
+    ELDER_NV_RT = 1 - ELDER_V_RT
 
-class MedicineIntakeRate(Enum):
-    YOUTH_RT = 0.5
-    ADULT_RT = 0.5
-    ELDER_RT = 0.5
+class Vac_Infection_Rate(Enum):
+    YOUTH_V_I_RT = 0.088
+    ADULT_V_I_RT = 0.022
+    ELDER_V_I_RT = 0.032
+    YOUTH_V_NI_RT = 1 - YOUTH_V_I_RT
+    ADULT_V_NI_RT = 1 - ADULT_V_I_RT
+    ELDER_V_NI_RT = 1 - ELDER_V_I_RT
 
-class SevereRate(Enum):
-    YOUTH_48_RT = 0.000075
-    ADULT_48_RT = 0.000425
-    ELDER_48_RT = 0.0016
-    YOUTH_N48_RT = 0.000225
-    ADULT_N48_RT = 0.001275
-    ELDER_N48_RT = 0.0048
+class NoVac_Infection_Rate(Enum):
+    YOUTH_NV_I_RT = 0.146
+    ADULT_NV_I_RT = 0.037
+    ELDER_NV_I_RT = 0.053
+    YOUTH_NV_NI_RT = 1 - YOUTH_NV_I_RT
+    ADULT_NV_NI_RT = 1 - ADULT_NV_I_RT
+    ELDER_NV_NI_RT = 1 - ELDER_NV_I_RT
 
-class FatalityRate(Enum):
-    YOUTH_RT = 0.12
-    ADULT_RT = 0.14
-    ELDER_RT = 0.14
+# # Should be removed
+# class InfectionRate(Enum):
+#     YOUTH_NV_RT = 0.146
+#     ADULT_NV_RT = 0.037
+#     ELDER_NV_RT = 0.053
+#     YOUTH_V_RT = 0.088
+#     ADULT_V_RT = 0.022
+#     ELDER_V_RT = 0.032
+
+
+class SMT_HospitalizedOPD_Rate(Enum):
+    YOUTH_HOS_RT = 0.1
+    ADULT_HOS_RT = 0.1
+    ELDER_HOS_RT = 0.1
+    YOUTH_OPD_RT = 1 - YOUTH_HOS_RT
+    ADULT_OPD_RT = 1 - YOUTH_HOS_RT
+    ELDER_OPD_RT = 1 - ELDER_HOS_RT
+
+class SMT_Hospitalized_Death_Rate(Enum):
+    YOUTH_HOS_D_RT = 0.12
+    ADULT_HOS_D_RT = 0.14
+    ELDER_HOS_D_RT = 0.14
+    YOUTH_HOS_R_RT = 1 - YOUTH_HOS_D_RT
+    ADULT_HOS_R_RT = 1 - ADULT_HOS_D_RT
+    ELDER_HOS_R_RT = 1 - ELDER_HOS_D_RT
+
+# This should be renamed
+class SMT_OPD_MedicineIntake_Rate(Enum):
+    YOUTH_OPD_M_RT = 0.5
+    ADULT_OPD_M_RT = 0.5
+    ELDER_OPD_M_RT = 0.5
+    YOUTH_OPD_NM_RT = 1 - YOUTH_OPD_M_RT
+    ADULT_OPD_NM_RT = 1 - ADULT_OPD_M_RT
+    ELDER_OPD_NM_RT = 1 - ELDER_OPD_M_RT
+
+class SMT_OPD_M_Hospitalized_Rate(Enum):
+    YOUTH_OPD_M_HOS_RT = 0.000075
+    ADULT_OPD_M_HOS_RT = 0.000425
+    ELDER_OPD_M_HOS_RT = 0.0016
+    YOUTH_OPD_M_R_RT = 1 - YOUTH_OPD_M_HOS_RT
+    ADULT_OPD_M_R_RT = 1 - ADULT_OPD_M_HOS_RT
+    ELDER_OPD_M_R_RT = 1 - ELDER_OPD_M_HOS_RT
+
+class SMT_OPD_M_Hospitalized_Death_Rate(Enum):
+    YOUTH_OPD_M_HOS_D_RT = 0.12
+    ADULT_OPD_M_HOS_D_RT = 0.14
+    ELDER_OPD_M_HOS_D_RT = 0.14
+    YOUTH_OPD_M_HOS_R_RT = 1 - YOUTH_OPD_M_HOS_D_RT
+    ADULT_OPD_M_HOS_R_RT = 1 - ADULT_OPD_M_HOS_D_RT
+    ELDER_OPD_M_HOS_R_RT = 1 - ELDER_OPD_M_HOS_D_RT
+
+class SMT_OPD_NM_Hospitalized_Rate(Enum):
+    YOUTH_OPD_NM_HOS_RT = 0.000225
+    ADULT_OPD_NM_HOS_RT = 0.001275
+    ELDER_OPD_NM_HOS_RT = 0.0048
+    YOUTH_OPD_NM_R_RT = 1 - YOUTH_OPD_NM_HOS_RT
+    ADULT_OPD_NM_R_RT = 1 - ADULT_OPD_NM_HOS_RT
+    ELDER_OPD_NM_R_RT = 1 - ELDER_OPD_NM_HOS_RT
+
+class SMT_OPD_NM_Hospitalized_Death_Rate(Enum):
+    YOUTH_OPD_NM_HOS_D_RT = 0.12
+    ADULT_OPD_NM_HOS_D_RT = 0.14
+    ELDER_OPD_NM_HOS_D_RT = 0.14
+    YOUTH_OPD_NM_HOS_R_RT = 1 - YOUTH_OPD_NM_HOS_D_RT
+    ADULT_OPD_NM_HOS_R_RT = 1 - ADULT_OPD_NM_HOS_D_RT
+    ELDER_OPD_NM_HOS_R_RT = 1 - ELDER_OPD_NM_HOS_D_RT
+
+
+
+
+
+
+
+
+
 
 class effectiveness(Enum):
     MILD = (-0.88)*7/365

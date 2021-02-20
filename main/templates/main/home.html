@@ -73,7 +73,7 @@
         left: 120
     },
     width = screen_width - margin.right - margin.left,
-        height = 500 - margin.top - margin.bottom;
+        height = 800 - margin.top - margin.bottom;
 
     var i = 0,
         duration = 750,
@@ -89,7 +89,7 @@
 
     var svg = d3.select(select_id).append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "-200 0 2000 450")
+        .attr("viewBox", "-200 0 2250 750")
         .append("g")
         // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -168,8 +168,53 @@
           })
             .attr("dy", ".35em")
             .attr("text-anchor", function (d) {
-            return d.children || d._children ? "end" : "start";
+              if (d.children == undefined) {
+                position = "start"
+              } else {
+                position = "end"
+              }
+              if (d.parent == "null") {
+                position = "middle"
+              }
+              return position
+            // return d.children || d._children ? "end" : "start";
           })
+          .attr("dy", function (d) {
+            if (d.children == undefined) {
+              position = ".35em"
+            } else {
+              position = ".35em"
+            }
+            if (d.parent == "null") {
+              position = "-1em"
+            }
+            return position
+          // return d.children || d._children ? "end" : "start";
+          })
+          .attr("dx", function (d) {
+            if (d.children == undefined) {
+              position = "0em"
+            } else {
+              position = "0em"
+            }
+            if (d.parent == "null") {
+              position = "-3em"
+            }
+            return position
+          // return d.children || d._children ? "end" : "start";
+          })
+
+        //   .attr("text-anchor", function (d) {
+        //     if (d.parent == 'null') {
+        //       return "end"
+        //     }
+        //   // return d.children || d._children ? "end" : "start";
+        // })
+          //   .attr("text-anchor", function (d) {
+          //   if (d.name== "Infected Individuals") {
+          //     return "end"
+          //   }
+          // })
             .style("fill-opacity", 1e-6)
             .text(function (d) {
             return d.name;
@@ -177,10 +222,47 @@
             .attr("vector-effect", "non-scaling-stroke")
             .style("border", "red")
             .attr("fill", function (d) {
-            return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? "#4287f5" : "#00298f";
+              if (d.children == undefined) {
+                color = "#4287f5";
+              } else {
+                color = "#00298f";
+              }
+              if (d.name.includes("Infected")) {
+                color = "#fc7303";
+              }
+              if (d.name.includes("Not infected")) {
+                color = "#44ab00";
+              }
+              if (d.name.includes("Death")) {
+                color = "red";
+              }
+              if (d.name.includes("Death")) {
+                color = "red";
+              }
+              if (d.name.includes("Recovery")) {
+                color = "green";
+              }
+            return color;
+            // return ( d.children == undefined)  ? "#4287f5" : "#00298f";
+            // return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? "#4287f5" : "#00298f";
           })
+          //   .attr("vector-effect", "non-scaling-stroke")
+          //   .style("border", "red")
+          //   .attr("fill", function (d) {
+          //   return (d.name.includes("Infected"))  ? "#fc7303" : "#00298f";
+          // })
             .style("font-size", function (d) {
-            return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? 15 : 20;
+              if (d.children == undefined) {
+                size = 15;
+              } else {
+                size = 23;
+              }
+              if (d.name.includes("Infected")) {
+                size = 23;
+              }
+            return size;
+            // return ( d.children == undefined)  ? 15 : 20;
+            // return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? 15 : 20;
           });
         // nodeEnter.append("text")
         //   .attr("x", function (d) {
@@ -200,7 +282,7 @@
         });
 
         nodeUpdate.select("circle")
-            .attr("r", function(d) { return d.children == undefined ? 10 : 5;} ) //function(d) { return d._children.length == 0 ? 3 : 10;}
+            .attr("r", function(d) { return (d.children == undefined || d.parent == "null") ? 10 : 5;} ) //function(d) { return d._children.length == 0 ? 3 : 10;}
             .style("fill", function(d) { return d.color; });
             // .attr("r", 4.5)
         //     .style("fill", function (d) {
@@ -246,6 +328,7 @@
                 target: o
             });
         });
+
 
         // Transition links to their new position.
         link.transition()
@@ -322,6 +405,23 @@
             d.x0 = d.x;
             d.y0 = d.y;
         });
+
+        // // Try to add new link
+        // var line = d3.svg.line()
+        //     .x(function(d) {
+        //         return d.y; // because tree is horizontal
+        //     })
+        //     .y(function(d) {
+        //         return d.x; // because tree is horizontal
+        //     });
+        // console.log("line: ", line);
+        // Enter the links.
+        // link.enter().insert("path", "g")
+        //     .attr("class", "link")
+        //     .attr("d", function(d) {
+        //         return line([d.source, d.target]);
+        //     });
+
     }
     // Toggle children on click.
     function click(d) {
@@ -335,6 +435,7 @@
         update(d);
     }
   }
+  
 </script>
 
 

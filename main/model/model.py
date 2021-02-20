@@ -15,7 +15,7 @@ class VaccineModel():
         ## In model group
         self.transmission_gp = []
         ## In model group
-        # self.treatment_gp = []
+
         self.death_gp = []
         self.recovery_gp = []
         self.cycle_reached_gp = []
