@@ -12,10 +12,11 @@ class VaccineModel():
         self.sim_time = SIMULATION_TIME
         self.day = 0
         self.cycle_days = CYCLE_DAYS
-        ## In model group
+        ## In_model group
         self.transmission_gp = []
-        ## In model group
+        self.seektreatment_gp = []
 
+        ## Leave model group
         self.death_gp = []
         self.recovery_gp = []
         self.cycle_reached_gp = []
@@ -43,21 +44,19 @@ class VaccineModel():
         print("##################")
         youth_pop = int((AgeGroupPerc.YOUTH_GRP.value)*self.idx_case_num)
         adult_pop = int((AgeGroupPerc.ADULT_GRP.value)*self.idx_case_num)
-        elder_pop = int((AgeGroupPerc.ELDER_GRP.value)*self.idx_case_num)
+        elder_pop = self.idx_case_num - youth_pop - adult_pop
+        # int((AgeGroupPerc.ELDER_GRP.value)*self.idx_case_num)
         for i in range(youth_pop):
             age = random.randrange(0, 18)
             p = Person(age, initial_idx_case=True)
-            p.day_passed()
             self.transmission_gp.append(p)
         for i in range(adult_pop):
             age = random.randrange(19, 64)
             p = Person(age, initial_idx_case=True)
-            p.day_passed()
             self.transmission_gp.append(p)
         for i in range(elder_pop):
             age = random.randrange(65, 100)
             p = Person(age, initial_idx_case=True)
-            p.day_passed()
             self.transmission_gp.append(p)
         self.day += 1
 
@@ -73,6 +72,60 @@ class VaccineModel():
 
         self.totalReachDay.append(0)
         self.newReachDay.append(0)
+
+
+    def one_day_passed(self):
+        print("##################")
+        print("## Day ", str(self.day), " ##")
+        print("##################")
+        print('@@ Starting transmission_gp size: ', len(self.transmission_gp))
+
+        new_transmission_gp = []
+        new_death_gp = []
+        new_recovery_gp = []
+        new_cycle_reached_gp = []
+
+
+        for _p in self.transmission_gp:
+            ## Day pre-processing
+            _p.day_preprocessing()
+
+            if _p.person_status[0] == 1:
+                # In the transmission path
+                infected_ls, non_infected_ls = _p.contact_people()
+                new_transmission_gp.append(_p)
+                new_transmission_gp = new_transmission_gp + infected_ls
+
+            elif _p.person_status[0] == 0:
+                # In the seektreatment path
+                _p.seek_medical_treatment()
+                if _p.curr_status == CurrStatus.DEATH:
+                    new_death_gp.append(_p)
+                elif _p.curr_status == CurrStatus.RECOVERY:
+                    new_recovery_gp.append(_p)
+
+            ## Day post-processing
+            _p.day_postprocessing()
+
+            ## Filter out reached people
+            if _p.curr_status == CurrStatus.CYCLE_REACHED:
+                new_cycle_reached_gp.append(_p)
+
+
+        self.transmission_gp = new_transmission_gp
+        self.death_gp = self.death_gp + new_death_gp
+        self.recovery_gp = self.recovery_gp + new_recovery_gp
+        self.cycle_reached_gp = self.cycle_reached_gp + new_cycle_reached_gp
+        print('     new_transmission_gp size      : ', len(new_transmission_gp))
+        print('         self.transmission_gp size : ', len(self.transmission_gp))
+        print('     new_death_gp                  : ', len(new_death_gp))
+        print('         self.death_gp size        : ', len(self.death_gp))
+        print('     new_recovery_gp               : ', len(new_recovery_gp))
+        print('         self.recovery_gp size     : ', len(self.recovery_gp))
+        print('     new_cycle_reached_gp          : ', len(new_cycle_reached_gp))
+        print('         self.cycle_reached_gp size: ', len(self.cycle_reached_gp))
+
+
 
 
 

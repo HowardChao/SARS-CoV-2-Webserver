@@ -5,14 +5,13 @@ from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactPersonSeekTrea
 class Person():
     def __init__(self, age, initial_idx_case=False):
         self.id = str(uuid.uuid1())
-        self.person_status = [0, 0, 0, 0, 0]
+        self.initial_idx_case = initial_idx_case
+        self.person_status = [-1, -1, -1, -1, -1]
         self.curr_status = CurrStatus.IN_MODEL
         self.day = 0
         self.age = age
         self.age_group = self.set_age_group()
         self.contactperson_rate, self.seektreatment_rate = self.set_contactperson_seektreatment_rate()
-
-        # self.route_status = RouteStatus.TRANSMISSION
 
         self.youth_contact_rate = self.set_contact_rate('youth')
         self.adult_contact_rate = self.set_contact_rate('adult')
@@ -21,7 +20,9 @@ class Person():
         self.vac_infection_rate, self.vac_n_infection_rate = self.set_vac_infection_rate()
         self.n_vac_infection_rate, self.n_vac_n_infection_rate = self.set_n_vac_infection_rate()
 
-        # self.vaccine_status = self.set_vaccine_status()
+        # Initialization
+        self.vaccine_status = self.set_vaccine_status()
+        self.set_initial_idx_case()
 
         self.smt_hospitalized_rate, self.smt_opd_rate = self.set_smt_hospitalized_opd_rate()
         self.smt_hospitalized_death_rate, self.smt_hospitalized_recovery_rate = self.set_smt_hospitalized_death_rate()
@@ -29,7 +30,7 @@ class Person():
         self.smt_opd_m_hospitalized_rate, self.smt_opd_m_recovery_rate = self.set_smt_opd_m_hospitalized_rate()
         self.smt_opd_m_hospitalized_death_rate, self.smt_opd_m_hospitalized_recovery_rate = self.set_smt_opd_m_hospitalized_death_rate()
         self.smt_opd_nm_hospitalized_rate, self.smt_opd_nm_recovery_rate = self.set_smt_opd_nm_hospitalized_rate()
-        self.smt_opd_nm_hospitalized_death_rate, self.smt_opd_nm_recovery_death_rate = self.set_smt_opd_nm_hospitalized_death_srate()
+        self.smt_opd_nm_hospitalized_death_rate, self.smt_opd_nm_recovery_death_rate = self.set_smt_opd_nm_hospitalized_death_rate()
         # self.infection_rate = self.set_infection_rate()
         # self.infection_status = self.set_infection_status(initial_idx_case)
         #
@@ -48,19 +49,124 @@ class Person():
         # self.effectiveness_severe = effectiveness.SEVERE
         # self.effectiveness_death = effectiveness.DEATH
 
+    ##################
+    # Initialization #
+    ##################
+    def set_vaccine_status(self):
+        if self.curr_status.value == 'in_model':
+            rand_dice = random.random() < self.vaccine_rate.value
+            if rand_dice:
+                self.vaccine_status = True
+            else:
+                self.vaccine_status = False
 
+    def set_initial_idx_case(self):
+        if self.curr_status.value == 'in_model':
+            if self.initial_idx_case == True:
+                self.infection_status = True
+                self.person_status[0] = 1
+            else:
+                self.infection_status = False
+
+    ##################
+    # When the new infected person contact another person
+    ##################
+    def set_infection_status(self):
+        # Only set infection status when it's false
+        if self.curr_status.value == 'in_model' and self.infection_status == False:
+            if self.initial_idx_case == True:
+                self.infection_status = True
+            else:
+                if self.vaccine_status == True:
+                    rand_dice = random.random() < self.vac_infection_rate.value
+                    if rand_dice:
+                        self.infection_status = True
+                    else:
+                        self.infection_status = False
+                else:
+                    rand_dice = random.random() < self.n_vac_infection_rate.value
+                    if rand_dice:
+                        self.infection_status = True
+                    else:
+                        self.infection_status = False
+
+    ##################
+    # All the infected people need to choose their route everytime
+    ##################
     def set_route_status(self):
-        rand_dice = random.random() < self.contactperson_rate.value
-        if rand_dice:
-            self.person_status[0] = 1
-        else:
-            self.person_status[0] = 0
+        # Only need to check when the person hasn't contact another person
+        if self.curr_status.value == 'in_model' and self.infection_status == True:
+            rand_dice = random.random() < self.contactperson_rate.value
+            if rand_dice:
+                self.person_status[0] = 1
+            else:
+                self.person_status[0] = 0
 
+    ##################
+    # After the infected people choose their route. Run their own path
+    ##################
     def contact_people(self):
-        pass
+        if self.curr_status.value == 'in_model' and self.person_status[0] == 1:
+            infected_people_ls = []
+            non_infected_people_ls = []
+            for _ in range(6):
+                rand_age = np.random.choice(
+                            [ random.randint(0, 18), random.randint(19, 64), random.randint(65, 100)],
+                            1,
+                            p=[self.youth_contact_rate.value,self.adult_contact_rate.value, self.elder_contact_rate.value]
+                           )[0]
+                p = Person(rand_age)
+                # InfectionRate
+                p.set_infection_status()
+                if p.infection_status == True:
+                    infected_people_ls.append(p)
+                else:
+                    non_infected_people_ls.append(p)
+            return infected_people_ls, non_infected_people_ls
+        else:
+            return [], []
 
     def seek_medical_treatment(self):
-        pass
+        if self.curr_status.value == 'in_model' and self.person_status[0] == 0:
+            death_ls = []
+            recovery_ls = []
+            reached_ls = []
+            self.set_smt_hospitalized_opd_status()
+            if self.person_status[1] == 1:
+                self.set_smt_hospitalized_death_status()
+                if self.person_status[2] == 1:
+                    self.death()
+                elif self.person_status[2] == 0:
+                    self.recovery()
+            elif self.person_status[1] == 0:
+                self.set_smt_opd_medicineintake_status()
+                if self.person_status[2] == 1:
+                    self.set_smt_opd_m_hospitalized_status()
+                    if self.person_status[3] == 1:
+                        self.set_smt_opd_m_hospitalized_death_status()
+                        if self.person_status[4] == 1:
+                            self.death()
+                        elif self.person_status[4] == 0:
+                            self.recovery()
+                    elif self.person_status[3] == 0:
+                        self.recovery()
+                elif self.person_status[2] == 0:
+                    self.set_smt_opd_nm_hospitalized_status()
+                    if self.person_status[3] == 1:
+                        self.set_smt_opd_nm_hospitalized_death_status()
+                        if self.person_status[4] == 1:
+                            self.death()
+                        elif self.person_status[4] == 0:
+                            self.recovery()
+                    elif self.person_status[3] == 0:
+                        self.recovery()
+
+
+    def death(self):
+        self.curr_status = CurrStatus.DEATH
+
+    def recovery(self):
+        self.curr_status = CurrStatus.RECOVERY
 
     ## static
     def set_contactperson_seektreatment_rate(self):
@@ -70,31 +176,6 @@ class Person():
             return ContactPersonSeekTreatment_Rate.ADULT_CP_RT, ContactPersonSeekTreatment_Rate.ADULT_ST_RT
         elif self.age >= 65:
             return ContactPersonSeekTreatment_Rate.ELDER_CP_RT, ContactPersonSeekTreatment_Rate.ELDER_ST_RT
-
-    ## static
-    # def set_seek_treatment_status(self):
-    #     if self.infection_status is False:
-    #         return False
-    #     rand_dice = random.random() < self.seek_treatment_rate.value
-    #     if rand_dice:
-    #         return True
-    #     else:
-    #         return False
-
-    ##########################
-    ## Outside Calling func ##
-    ##########################
-    # def choose_route(self):
-    #     if self.route_status is RouteStatus.TRANSMISSION:
-    #         self.seek_treatment_status = self.set_seek_treatment_status()
-    #         if self.seek_treatment_status is True:
-    #             self.route_status = RouteStatus.SEEKTREATMENT
-    #             self.medicine_intake_status = self.set_medicine_intake_status()
-    #             self.severe_status = self.set_severe_status()
-    #         elif self.seek_treatment_status is False:
-    #             pass
-    #     elif self.route_status is RouteStatus.SEEKTREATMENT:
-    #         pass
 
     ## static
     def set_age_group(self):
@@ -202,7 +283,7 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_NM_Hospitalized_Rate.ELDER_OPD_NM_HOS_RT, SMT_OPD_NM_Hospitalized_Rate.ELDER_OPD_NM_R_RT
 
-    def set_smt_opd_nm_hospitalized_death_srate(self):
+    def set_smt_opd_nm_hospitalized_death_rate(self):
         if self.age <= 18:
             return SMT_OPD_NM_Hospitalized_Death_Rate.YOUTH_OPD_NM_HOS_D_RT, SMT_OPD_NM_Hospitalized_Death_Rate.YOUTH_OPD_NM_HOS_R_RT
         elif self.age > 18 and self.age <65:
@@ -210,7 +291,32 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_NM_Hospitalized_Death_Rate.ELDER_OPD_NM_HOS_D_RT, SMT_OPD_NM_Hospitalized_Death_Rate.ELDER_OPD_NM_HOS_R_RT
 
+    ##########################
+    ## Outside Calling func ##
+    ##########################
+    def day_preprocessing(self):
+        self.set_route_status()
 
+    def day_postprocessing(self):
+        if self.curr_status.value == 'in_model':
+            self.set_infection_status()
+            self.day += 1
+            if self.day > 7:
+                self.curr_status = CurrStatus.CYCLE_REACHED
+
+
+    def day_passed(self):
+        if self.curr_status.value == 'in_model':
+            self.day += 1
+            # 1. Check whether the person get infected
+            self.set_infection_status()
+            # 2. Check whether the person go into transmission cycle
+            self.set_route_status()
+
+        # if self.day > 7:
+        #     self.cycle_reached()
+        # if self.curr_status is not CurrStatus.DEATH:
+        #     self.recovery()
 
 
 
