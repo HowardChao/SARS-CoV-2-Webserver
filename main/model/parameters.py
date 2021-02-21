@@ -45,8 +45,8 @@ class ContactPersonSeekTreatment_Rate(Enum):
     ELDER_ST_RT = 1 - ELDER_CP_RT
 
 class ContactGroup_Rate(Enum):
-    SAME_GRP = 0.8
-    DIFF_GRP = 1 - SAME_GRP
+    SAME_GRP = 0.6
+    DIFF_GRP = 0.2
 
 class Vaccine_Rate(Enum):
     YOUTH_V_RT = 0.646

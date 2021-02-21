@@ -1,5 +1,6 @@
 import uuid
 import random
+import numpy as np
 from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactPersonSeekTreatment_Rate, ContactGroup_Rate, Vaccine_Rate, Vac_Infection_Rate, NoVac_Infection_Rate, SMT_HospitalizedOPD_Rate, SMT_Hospitalized_Death_Rate, SMT_OPD_MedicineIntake_Rate, SMT_OPD_M_Hospitalized_Rate, SMT_OPD_M_Hospitalized_Death_Rate, SMT_OPD_NM_Hospitalized_Rate, SMT_OPD_NM_Hospitalized_Death_Rate, effectiveness
 
 class Person():
@@ -160,6 +161,94 @@ class Person():
                             self.recovery()
                     elif self.person_status[3] == 0:
                         self.recovery()
+
+
+    def set_smt_hospitalized_opd_status(self):
+        rand_dice = random.random() < self.smt_hospitalized_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+
+    def set_smt_hospitalized_death_status(self):
+        rand_dice = random.random() < self.smt_hospitalized_death_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 1
+            self.person_status[2] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 1
+            self.person_status[2] = 0
+
+    def set_smt_opd_medicineintake_status(self):
+        rand_dice = random.random() < self.smt_opd_medicine_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 0
+
+    def set_smt_opd_m_hospitalized_status(self):
+        rand_dice = random.random() < self.smt_opd_m_hospitalized_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 1
+            self.person_status[3] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 1
+            self.person_status[3] = 0
+
+    def set_smt_opd_m_hospitalized_death_status(self):
+        rand_dice = random.random() < self.smt_opd_m_hospitalized_death_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 1
+            self.person_status[3] = 1
+            self.person_status[4] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 1
+            self.person_status[3] = 1
+            self.person_status[4] = 0
+
+    def set_smt_opd_nm_hospitalized_status(self):
+        rand_dice = random.random() < self.smt_opd_nm_hospitalized_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 0
+            self.person_status[3] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 0
+            self.person_status[3] = 0
+
+    def set_smt_opd_nm_hospitalized_death_status(self):
+        rand_dice = random.random() < self.smt_opd_nm_hospitalized_death_rate.value
+        if rand_dice:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 0
+            self.person_status[3] = 1
+            self.person_status[4] = 1
+        else:
+            self.person_status[0] = 0
+            self.person_status[1] = 0
+            self.person_status[2] = 0
+            self.person_status[3] = 1
+            self.person_status[4] = 0
 
 
     def death(self):

@@ -1,7 +1,7 @@
 # from model import parameters
 from model import person
-# from model import vaccine
-# from model import model
+from model import vaccine
+from model import model
 
 # person.Person(.value)
 
@@ -44,6 +44,20 @@ print("        smt_opd_nm_hospitalized_rate: ", p.smt_opd_nm_hospitalized_rate.v
 print("            smt_opd_nm_recovery_rate: ", p.smt_opd_nm_recovery_rate.value)
 print(" smt_opd_nm_hospitalized_death_srate: ", p.smt_opd_nm_hospitalized_death_rate.value)
 print("      smt_opd_nm_recovery_death_rate: ", p.smt_opd_nm_recovery_death_rate.value)
+
+m = model.VaccineModel()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+m.one_day_passed()
+
 # print("         age      : ", p.age.value)
 # print("         age group: ", p.age_group.value.value)
 # print("      route status: ", p.route_status.value.value)
