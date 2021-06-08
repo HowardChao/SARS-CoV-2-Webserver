@@ -28,25 +28,6 @@ import copy
 def iterate(group, input_json, data):
     in_nput_json = copy.deepcopy(input_json)
 
-# STR_YOUTH_RT = form.cleaned_data["STR_YOUTH_RT"]
-# STR_ADULT_RT = form.cleaned_data["STR_ADULT_RT"]
-# STR_ELDER_RT = form.cleaned_data["STR_ELDER_RT"]
-#
-# MIR_YOUTH_RT = form.cleaned_data["MIR_YOUTH_RT"]
-# MIR_ADULT_RT = form.cleaned_data["MIR_ADULT_RT"]
-# MIR_ELDER_RT = form.cleaned_data["MIR_ELDER_RT"]
-#
-# SR_YOUTH_48_RT = form.cleaned_data["SR_YOUTH_48_RT"]
-# SR_ADULT_48_RT = form.cleaned_data["SR_ADULT_48_RT"]
-# SR_ELDER_48_RT = form.cleaned_data["SR_ELDER_48_RT"]
-# SR_YOUTH_N48_RT = form.cleaned_data["SR_YOUTH_N48_RT"]
-# SR_ADULT_N48_RT = form.cleaned_data["SR_ADULT_N48_RT"]
-# SR_ELDER_N48_RT = form.cleaned_data["SR_ELDER_N48_RT"]
-#
-# FR_YOUTH_RT = form.cleaned_data["FR_YOUTH_RT"]
-# FR_ADULT_RT = form.cleaned_data["FR_ADULT_RT"]
-# FR_ELDER_RT = form.cleaned_data["FR_ELDER_RT"]
-
     if in_nput_json['id'] == "Index Case":
         in_nput_json['pb'] = "1"
     elif in_nput_json['id'] == "Contact another person":
@@ -67,23 +48,23 @@ def iterate(group, input_json, data):
         in_nput_json['pb'] = str(data["STR_"+group+"_RT"])
     elif in_nput_json['id'] == "Taken Antiviral":
         in_nput_json['pb'] = str(data["MIR_"+group+"_RT"])
-    elif in_nput_json['id'] == "Hospitalization (antiviral)":
+    elif in_nput_json['id'] == "IPDpitalization (antiviral)":
         in_nput_json['pb'] = str(data["SR_"+group+"_48_RT"])
-    elif in_nput_json['id'] == "Death (antiviral, hospitalized)":
+    elif in_nput_json['id'] == "Death (antiviral, IPD)":
         in_nput_json['pb'] = str(data["FR_"+group+"_RT"])
-    elif in_nput_json['id'] == "Recovery (antiviral, hospitalized)":
+    elif in_nput_json['id'] == "Recovery (antiviral, IPD)":
         in_nput_json['pb'] = str(1 - float(data["FR_"+group+"_RT"]))
-    elif in_nput_json['id'] == "Recovery (antiviral, not hospitalized)":
+    elif in_nput_json['id'] == "Recovery (antiviral, not IPD)":
         in_nput_json['pb'] = str(1 - float(data["SR_"+group+"_48_RT"]))
     elif in_nput_json['id'] == "Not taken Antiviral":
         in_nput_json['pb'] = str(1 - float(data["MIR_"+group+"_RT"]))
-    elif in_nput_json['id'] == "Hospitalization (no antiviral)":
+    elif in_nput_json['id'] == "IPDpitalization (no antiviral)":
         in_nput_json['pb'] = str(data["SR_"+group+"_N48_RT"])
-    elif in_nput_json['id'] == "Death (no antiviral, hospitalized)":
+    elif in_nput_json['id'] == "Death (no antiviral, IPD)":
         in_nput_json['pb'] = str(data["FR_"+group+"_RT"])
-    elif in_nput_json['id'] == "Recovery (no antiviral, hospitalized)":
+    elif in_nput_json['id'] == "Recovery (no antiviral, IPD)":
         in_nput_json['pb'] = str(1 - float(data["FR_"+group+"_RT"]))
-    elif in_nput_json['id'] == "Recovery (no antiviral, not hospitalized)":
+    elif in_nput_json['id'] == "Recovery (no antiviral, not IPD)":
         in_nput_json['pb'] = str(1 - float(data["SR_"+group+"_N48_RT"]))
     print("in_nput_json: ", in_nput_json)
     if len(in_nput_json['children']) != 0:
@@ -131,38 +112,85 @@ def home(request):
         'AGP_ADULT_GRP': parameters.AgeGroupPerc.ADULT_GRP.value,
         'AGP_ELDER_GRP': parameters.AgeGroupPerc.ELDER_GRP.value,
 
-        'CR_SAME_GRP': parameters.ContactRate.SAME_GRP.value,
-        'CR_DIFF_GRP': parameters.ContactRate.DIFF_GRP.value,
+        'CP_SMT_YOUTH_Rate_CP': parameters.ContactPersonSeekTreatment_Rate.YOUTH_CP_RT.value,
+        'CP_SMT_ADULT_Rate_CP': parameters.ContactPersonSeekTreatment_Rate.ADULT_CP_RT.value,
+        'CP_SMT_ELDER_Rate_CP': parameters.ContactPersonSeekTreatment_Rate.ELDER_CP_RT.value,
+        'CP_SMT_YOUTH_Rate_ST': parameters.ContactPersonSeekTreatment_Rate.YOUTH_ST_RT.value,
+        'CP_SMT_ADULT_Rate_ST': parameters.ContactPersonSeekTreatment_Rate.ADULT_ST_RT.value,
+        'CP_SMT_ELDER_Rate_ST': parameters.ContactPersonSeekTreatment_Rate.ELDER_ST_RT.value,
 
-        'VR_YOUTH_RT': parameters.VaccineRate.YOUTH_RT.value,
-        'VR_ADULT_RT': parameters.VaccineRate.ADULT_RT.value,
-        'VR_ELDER_RT': parameters.VaccineRate.ELDER_RT.value,
+        'CR_SAME_GRP': parameters.ContactGroup_Rate.SAME_GRP.value,
+        'CR_DIFF_GRP': parameters.ContactGroup_Rate.DIFF_GRP.value,
 
-        'IR_YOUTH_NV_RT': parameters.InfectionRate.YOUTH_NV_RT.value,
-        'IR_ADULT_NV_RT': parameters.InfectionRate.ADULT_NV_RT.value,
-        'IR_ELDER_NV_RT': parameters.InfectionRate.ELDER_NV_RT.value,
-        'IR_YOUTH_V_RT': parameters.InfectionRate.YOUTH_V_RT.value,
-        'IR_ADULT_V_RT': parameters.InfectionRate.ADULT_V_RT.value,
-        'IR_ELDER_V_RT': parameters.InfectionRate.ELDER_V_RT.value,
+        'Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
+        'Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
+        'Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
+        'Vac_YOUTH_Rate_NV': parameters.Vaccine_Rate.YOUTH_NV_RT.value,
+        'Vac_ADULT_Rate_NV': parameters.Vaccine_Rate.ADULT_NV_RT.value,
+        'Vac_ELDER_Rate_NV': parameters.Vaccine_Rate.ELDER_NV_RT.value,
 
-        'STR_YOUTH_RT': parameters.SeekTreatmentRate.YOUTH_RT.value,
-        'STR_ADULT_RT': parameters.SeekTreatmentRate.ADULT_RT.value,
-        'STR_ELDER_RT': parameters.SeekTreatmentRate.ELDER_RT.value,
+        'Vac_Infection_YOUTH_Rate_V_I': parameters.Vac_Infection_Rate.YOUTH_V_I_RT.value,
+        'Vac_Infection_ADULT_Rate_V_I': parameters.Vac_Infection_Rate.ADULT_V_I_RT.value,
+        'Vac_Infection_ELDER_Rate_V_I': parameters.Vac_Infection_Rate.ELDER_V_I_RT.value,
+        'Vac_Infection_YOUTH_Rate_V_NI': parameters.Vac_Infection_Rate.YOUTH_V_NI_RT.value,
+        'Vac_Infection_ADULT_Rate_V_NI': parameters.Vac_Infection_Rate.ADULT_V_NI_RT.value,
+        'Vac_Infection_ELDER_Rate_V_NI': parameters.Vac_Infection_Rate.ELDER_V_NI_RT.value,
 
-        'MIR_YOUTH_RT': parameters.MedicineIntakeRate.YOUTH_RT.value,
-        'MIR_ADULT_RT': parameters.MedicineIntakeRate.ADULT_RT.value,
-        'MIR_ELDER_RT': parameters.MedicineIntakeRate.ELDER_RT.value,
+        'NoVac_Infection_YOUTH_Rate_NV_I': parameters.NoVac_Infection_Rate.YOUTH_NV_I_RT.value,
+        'NoVac_Infection_ADULT_Rate_NV_I': parameters.NoVac_Infection_Rate.ADULT_NV_I_RT.value,
+        'NoVac_Infection_ELDER_Rate_NV_I': parameters.NoVac_Infection_Rate.ELDER_NV_I_RT.value,
+        'NoVac_Infection_YOUTH_Rate_NV_NI': parameters.NoVac_Infection_Rate.YOUTH_NV_NI_RT.value,
+        'NoVac_Infection_ADULT_Rate_NV_NI': parameters.NoVac_Infection_Rate.ADULT_NV_NI_RT.value,
+        'NoVac_Infection_ELDER_Rate_NV_NI': parameters.NoVac_Infection_Rate.ELDER_NV_NI_RT.value,
 
-        'SR_YOUTH_48_RT': parameters.SevereRate.YOUTH_48_RT.value,
-        'SR_ADULT_48_RT': parameters.SevereRate.ADULT_48_RT.value,
-        'SR_ELDER_48_RT': parameters.SevereRate.ELDER_48_RT.value,
-        'SR_YOUTH_N48_RT': parameters.SevereRate.YOUTH_N48_RT.value,
-        'SR_ADULT_N48_RT': parameters.SevereRate.ADULT_N48_RT.value,
-        'SR_ELDER_N48_RT': parameters.SevereRate.ELDER_N48_RT.value,
+        'SMT_IPDOPD_YOUTH_Rate_IPD': parameters.SMT_IPDOPD_Rate.YOUTH_IPD_RT.value,
+        'SMT_IPDOPD_ADULT_Rate_IPD': parameters.SMT_IPDOPD_Rate.ADULT_IPD_RT.value,
+        'SMT_IPDOPD_ELDER_Rate_IPD': parameters.SMT_IPDOPD_Rate.ELDER_IPD_RT.value,
+        'SMT_IPDOPD_YOUTH_Rate_OPD': parameters.SMT_IPDOPD_Rate.YOUTH_OPD_RT.value,
+        'SMT_IPDOPD_ADULT_Rate_OPD': parameters.SMT_IPDOPD_Rate.ADULT_OPD_RT.value,
+        'SMT_IPDOPD_ELDER_Rate_OPD': parameters.SMT_IPDOPD_Rate.ELDER_OPD_RT.value,
 
-        'FR_YOUTH_RT': parameters.FatalityRate.YOUTH_RT.value,
-        'FR_ADULT_RT': parameters.FatalityRate.ADULT_RT.value,
-        'FR_ELDER_RT': parameters.FatalityRate.ELDER_RT.value,
+        'SMT_IPD_Death_YOUTH_Rate_IPD_D': parameters.SMT_IPD_Death_Rate.YOUTH_IPD_D_RT.value,
+        'SMT_IPD_Death_ADULT_Rate_IPD_D': parameters.SMT_IPD_Death_Rate.ADULT_IPD_D_RT.value,
+        'SMT_IPD_Death_ELDER_Rate_IPD_D': parameters.SMT_IPD_Death_Rate.ELDER_IPD_D_RT.value,
+        'SMT_IPD_Death_YOUTH_Rate_IPD_R': parameters.SMT_IPD_Death_Rate.YOUTH_IPD_R_RT.value,
+        'SMT_IPD_Death_ADULT_Rate_IPD_R': parameters.SMT_IPD_Death_Rate.ADULT_IPD_R_RT.value,
+        'SMT_IPD_Death_ELDER_Rate_IPD_R': parameters.SMT_IPD_Death_Rate.ELDER_IPD_R_RT.value,
+
+        'SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M': parameters.SMT_OPD_MedicineIntake_Rate.YOUTH_OPD_M_RT.value,
+        'SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M': parameters.SMT_OPD_MedicineIntake_Rate.ADULT_OPD_M_RT.value,
+        'SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M': parameters.SMT_OPD_MedicineIntake_Rate.ELDER_OPD_M_RT.value,
+        'SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_NM': parameters.SMT_OPD_MedicineIntake_Rate.YOUTH_OPD_NM_RT.value,
+        'SMT_OPD_MedicineIntake_ADULT_Rate_OPD_NM': parameters.SMT_OPD_MedicineIntake_Rate.ADULT_OPD_NM_RT.value,
+        'SMT_OPD_MedicineIntake_ELDER_Rate_OPD_NM': parameters.SMT_OPD_MedicineIntake_Rate.ELDER_OPD_NM_RT.value,
+
+        'SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD': parameters.SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_IPD_RT.value,
+        'SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD': parameters.SMT_OPD_M_IPD_Rate.ADULT_OPD_M_IPD_RT.value,
+        'SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD': parameters.SMT_OPD_M_IPD_Rate.ELDER_OPD_M_IPD_RT.value,
+        'SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_R': parameters.SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_R_RT.value,
+        'SMT_OPD_M_IPD_ADULT_Rate_OPD_M_R': parameters.SMT_OPD_M_IPD_Rate.ADULT_OPD_M_R_RT.value,
+        'SMT_OPD_M_IPD_ELDER_Rate_OPD_M_R': parameters.SMT_OPD_M_IPD_Rate.ELDER_OPD_M_R_RT.value,
+
+        'SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D': parameters.SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_D_RT.value,
+        'SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D': parameters.SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_D_RT.value,
+        'SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D': parameters.SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_D_RT.value,
+        'SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_R': parameters.SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_R_RT.value,
+        'SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_R': parameters.SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_R_RT.value,
+        'SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_R': parameters.SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_R_RT.value,
+
+        'SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD': parameters.SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_IPD_RT.value,
+        'SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD': parameters.SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_IPD_RT.value,
+        'SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD': parameters.SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_IPD_RT.value,
+        'SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_R': parameters.SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_R_RT.value,
+        'SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_R': parameters.SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_R_RT.value,
+        'SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_R': parameters.SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_R_RT.value,
+
+        'SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D': parameters.SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_D_RT.value,
+        'SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D': parameters.SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_D_RT.value,
+        'SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D': parameters.SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_D_RT.value,
+        'SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_R': parameters.SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_R_RT.value,
+        'SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R': parameters.SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_R_RT.value,
+        'SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R': parameters.SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_R_RT.value
     }
 
     if request.method == 'POST':
@@ -223,38 +251,86 @@ def home(request):
                 AGP_ADULT_GRP = form.cleaned_data["AGP_ADULT_GRP"]
                 AGP_ELDER_GRP = form.cleaned_data["AGP_ELDER_GRP"]
 
+                CP_SMT_YOUTH_Rate_CP = form.cleaned_data["CP_SMT_YOUTH_Rate_CP"]
+                CP_SMT_ADULT_Rate_CP = form.cleaned_data["CP_SMT_ADULT_Rate_CP"]
+                CP_SMT_ELDER_Rate_CP = form.cleaned_data["CP_SMT_ELDER_Rate_CP"]
+                CP_SMT_YOUTH_Rate_ST = form.cleaned_data["CP_SMT_YOUTH_Rate_ST"]
+                CP_SMT_ADULT_Rate_ST = form.cleaned_data["CP_SMT_ADULT_Rate_ST"]
+                CP_SMT_ELDER_Rate_ST = form.cleaned_data["CP_SMT_ELDER_Rate_ST"]
+
                 CR_SAME_GRP = form.cleaned_data["CR_SAME_GRP"]
                 CR_DIFF_GRP = form.cleaned_data["CR_DIFF_GRP"]
 
-                VR_YOUTH_RT = form.cleaned_data["VR_YOUTH_RT"]
-                VR_ADULT_RT = form.cleaned_data["VR_ADULT_RT"]
-                VR_ELDER_RT = form.cleaned_data["VR_ELDER_RT"]
+                Vac_YOUTH_Rate_V = form.cleaned_data["Vac_YOUTH_Rate_V"]
+                Vac_ADULT_Rate_V = form.cleaned_data["Vac_ADULT_Rate_V"]
+                Vac_ELDER_Rate_V = form.cleaned_data["Vac_ELDER_Rate_V"]
+                Vac_YOUTH_Rate_NV = form.cleaned_data["Vac_YOUTH_Rate_NV"]
+                Vac_ADULT_Rate_NV = form.cleaned_data["Vac_ADULT_Rate_NV"]
+                Vac_ELDER_Rate_NV = form.cleaned_data["Vac_ELDER_Rate_NV"]
 
-                IR_YOUTH_NV_RT = form.cleaned_data["IR_YOUTH_NV_RT"]
-                IR_ADULT_NV_RT = form.cleaned_data["IR_ADULT_NV_RT"]
-                IR_ELDER_NV_RT = form.cleaned_data["IR_ELDER_NV_RT"]
-                IR_YOUTH_V_RT = form.cleaned_data["IR_YOUTH_V_RT"]
-                IR_ADULT_V_RT = form.cleaned_data["IR_ADULT_V_RT"]
-                IR_ELDER_V_RT = form.cleaned_data["IR_ELDER_V_RT"]
+                Vac_Infection_YOUTH_Rate_V_I = form.cleaned_data["Vac_Infection_YOUTH_Rate_V_I"]
+                Vac_Infection_ADULT_Rate_V_I = form.cleaned_data["Vac_Infection_ADULT_Rate_V_I"]
+                Vac_Infection_ELDER_Rate_V_I = form.cleaned_data["Vac_Infection_ELDER_Rate_V_I"]
+                Vac_Infection_YOUTH_Rate_V_NI = form.cleaned_data["Vac_Infection_YOUTH_Rate_V_NI"]
+                Vac_Infection_ADULT_Rate_V_NI = form.cleaned_data["Vac_Infection_ADULT_Rate_V_NI"]
+                Vac_Infection_ELDER_Rate_V_NI = form.cleaned_data["Vac_Infection_ELDER_Rate_V_NI"]
 
-                STR_YOUTH_RT = form.cleaned_data["STR_YOUTH_RT"]
-                STR_ADULT_RT = form.cleaned_data["STR_ADULT_RT"]
-                STR_ELDER_RT = form.cleaned_data["STR_ELDER_RT"]
+                NoVac_Infection_YOUTH_Rate_NV_I = form.cleaned_data["NoVac_Infection_YOUTH_Rate_NV_I"]
+                NoVac_Infection_ADULT_Rate_NV_I = form.cleaned_data["NoVac_Infection_ADULT_Rate_NV_I"]
+                NoVac_Infection_ELDER_Rate_NV_I = form.cleaned_data["NoVac_Infection_ELDER_Rate_NV_I"]
+                NoVac_Infection_YOUTH_Rate_NV_NI = form.cleaned_data["NoVac_Infection_YOUTH_Rate_NV_NI"]
+                NoVac_Infection_ADULT_Rate_NV_NI = form.cleaned_data["NoVac_Infection_ADULT_Rate_NV_NI"]
+                NoVac_Infection_ELDER_Rate_NV_NI = form.cleaned_data["NoVac_Infection_ELDER_Rate_NV_NI"]
 
-                MIR_YOUTH_RT = form.cleaned_data["MIR_YOUTH_RT"]
-                MIR_ADULT_RT = form.cleaned_data["MIR_ADULT_RT"]
-                MIR_ELDER_RT = form.cleaned_data["MIR_ELDER_RT"]
+                SMT_IPDOPD_YOUTH_Rate_IPD = form.cleaned_data["SMT_IPDOPD_YOUTH_Rate_IPD"]
+                SMT_IPDOPD_ADULT_Rate_IPD = form.cleaned_data["SMT_IPDOPD_ADULT_Rate_IPD"]
+                SMT_IPDOPD_ELDER_Rate_IPD = form.cleaned_data["SMT_IPDOPD_ELDER_Rate_IPD"]
+                SMT_IPDOPD_YOUTH_Rate_OPD = form.cleaned_data["SMT_IPDOPD_YOUTH_Rate_OPD"]
+                SMT_IPDOPD_ADULT_Rate_OPD = form.cleaned_data["SMT_IPDOPD_ADULT_Rate_OPD"]
+                SMT_IPDOPD_ELDER_Rate_OPD = form.cleaned_data["SMT_IPDOPD_ELDER_Rate_OPD"]
 
-                SR_YOUTH_48_RT = form.cleaned_data["SR_YOUTH_48_RT"]
-                SR_ADULT_48_RT = form.cleaned_data["SR_ADULT_48_RT"]
-                SR_ELDER_48_RT = form.cleaned_data["SR_ELDER_48_RT"]
-                SR_YOUTH_N48_RT = form.cleaned_data["SR_YOUTH_N48_RT"]
-                SR_ADULT_N48_RT = form.cleaned_data["SR_ADULT_N48_RT"]
-                SR_ELDER_N48_RT = form.cleaned_data["SR_ELDER_N48_RT"]
+                SMT_IPD_Death_YOUTH_Rate_IPD_D = form.cleaned_data["SMT_IPD_Death_YOUTH_Rate_IPD_D"]
+                SMT_IPD_Death_ADULT_Rate_IPD_D = form.cleaned_data["SMT_IPD_Death_ADULT_Rate_IPD_D"]
+                SMT_IPD_Death_ELDER_Rate_IPD_D = form.cleaned_data["SMT_IPD_Death_ELDER_Rate_IPD_D"]
+                SMT_IPD_Death_YOUTH_Rate_IPD_R = form.cleaned_data["SMT_IPD_Death_YOUTH_Rate_IPD_R"]
+                SMT_IPD_Death_ADULT_Rate_IPD_R = form.cleaned_data["SMT_IPD_Death_ADULT_Rate_IPD_R"]
+                SMT_IPD_Death_ELDER_Rate_IPD_R = form.cleaned_data["SMT_IPD_Death_ELDER_Rate_IPD_R"]
 
-                FR_YOUTH_RT = form.cleaned_data["FR_YOUTH_RT"]
-                FR_ADULT_RT = form.cleaned_data["FR_ADULT_RT"]
-                FR_ELDER_RT = form.cleaned_data["FR_ELDER_RT"]
+                SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M = form.cleaned_data["SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M"]
+                SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M = form.cleaned_data["SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M"]
+                SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M = form.cleaned_data["SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M"]
+                SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_NM = form.cleaned_data["SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_NM"]
+                SMT_OPD_MedicineIntake_ADULT_Rate_OPD_NM = form.cleaned_data["SMT_OPD_MedicineIntake_ADULT_Rate_OPD_NM"]
+                SMT_OPD_MedicineIntake_ELDER_Rate_OPD_NM = form.cleaned_data["SMT_OPD_MedicineIntake_ELDER_Rate_OPD_NM"]
+
+                SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD = form.cleaned_data["SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD"]
+                SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD = form.cleaned_data["SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD"]
+                SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD = form.cleaned_data["SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD"]
+                SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_R = form.cleaned_data["SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_R"]
+                SMT_OPD_M_IPD_ADULT_Rate_OPD_M_R = form.cleaned_data["SMT_OPD_M_IPD_ADULT_Rate_OPD_M_R"]
+                SMT_OPD_M_IPD_ELDER_Rate_OPD_M_R = form.cleaned_data["SMT_OPD_M_IPD_ELDER_Rate_OPD_M_R"]
+
+                SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D = form.cleaned_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D"]
+                SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D = form.cleaned_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D"]
+                SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D = form.cleaned_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D"]
+                SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_R = form.cleaned_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_R"]
+                SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_R = form.cleaned_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_R"]
+                SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_R = form.cleaned_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_R"]
+
+                SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD = form.cleaned_data["SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD"]
+                SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD = form.cleaned_data["SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD"]
+                SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD = form.cleaned_data["SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD"]
+                SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_R = form.cleaned_data["SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_R"]
+                SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_R = form.cleaned_data["SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_R"]
+                SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_R = form.cleaned_data["SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_R"]
+
+                SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D = form.cleaned_data["SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D"]
+                SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D = form.cleaned_data["SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D"]
+                SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D = form.cleaned_data["SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D"]
+                SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_R = form.cleaned_data["SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_R"]
+                SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R = form.cleaned_data["SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R"]
+                SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R = form.cleaned_data["SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R"]
+
 
                 global_json = os.path.join(settings.STATIC_MAIN_APP, 'main/topology.json')
                 with open(global_json, 'r') as f:
@@ -290,32 +366,83 @@ def home(request):
                         "AGP_YOUTH_GRP": AGP_YOUTH_GRP,
                         "AGP_ADULT_GRP": AGP_ADULT_GRP,
                         "AGP_ELDER_GRP": AGP_ELDER_GRP,
+                        "CP_SMT_YOUTH_Rate_CP": AGP_ELDER_GRP,
+                        "CP_SMT_ADULT_Rate_CP": CP_SMT_ADULT_Rate_CP,
+                        "CP_SMT_ELDER_Rate_CP": CP_SMT_ELDER_Rate_CP,
+                        "CP_SMT_YOUTH_Rate_ST": CP_SMT_YOUTH_Rate_ST,
+                        "CP_SMT_ADULT_Rate_ST": CP_SMT_ADULT_Rate_ST,
+                        "CP_SMT_ELDER_Rate_ST": CP_SMT_ELDER_Rate_ST,
                         "CR_SAME_GRP": CR_SAME_GRP,
                         "CR_DIFF_GRP": CR_DIFF_GRP,
-                        "VR_YOUTH_RT":  VR_YOUTH_RT,
-                        "VR_ADULT_RT": VR_ADULT_RT,
-                        "VR_ELDER_RT": VR_ELDER_RT,
-                        "IR_YOUTH_NV_RT": IR_YOUTH_NV_RT,
-                        "IR_ADULT_NV_RT": IR_ADULT_NV_RT,
-                        "IR_ELDER_NV_RT": IR_ELDER_NV_RT,
-                        "IR_YOUTH_V_RT": IR_YOUTH_V_RT,
-                        "IR_ADULT_V_RT": IR_ADULT_V_RT,
-                        "IR_ELDER_V_RT": IR_ELDER_V_RT,
-                        "STR_YOUTH_RT": STR_YOUTH_RT,
-                        "STR_ADULT_RT": STR_ADULT_RT,
-                        "STR_ELDER_RT": STR_ELDER_RT,
-                        "MIR_YOUTH_RT": MIR_YOUTH_RT,
-                        "MIR_ADULT_RT": MIR_ADULT_RT,
-                        "MIR_ELDER_RT": MIR_ELDER_RT,
-                        "SR_YOUTH_48_RT": SR_YOUTH_48_RT,
-                        "SR_ADULT_48_RT": SR_ADULT_48_RT,
-                        "SR_ELDER_48_RT": SR_ELDER_48_RT,
-                        "SR_YOUTH_N48_RT": SR_YOUTH_N48_RT,
-                        "SR_ADULT_N48_RT": SR_ADULT_N48_RT,
-                        "SR_ELDER_N48_RT": SR_ELDER_N48_RT,
-                        "FR_YOUTH_RT": FR_YOUTH_RT,
-                        "FR_ADULT_RT": FR_ADULT_RT,
-                        "FR_ELDER_RT": FR_ELDER_RT,
+                        "Vac_YOUTH_Rate_V": Vac_YOUTH_Rate_V,
+                        "Vac_ADULT_Rate_V": Vac_ADULT_Rate_V,
+                        "Vac_ELDER_Rate_V": Vac_ELDER_Rate_V,
+                        "Vac_YOUTH_Rate_NV": Vac_YOUTH_Rate_NV,
+                        "Vac_ADULT_Rate_NV": Vac_ADULT_Rate_NV,
+                        "Vac_ELDER_Rate_NV": Vac_ELDER_Rate_NV,
+
+                        "Vac_Infection_YOUTH_Rate_V_I": Vac_Infection_YOUTH_Rate_V_I,
+                        "Vac_Infection_ADULT_Rate_V_I": Vac_Infection_ADULT_Rate_V_I,
+                        "Vac_Infection_ELDER_Rate_V_I": Vac_Infection_ELDER_Rate_V_I,
+                        "Vac_Infection_YOUTH_Rate_V_NI": Vac_Infection_YOUTH_Rate_V_NI,
+                        "Vac_Infection_ADULT_Rate_V_NI": Vac_Infection_ADULT_Rate_V_NI,
+                        "Vac_Infection_ELDER_Rate_V_NI": Vac_Infection_ELDER_Rate_V_NI,
+
+                        "NoVac_Infection_YOUTH_Rate_NV_I": NoVac_Infection_YOUTH_Rate_NV_I,
+                        "NoVac_Infection_ADULT_Rate_NV_I": NoVac_Infection_ADULT_Rate_NV_I,
+                        "NoVac_Infection_ELDER_Rate_NV_I": NoVac_Infection_ELDER_Rate_NV_I,
+                        "NoVac_Infection_YOUTH_Rate_NV_NI": NoVac_Infection_YOUTH_Rate_NV_NI,
+                        "NoVac_Infection_ADULT_Rate_NV_NI": NoVac_Infection_ADULT_Rate_NV_NI,
+                        "NoVac_Infection_ELDER_Rate_NV_NI": NoVac_Infection_ELDER_Rate_NV_NI,
+
+                        "SMT_IPDOPD_YOUTH_Rate_IPD": SMT_IPDOPD_YOUTH_Rate_IPD,
+                        "SMT_IPDOPD_ADULT_Rate_IPD": SMT_IPDOPD_ADULT_Rate_IPD,
+                        "SMT_IPDOPD_ELDER_Rate_IPD": SMT_IPDOPD_ELDER_Rate_IPD,
+                        "SMT_IPDOPD_YOUTH_Rate_OPD": SMT_IPDOPD_YOUTH_Rate_OPD,
+                        "SMT_IPDOPD_ADULT_Rate_OPD": SMT_IPDOPD_ADULT_Rate_OPD,
+                        "SMT_IPDOPD_ELDER_Rate_OPD": SMT_IPDOPD_ELDER_Rate_OPD,
+
+                        "SMT_IPD_Death_YOUTH_Rate_IPD_D": SMT_IPD_Death_YOUTH_Rate_IPD_D,
+                        "SMT_IPD_Death_ADULT_Rate_IPD_D": SMT_IPD_Death_ADULT_Rate_IPD_D,
+                        "SMT_IPD_Death_ELDER_Rate_IPD_D": SMT_IPD_Death_ELDER_Rate_IPD_D,
+                        "SMT_IPD_Death_YOUTH_Rate_IPD_R": SMT_IPD_Death_YOUTH_Rate_IPD_R,
+                        "SMT_IPD_Death_ADULT_Rate_IPD_R": SMT_IPD_Death_ADULT_Rate_IPD_R,
+                        "SMT_IPD_Death_ELDER_Rate_IPD_R": SMT_IPD_Death_ELDER_Rate_IPD_R,
+
+                        "SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M": SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M,
+                        "SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M": SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M,
+                        "SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M": SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M,
+                        "SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_NM": SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_NM,
+                        "SMT_OPD_MedicineIntake_ADULT_Rate_OPD_NM": SMT_OPD_MedicineIntake_ADULT_Rate_OPD_NM,
+                        "SMT_OPD_MedicineIntake_ELDER_Rate_OPD_NM": SMT_OPD_MedicineIntake_ELDER_Rate_OPD_NM,
+
+                        "SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD": SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD,
+                        "SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD": SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD,
+                        "SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD": SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD,
+                        "SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_R": SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_R,
+                        "SMT_OPD_M_IPD_ADULT_Rate_OPD_M_R": SMT_OPD_M_IPD_ADULT_Rate_OPD_M_R,
+                        "SMT_OPD_M_IPD_ELDER_Rate_OPD_M_R": SMT_OPD_M_IPD_ELDER_Rate_OPD_M_R,
+
+                        "SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D": SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D,
+                        "SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D": SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D,
+                        "SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D": SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D,
+                        "SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_R": SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_R,
+                        "SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_R": SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_R,
+                        "SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_R": SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_R,
+
+                        "SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD": SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD,
+                        "SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD": SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD,
+                        "SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD": SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD,
+                        "SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_R": SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_R,
+                        "SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_R": SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_R,
+                        "SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_R": SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_R,
+
+                        "SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D": SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D,
+                        "SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D": SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D,
+                        "SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D": SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D,
+                        "SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_R": SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_R,
+                        "SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R": SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R,
+                        "SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R": SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R,
                     }, f)
 
                 a = async_task(tasks.start_analysis, datadir, BMP_SIMULATION_DAY, task_name="id_"+analysis_code)

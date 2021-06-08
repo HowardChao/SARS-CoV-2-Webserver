@@ -1,7 +1,7 @@
 import uuid
 import random
 import numpy as np
-from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactPersonSeekTreatment_Rate, ContactGroup_Rate, Vaccine_Rate, Vac_Infection_Rate, NoVac_Infection_Rate, SMT_HospitalizedOPD_Rate, SMT_Hospitalized_Death_Rate, SMT_OPD_MedicineIntake_Rate, SMT_OPD_M_Hospitalized_Rate, SMT_OPD_M_Hospitalized_Death_Rate, SMT_OPD_NM_Hospitalized_Rate, SMT_OPD_NM_Hospitalized_Death_Rate, effectiveness
+from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactPersonSeekTreatment_Rate, ContactGroup_Rate, Vaccine_Rate, Vac_Infection_Rate, NoVac_Infection_Rate, SMT_IPDOPD_Rate, SMT_IPD_Death_Rate, SMT_OPD_MedicineIntake_Rate, SMT_OPD_M_IPD_Rate, SMT_OPD_M_IPD_Death_Rate, SMT_OPD_NM_IPD_Rate, SMT_OPD_NM_IPD_Death_Rate, effectiveness
 
 class Person():
     def __init__(self, age, initial_idx_case=False):
@@ -25,13 +25,13 @@ class Person():
         self.vaccine_status = self.set_vaccine_status()
         self.set_initial_idx_case()
 
-        self.smt_hospitalized_rate, self.smt_opd_rate = self.set_smt_hospitalized_opd_rate()
-        self.smt_hospitalized_death_rate, self.smt_hospitalized_recovery_rate = self.set_smt_hospitalized_death_rate()
+        self.smt_IPD_rate, self.smt_opd_rate = self.set_smt_IPD_opd_rate()
+        self.smt_IPD_death_rate, self.smt_IPD_recovery_rate = self.set_smt_IPD_death_rate()
         self.smt_opd_medicine_rate, self.smt_opd_n_medicine_rate = self.set_smt_opd_medicineintake_rate()
-        self.smt_opd_m_hospitalized_rate, self.smt_opd_m_recovery_rate = self.set_smt_opd_m_hospitalized_rate()
-        self.smt_opd_m_hospitalized_death_rate, self.smt_opd_m_hospitalized_recovery_rate = self.set_smt_opd_m_hospitalized_death_rate()
-        self.smt_opd_nm_hospitalized_rate, self.smt_opd_nm_recovery_rate = self.set_smt_opd_nm_hospitalized_rate()
-        self.smt_opd_nm_hospitalized_death_rate, self.smt_opd_nm_recovery_death_rate = self.set_smt_opd_nm_hospitalized_death_rate()
+        self.smt_opd_m_IPD_rate, self.smt_opd_m_recovery_rate = self.set_smt_opd_m_IPD_rate()
+        self.smt_opd_m_IPD_death_rate, self.smt_opd_m_IPD_recovery_rate = self.set_smt_opd_m_IPD_death_rate()
+        self.smt_opd_nm_IPD_rate, self.smt_opd_nm_recovery_rate = self.set_smt_opd_nm_IPD_rate()
+        self.smt_opd_nm_IPD_death_rate, self.smt_opd_nm_recovery_death_rate = self.set_smt_opd_nm_IPD_death_rate()
         # self.infection_rate = self.set_infection_rate()
         # self.infection_status = self.set_infection_status(initial_idx_case)
         #
@@ -132,9 +132,9 @@ class Person():
             death_ls = []
             recovery_ls = []
             reached_ls = []
-            self.set_smt_hospitalized_opd_status()
+            self.set_smt_IPD_opd_status()
             if self.person_status[1] == 1:
-                self.set_smt_hospitalized_death_status()
+                self.set_smt_IPD_death_status()
                 if self.person_status[2] == 1:
                     self.death()
                 elif self.person_status[2] == 0:
@@ -142,9 +142,9 @@ class Person():
             elif self.person_status[1] == 0:
                 self.set_smt_opd_medicineintake_status()
                 if self.person_status[2] == 1:
-                    self.set_smt_opd_m_hospitalized_status()
+                    self.set_smt_opd_m_IPD_status()
                     if self.person_status[3] == 1:
-                        self.set_smt_opd_m_hospitalized_death_status()
+                        self.set_smt_opd_m_IPD_death_status()
                         if self.person_status[4] == 1:
                             self.death()
                         elif self.person_status[4] == 0:
@@ -152,9 +152,9 @@ class Person():
                     elif self.person_status[3] == 0:
                         self.recovery()
                 elif self.person_status[2] == 0:
-                    self.set_smt_opd_nm_hospitalized_status()
+                    self.set_smt_opd_nm_IPD_status()
                     if self.person_status[3] == 1:
-                        self.set_smt_opd_nm_hospitalized_death_status()
+                        self.set_smt_opd_nm_IPD_death_status()
                         if self.person_status[4] == 1:
                             self.death()
                         elif self.person_status[4] == 0:
@@ -163,8 +163,8 @@ class Person():
                         self.recovery()
 
 
-    def set_smt_hospitalized_opd_status(self):
-        rand_dice = random.random() < self.smt_hospitalized_rate.value
+    def set_smt_IPD_opd_status(self):
+        rand_dice = random.random() < self.smt_IPD_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 1
@@ -172,8 +172,8 @@ class Person():
             self.person_status[0] = 0
             self.person_status[1] = 0
 
-    def set_smt_hospitalized_death_status(self):
-        rand_dice = random.random() < self.smt_hospitalized_death_rate.value
+    def set_smt_IPD_death_status(self):
+        rand_dice = random.random() < self.smt_IPD_death_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 1
@@ -194,8 +194,8 @@ class Person():
             self.person_status[1] = 0
             self.person_status[2] = 0
 
-    def set_smt_opd_m_hospitalized_status(self):
-        rand_dice = random.random() < self.smt_opd_m_hospitalized_rate.value
+    def set_smt_opd_m_IPD_status(self):
+        rand_dice = random.random() < self.smt_opd_m_IPD_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -207,8 +207,8 @@ class Person():
             self.person_status[2] = 1
             self.person_status[3] = 0
 
-    def set_smt_opd_m_hospitalized_death_status(self):
-        rand_dice = random.random() < self.smt_opd_m_hospitalized_death_rate.value
+    def set_smt_opd_m_IPD_death_status(self):
+        rand_dice = random.random() < self.smt_opd_m_IPD_death_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -222,8 +222,8 @@ class Person():
             self.person_status[3] = 1
             self.person_status[4] = 0
 
-    def set_smt_opd_nm_hospitalized_status(self):
-        rand_dice = random.random() < self.smt_opd_nm_hospitalized_rate.value
+    def set_smt_opd_nm_IPD_status(self):
+        rand_dice = random.random() < self.smt_opd_nm_IPD_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -235,8 +235,8 @@ class Person():
             self.person_status[2] = 0
             self.person_status[3] = 0
 
-    def set_smt_opd_nm_hospitalized_death_status(self):
-        rand_dice = random.random() < self.smt_opd_nm_hospitalized_death_rate.value
+    def set_smt_opd_nm_IPD_death_status(self):
+        rand_dice = random.random() < self.smt_opd_nm_IPD_death_rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -323,21 +323,21 @@ class Person():
         elif self.age >= 65:
             return NoVac_Infection_Rate.ELDER_NV_I_RT, NoVac_Infection_Rate.ELDER_NV_NI_RT
 
-    def set_smt_hospitalized_opd_rate(self):
+    def set_smt_IPD_opd_rate(self):
         if self.age <= 18:
-            return SMT_HospitalizedOPD_Rate.YOUTH_HOS_RT, SMT_HospitalizedOPD_Rate.YOUTH_OPD_RT
+            return SMT_IPDOPD_Rate.YOUTH_IPD_RT, SMT_IPDOPD_Rate.YOUTH_OPD_RT
         elif self.age > 18 and self.age <65:
-            return SMT_HospitalizedOPD_Rate.ADULT_HOS_RT, SMT_HospitalizedOPD_Rate.ADULT_OPD_RT
+            return SMT_IPDOPD_Rate.ADULT_IPD_RT, SMT_IPDOPD_Rate.ADULT_OPD_RT
         elif self.age >= 65:
-            return SMT_HospitalizedOPD_Rate.ELDER_HOS_RT, SMT_HospitalizedOPD_Rate.ELDER_OPD_RT
+            return SMT_IPDOPD_Rate.ELDER_IPD_RT, SMT_IPDOPD_Rate.ELDER_OPD_RT
 
-    def set_smt_hospitalized_death_rate(self):
+    def set_smt_IPD_death_rate(self):
         if self.age <= 18:
-            return SMT_Hospitalized_Death_Rate.YOUTH_HOS_D_RT, SMT_Hospitalized_Death_Rate.YOUTH_HOS_R_RT
+            return SMT_IPD_Death_Rate.YOUTH_IPD_D_RT, SMT_IPD_Death_Rate.YOUTH_IPD_R_RT
         elif self.age > 18 and self.age <65:
-            return SMT_Hospitalized_Death_Rate.ADULT_HOS_D_RT, SMT_Hospitalized_Death_Rate.ADULT_HOS_R_RT
+            return SMT_IPD_Death_Rate.ADULT_IPD_D_RT, SMT_IPD_Death_Rate.ADULT_IPD_R_RT
         elif self.age >= 65:
-            return SMT_Hospitalized_Death_Rate.ELDER_HOS_D_RT, SMT_Hospitalized_Death_Rate.ELDER_HOS_R_RT
+            return SMT_IPD_Death_Rate.ELDER_IPD_D_RT, SMT_IPD_Death_Rate.ELDER_IPD_R_RT
 
 
     def set_smt_opd_medicineintake_rate(self):
@@ -348,37 +348,37 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_MedicineIntake_Rate.ELDER_OPD_M_RT, SMT_OPD_MedicineIntake_Rate.ELDER_OPD_NM_RT
 
-    def set_smt_opd_m_hospitalized_rate(self):
+    def set_smt_opd_m_IPD_rate(self):
         if self.age <= 18:
-            return SMT_OPD_M_Hospitalized_Rate.YOUTH_OPD_M_HOS_RT, SMT_OPD_M_Hospitalized_Rate.YOUTH_OPD_M_R_RT
+            return SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_R_RT
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_M_Hospitalized_Rate.ADULT_OPD_M_HOS_RT, SMT_OPD_M_Hospitalized_Rate.ADULT_OPD_M_R_RT
+            return SMT_OPD_M_IPD_Rate.ADULT_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.ADULT_OPD_M_R_RT
         elif self.age >= 65:
-            return SMT_OPD_M_Hospitalized_Rate.ELDER_OPD_M_HOS_RT, SMT_OPD_M_Hospitalized_Rate.ELDER_OPD_M_R_RT
+            return SMT_OPD_M_IPD_Rate.ELDER_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.ELDER_OPD_M_R_RT
 
-    def set_smt_opd_m_hospitalized_death_rate(self):
+    def set_smt_opd_m_IPD_death_rate(self):
         if self.age <= 18:
-            return SMT_OPD_M_Hospitalized_Death_Rate.YOUTH_OPD_M_HOS_D_RT, SMT_OPD_M_Hospitalized_Death_Rate.YOUTH_OPD_M_HOS_R_RT
+            return SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_R_RT
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_M_Hospitalized_Death_Rate.ADULT_OPD_M_HOS_D_RT, SMT_OPD_M_Hospitalized_Death_Rate.ADULT_OPD_M_HOS_R_RT
+            return SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_R_RT
         elif self.age >= 65:
-            return SMT_OPD_M_Hospitalized_Death_Rate.ELDER_OPD_M_HOS_D_RT, SMT_OPD_M_Hospitalized_Death_Rate.ELDER_OPD_M_HOS_R_RT
+            return SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_R_RT
 
-    def set_smt_opd_nm_hospitalized_rate(self):
+    def set_smt_opd_nm_IPD_rate(self):
         if self.age <= 18:
-            return SMT_OPD_NM_Hospitalized_Rate.YOUTH_OPD_NM_HOS_RT, SMT_OPD_NM_Hospitalized_Rate.YOUTH_OPD_NM_R_RT
+            return SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_R_RT
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_NM_Hospitalized_Rate.ADULT_OPD_NM_HOS_RT, SMT_OPD_NM_Hospitalized_Rate.ADULT_OPD_NM_R_RT
+            return SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_R_RT
         elif self.age >= 65:
-            return SMT_OPD_NM_Hospitalized_Rate.ELDER_OPD_NM_HOS_RT, SMT_OPD_NM_Hospitalized_Rate.ELDER_OPD_NM_R_RT
+            return SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_R_RT
 
-    def set_smt_opd_nm_hospitalized_death_rate(self):
+    def set_smt_opd_nm_IPD_death_rate(self):
         if self.age <= 18:
-            return SMT_OPD_NM_Hospitalized_Death_Rate.YOUTH_OPD_NM_HOS_D_RT, SMT_OPD_NM_Hospitalized_Death_Rate.YOUTH_OPD_NM_HOS_R_RT
+            return SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_R_RT
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_NM_Hospitalized_Death_Rate.ADULT_OPD_NM_HOS_D_RT, SMT_OPD_NM_Hospitalized_Death_Rate.ADULT_OPD_NM_HOS_R_RT
+            return SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_R_RT
         elif self.age >= 65:
-            return SMT_OPD_NM_Hospitalized_Death_Rate.ELDER_OPD_NM_HOS_D_RT, SMT_OPD_NM_Hospitalized_Death_Rate.ELDER_OPD_NM_HOS_R_RT
+            return SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_R_RT
 
     ##########################
     ## Outside Calling func ##
@@ -546,9 +546,9 @@ class Person():
 #         Person(age, vaccine_rate, infection_rate)
 #
 # def IdxCasePerson(Person):
-#     def __init__(self, age, vaccine_rate, affected_rate, hosp_status, sever_rate, mortality_rate, symptom):
+#     def __init__(self, age, vaccine_rate, affected_rate, IPDp_status, sever_rate, mortality_rate, symptom):
 #         Person(age, vaccine_rate, infection_rate)
-#         self.hosp_status = hosp_status
+#         self.IPDp_status = IPDp_status
 #         self.sever_rate = sever_rate
 #         self.mortality_rate = mortality_rate
 #         self.symptom = symptom
