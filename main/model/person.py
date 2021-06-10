@@ -26,12 +26,12 @@ class Person():
         self.set_initial_idx_case()
 
         self.smt_IPD_rate, self.smt_opd_rate = self.set_smt_IPD_opd_rate()
-        self.smt_IPD_death_rate, self.smt_IPD_recovery_rate = self.set_smt_IPD_death_rate()
+        self.SMT_IPD_Death_Rate, self.smt_IPD_recovery_rate = self.set_SMT_IPD_Death_Rate()
         self.smt_opd_medicine_rate, self.smt_opd_n_medicine_rate = self.set_smt_opd_medicineintake_rate()
-        self.smt_opd_m_IPD_rate, self.smt_opd_m_recovery_rate = self.set_smt_opd_m_IPD_rate()
-        self.smt_opd_m_IPD_death_rate, self.smt_opd_m_IPD_recovery_rate = self.set_smt_opd_m_IPD_death_rate()
-        self.smt_opd_nm_IPD_rate, self.smt_opd_nm_recovery_rate = self.set_smt_opd_nm_IPD_rate()
-        self.smt_opd_nm_IPD_death_rate, self.smt_opd_nm_recovery_death_rate = self.set_smt_opd_nm_IPD_death_rate()
+        self.SMT_OPD_M_IPD_Rate, self.smt_opd_m_recovery_rate = self.set_SMT_OPD_M_IPD_Rate()
+        self.SMT_OPD_M_IPD_Death_Rate, self.smt_opd_m_IPD_recovery_rate = self.set_SMT_OPD_M_IPD_Death_Rate()
+        self.SMT_OPD_NM_IPD_Rate, self.smt_opd_nm_recovery_rate = self.set_SMT_OPD_NM_IPD_Rate()
+        self.SMT_OPD_NM_IPD_Death_Rate, self.smt_opd_nm_recovery_rate = self.set_SMT_OPD_NM_IPD_Death_Rate()
         # self.infection_rate = self.set_infection_rate()
         # self.infection_status = self.set_infection_status(initial_idx_case)
         #
@@ -173,7 +173,7 @@ class Person():
             self.person_status[1] = 0
 
     def set_smt_IPD_death_status(self):
-        rand_dice = random.random() < self.smt_IPD_death_rate.value
+        rand_dice = random.random() < self.SMT_IPD_Death_Rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 1
@@ -195,7 +195,7 @@ class Person():
             self.person_status[2] = 0
 
     def set_smt_opd_m_IPD_status(self):
-        rand_dice = random.random() < self.smt_opd_m_IPD_rate.value
+        rand_dice = random.random() < self.SMT_OPD_M_IPD_Rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -208,7 +208,7 @@ class Person():
             self.person_status[3] = 0
 
     def set_smt_opd_m_IPD_death_status(self):
-        rand_dice = random.random() < self.smt_opd_m_IPD_death_rate.value
+        rand_dice = random.random() < self.SMT_OPD_M_IPD_Death_Rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -223,7 +223,7 @@ class Person():
             self.person_status[4] = 0
 
     def set_smt_opd_nm_IPD_status(self):
-        rand_dice = random.random() < self.smt_opd_nm_IPD_rate.value
+        rand_dice = random.random() < self.SMT_OPD_NM_IPD_Rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -236,7 +236,7 @@ class Person():
             self.person_status[3] = 0
 
     def set_smt_opd_nm_IPD_death_status(self):
-        rand_dice = random.random() < self.smt_opd_nm_IPD_death_rate.value
+        rand_dice = random.random() < self.SMT_OPD_NM_IPD_Death_Rate.value
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -331,7 +331,7 @@ class Person():
         elif self.age >= 65:
             return SMT_IPDOPD_Rate.ELDER_IPD_RT, SMT_IPDOPD_Rate.ELDER_OPD_RT
 
-    def set_smt_IPD_death_rate(self):
+    def set_SMT_IPD_Death_Rate(self):
         if self.age <= 18:
             return SMT_IPD_Death_Rate.YOUTH_IPD_D_RT, SMT_IPD_Death_Rate.YOUTH_IPD_R_RT
         elif self.age > 18 and self.age <65:
@@ -348,7 +348,7 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_MedicineIntake_Rate.ELDER_OPD_M_RT, SMT_OPD_MedicineIntake_Rate.ELDER_OPD_NM_RT
 
-    def set_smt_opd_m_IPD_rate(self):
+    def set_SMT_OPD_M_IPD_Rate(self):
         if self.age <= 18:
             return SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_R_RT
         elif self.age > 18 and self.age <65:
@@ -356,7 +356,7 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_M_IPD_Rate.ELDER_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.ELDER_OPD_M_R_RT
 
-    def set_smt_opd_m_IPD_death_rate(self):
+    def set_SMT_OPD_M_IPD_Death_Rate(self):
         if self.age <= 18:
             return SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_R_RT
         elif self.age > 18 and self.age <65:
@@ -364,7 +364,7 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_R_RT
 
-    def set_smt_opd_nm_IPD_rate(self):
+    def set_SMT_OPD_NM_IPD_Rate(self):
         if self.age <= 18:
             return SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_R_RT
         elif self.age > 18 and self.age <65:
@@ -372,7 +372,7 @@ class Person():
         elif self.age >= 65:
             return SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_R_RT
 
-    def set_smt_opd_nm_IPD_death_rate(self):
+    def set_SMT_OPD_NM_IPD_Death_Rate(self):
         if self.age <= 18:
             return SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_R_RT
         elif self.age > 18 and self.age <65:
