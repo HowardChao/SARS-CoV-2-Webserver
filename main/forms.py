@@ -4,14 +4,16 @@ from django import forms
             # <input class="form-control" type="number" value="5000" id="BMP_IDX_CASE_NUM">
 
 
+class AnalysisCodeForm(forms.Form):
+    your_analysis_code = forms.CharField(max_length=100)
 
 class RunModelForm(forms.Form):
     # try_ = forms.IntegerField()
 
     BMP_IDX_CASE_NUM = forms.IntegerField()
     BMP_SIMULATION_DAY = forms.IntegerField()
-    BMP_SIMULATION_TIME = forms.IntegerField()
     BMP_CYCLE_DAYS = forms.IntegerField()
+    BMP_CONTACT_PEOPLE_NUM = forms.IntegerField()
 
     AGP_YOUTH_GRP = forms.FloatField()
     AGP_ADULT_GRP = forms.FloatField()
@@ -35,6 +37,9 @@ class RunModelForm(forms.Form):
     CP_SMT_YOUTH_Rate_CP = forms.FloatField()
     CP_SMT_ADULT_Rate_CP = forms.FloatField()
     CP_SMT_ELDER_Rate_CP = forms.FloatField()
+    CP_SMT_YOUTH_Rate_ST = forms.FloatField()
+    CP_SMT_ADULT_Rate_ST = forms.FloatField()
+    CP_SMT_ELDER_Rate_ST = forms.FloatField()
 
     SMT_IPDOPD_YOUTH_Rate_IPD = forms.FloatField()
     SMT_IPDOPD_ADULT_Rate_IPD = forms.FloatField()

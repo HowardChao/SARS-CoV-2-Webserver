@@ -6,7 +6,7 @@ from django.conf import settings
 
 from . import utils_func
 from . import tasks
-from .forms import RunModelForm
+from .forms import RunModelForm, AnalysisCodeForm
 
 from .model import parameters
 from .model import person
@@ -15,7 +15,7 @@ from .model import model
 
 import json
 import os
-from django_q.tasks import async_task, result, fetch, AsyncTask, result_group
+from django_q.tasks import async_task, result, fetch, AsyncTask, result_group, result
 import django_q
 
 import inspect
@@ -28,10 +28,10 @@ import copy
 def iterate(group, input_json, data):
     in_nput_json = copy.deepcopy(input_json)
 
-    # if in_nput_json['id'] == "Index Case":
-    #     in_nput_json['pb'] = "1"
-    # elif in_nput_json['id'] == "Contact another person":
-    #     in_nput_json['pb'] = "(" + str(data["CR_SAME_GRP"]) + ", " + str(data["CR_DIFF_GRP"]) + ")"
+    if in_nput_json['id'] == "Index Case":
+        in_nput_json['pb'] = "1"
+    elif in_nput_json['id'] == "Contact another person":
+        in_nput_json['pb'] = "(" + str(data["CR_SAME_GRP"]) + ", " + str(data["CR_DIFF_GRP"]) + ")"
     # elif in_nput_json['id'] == "Vaccinated":
     #     in_nput_json['pb'] = str(data["VR_"+group+"_RT"])
     # elif in_nput_json['id'] == "Infected (vaccinated)":
@@ -105,8 +105,8 @@ def home(request):
         'button_clicked': "False",
         'BMP_IDX_CASE_NUM': parameters.IDX_CASE_NUM,
         'BMP_SIMULATION_DAY': parameters.SIMULATION_DAY,
-        'BMP_SIMULATION_TIME': parameters.SIMULATION_TIME,
         'BMP_CYCLE_DAYS': parameters.CYCLE_DAYS,
+        'BMP_CONTACT_PEOPLE_NUM': parameters.CONTACT_PEOPLE_NUM,
 
         'AGP_YOUTH_GRP': parameters.AgeGroupPerc.YOUTH_GRP.value,
         'AGP_ADULT_GRP': parameters.AgeGroupPerc.ADULT_GRP.value,
@@ -266,8 +266,8 @@ def home(request):
             json_file = os.path.join(datadir, "data.json")
             # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
             # labels_file = os.path.join(datadir, "labels.json")
-            with open(json_file, 'w') as f:
-                json.dump({}, f)
+            with open(json_file, 'w', encoding="UTF-8") as f:
+                json.dump({}, f, ensure_ascii=False)
 
             # for (k, v) in YOUTH_json.items():
             #     print("      Key: " + k)
@@ -303,8 +303,8 @@ def home(request):
                 print("Form is valid")
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
                 BMP_SIMULATION_DAY = form.cleaned_data["BMP_SIMULATION_DAY"]
-                BMP_SIMULATION_TIME = form.cleaned_data["BMP_SIMULATION_TIME"]
                 BMP_CYCLE_DAYS = form.cleaned_data["BMP_CYCLE_DAYS"]
+                BMP_CONTACT_PEOPLE_NUM = form.cleaned_data["BMP_CONTACT_PEOPLE_NUM"]
 
                 AGP_YOUTH_GRP = form.cleaned_data["AGP_YOUTH_GRP"]
                 AGP_ADULT_GRP = form.cleaned_data["AGP_ADULT_GRP"]
@@ -328,6 +328,9 @@ def home(request):
                 CP_SMT_YOUTH_Rate_CP = form.cleaned_data["CP_SMT_YOUTH_Rate_CP"]
                 CP_SMT_ADULT_Rate_CP = form.cleaned_data["CP_SMT_ADULT_Rate_CP"]
                 CP_SMT_ELDER_Rate_CP = form.cleaned_data["CP_SMT_ELDER_Rate_CP"]
+                CP_SMT_YOUTH_Rate_ST = form.cleaned_data["CP_SMT_YOUTH_Rate_ST"]
+                CP_SMT_ADULT_Rate_ST = form.cleaned_data["CP_SMT_ADULT_Rate_ST"]
+                CP_SMT_ELDER_Rate_ST = form.cleaned_data["CP_SMT_ELDER_Rate_ST"]
 
                 SMT_IPDOPD_YOUTH_Rate_IPD = form.cleaned_data["SMT_IPDOPD_YOUTH_Rate_IPD"]
                 SMT_IPDOPD_ADULT_Rate_IPD = form.cleaned_data["SMT_IPDOPD_ADULT_Rate_IPD"]
@@ -420,7 +423,7 @@ def home(request):
                 TVSEC_ELDER_TRANS_COST_Rate = form.cleaned_data["TVSEC_ELDER_TRANS_COST_Rate"]
 
                 global_json = os.path.join(settings.STATIC_MAIN_APP, 'main/topology.json')
-                with open(global_json, 'r') as f:
+                with open(global_json, 'r', encoding="UTF-8") as f:
                     data = json.load(f)
                     YOUTH_json = copy.deepcopy(data)
                     ADULT_json = copy.deepcopy(data)
@@ -434,22 +437,22 @@ def home(request):
                 ADULT_json_new = iterate("ADULT", ADULT_json, form.cleaned_data)
                 ELDER_json_new = iterate("ELDER", ELDER_json, form.cleaned_data)
 
-                with open(YOUTH_json_file, 'w') as f:
-                    json.dump(YOUTH_json_new, f)
-                with open(ADULT_json_file, 'w') as f:
-                    json.dump(ADULT_json_new, f)
-                with open(ELDER_json_file, 'w') as f:
-                    json.dump(ELDER_json_new, f)
+                with open(YOUTH_json_file, 'w', encoding="UTF-8") as f:
+                    json.dump(YOUTH_json_new, f, ensure_ascii=False)
+                with open(ADULT_json_file, 'w', encoding="UTF-8") as f:
+                    json.dump(ADULT_json_new, f, ensure_ascii=False)
+                with open(ELDER_json_file, 'w', encoding="UTF-8") as f:
+                    json.dump(ELDER_json_new, f, ensure_ascii=False)
 
-                with open(input_params_json_file, 'w') as f:
+                with open(input_params_json_file, 'w', encoding="UTF-8") as f:
                     json.dump({
                         "YOUTH_json_file": YOUTH_json_file,
                         "ADULT_json_file": ADULT_json_file,
                         "ELDER_json_file": ELDER_json_file,
                         "BMP_IDX_CASE_NUM": BMP_IDX_CASE_NUM,
                         "BMP_SIMULATION_DAY": BMP_SIMULATION_DAY,
-                        "BMP_SIMULATION_TIME": BMP_SIMULATION_TIME,
                         "BMP_CYCLE_DAYS": BMP_CYCLE_DAYS,
+                        "BMP_CONTACT_PEOPLE_NUM": BMP_CONTACT_PEOPLE_NUM,
 
                         "AGP_YOUTH_GRP": AGP_YOUTH_GRP,
                         "AGP_ADULT_GRP": AGP_ADULT_GRP,
@@ -470,9 +473,12 @@ def home(request):
                         "NoVac_Infection_ADULT_Rate_NV_I": NoVac_Infection_ADULT_Rate_NV_I,
                         "NoVac_Infection_ELDER_Rate_NV_I": NoVac_Infection_ELDER_Rate_NV_I,
 
-                        "CP_SMT_YOUTH_Rate_CP": AGP_ELDER_GRP,
+                        "CP_SMT_YOUTH_Rate_CP": CP_SMT_YOUTH_Rate_CP,
                         "CP_SMT_ADULT_Rate_CP": CP_SMT_ADULT_Rate_CP,
                         "CP_SMT_ELDER_Rate_CP": CP_SMT_ELDER_Rate_CP,
+                        "CP_SMT_YOUTH_Rate_ST": CP_SMT_YOUTH_Rate_ST,
+                        "CP_SMT_ADULT_Rate_ST": CP_SMT_ADULT_Rate_ST,
+                        "CP_SMT_ELDER_Rate_ST": CP_SMT_ELDER_Rate_ST,
 
                         "SMT_IPDOPD_YOUTH_Rate_IPD": SMT_IPDOPD_YOUTH_Rate_IPD,
                         "SMT_IPDOPD_ADULT_Rate_IPD": SMT_IPDOPD_ADULT_Rate_IPD,
@@ -564,7 +570,7 @@ def home(request):
                         "TVSEC_YOUTH_TRANS_COST_Rate": TVSEC_YOUTH_TRANS_COST_Rate,
                         "TVSEC_ADULT_TRANS_COST_Rate": TVSEC_ADULT_TRANS_COST_Rate,
                         "TVSEC_ELDER_TRANS_COST_Rate": TVSEC_ELDER_TRANS_COST_Rate,
-                    }, f)
+                    }, f, ensure_ascii=False)
 
                 a = async_task(tasks.start_analysis, datadir, BMP_SIMULATION_DAY, task_name="id_"+analysis_code)
                 print("!!!! A: ", a)
@@ -579,6 +585,62 @@ def home(request):
 
 # def check_task_status(analysis_code):
 
+def find_view(request):
+    template = "main/find.html"
+
+    form = AnalysisCodeForm(request.POST or None)
+    print("### form: ", form)
+    inside_or_outside = False
+    # print("form.is_valid(): ", form.is_valid())
+    data = {
+        'labels': [],
+        'totalInfected_sz': [],
+        'currentInfected_sz': [],
+        'newInfected_sz': [],
+        'totalSeekMed_sz': [],
+        'currentSeekMed_sz': [],
+        'newSeekMed_sz': [],
+        'totalDeath_sz': [],
+        'newDeath_sz': [],
+        'totalRecovery_sz': [],
+        'newRecovery_sz': [],
+        'totalReachDay_sz': [],
+        'newReachDay_sz': [],
+    }
+    analysis_code = ""
+    if form.is_valid():
+        # print("*** form['your_analysis_code'].value: ", form['your_analysis_code'].value())
+        analysis_code = form['your_analysis_code'].value()
+        task_result = fetch('id_' + analysis_code)
+        # print("@@@@@ task_result: ", task_result)
+        if task_result != None:
+            print("Not None!!!")
+            datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', form['your_analysis_code'].value())
+            json_file = os.path.join(datadir, "data.json")
+
+            if os.path.isfile(json_file):
+                template = "main/home.html"
+                with open(json_file, encoding="UTF-8") as f:
+                    data = json.load(f)
+                    # json.dump({}, f)
+            # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
+            # labels_file = os.path.join(datadir, "labels.json")
+        else:
+            print("None!!!")
+        print("&&&&& data: ", data)
+    content = {
+        'analysis_code': analysis_code,
+        'button_clicked': "True",
+        'show_prev_data': "True",
+        'data': data
+    }
+    return render(request, template, content)
+
+
+
+    if request.method == 'POST':
+        print("POST!")
+    return render(request, template)
 
 def help_view(request):
     template = "main/help.html"
@@ -602,7 +664,7 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
     # labels_file = os.path.join(datadir, "labels.json")
 
     if os.path.isfile(json_file):
-        with open(json_file) as f:
+        with open(json_file, encoding="UTF-8") as f:
             data = json.load(f)
             # json.dump({}, f)
     else:
@@ -611,6 +673,9 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
             'totalInfected_sz': [],
             'currentInfected_sz': [],
             'newInfected_sz': [],
+            'totalSeekMed_sz': [],
+            'currentSeekMed_sz': [],
+            'newSeekMed_sz': [],
             'totalDeath_sz': [],
             'newDeath_sz': [],
             'totalRecovery_sz': [],
@@ -666,7 +731,7 @@ def get_params_data(request, slug_analysis_code, *args, **kwargs):
     print("input_params_json_file: ", input_params_json_file)
 
     if os.path.isfile(input_params_json_file):
-        with open(input_params_json_file) as f:
+        with open(input_params_json_file, encoding="UTF-8") as f:
             data = json.load(f)
     else:
         data = {

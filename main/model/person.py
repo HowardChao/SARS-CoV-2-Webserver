@@ -1,19 +1,44 @@
 import uuid
 import random
 import numpy as np
+import scipy.stats
+import json
 from .parameters import CurrStatus, RouteStatus, AgeGroup, ContactPersonSeekTreatment_Rate, ContactGroup_Rate, Vaccine_Rate, Vac_Infection_Rate, NoVac_Infection_Rate, SMT_IPDOPD_Rate, SMT_IPD_Death_Rate, SMT_OPD_MedicineIntake_Rate, SMT_OPD_M_IPD_Rate, SMT_OPD_M_IPD_Death_Rate, SMT_OPD_NM_IPD_Rate, SMT_OPD_NM_IPD_Death_Rate, effectiveness
 
-class Person():
-    def __init__(self, age, initial_idx_case=False):
+from .parameters import SMT_IPD_DIST, SMT_OPD_DIST, SMT_OPD_M_DIST, SMT_OPD_M_IPD_DIST, SMT_OPD_NM_DIST, SMT_OPD_NM_IPD_DIST
+
+
+class Person:
+    def __init__(self, age, initial_idx_case=False, params_file_path=""):
+        self.params_file_path = params_file_path
         self.id = str(uuid.uuid1())
         self.initial_idx_case = initial_idx_case
         self.person_status = [-1, -1, -1, -1, -1]
-        self.curr_status = CurrStatus.IN_MODEL
-        self.day = 0
+
+    # INITIAL = 'initial'
+    # IN_TRANS_MODEL = 'in_trans_model'
+    # TRANS_CYCLE_REACHED = 'trans_cycle_reached'
+    # IN_MED_MODEL = 'in_med_model'
+    # RECOVERY = 'recovery'
+    # DEATH = 'death'
+
+        self.curr_status = CurrStatus.INITIAL
+        self.in_trans_day = 0
+        self.in_med_day = 0
+
+        self.SMT_IPD_day = 0
+        self.SMT_OPD_day = 0
+        self.SMT_OPD_M_day = 0
+        self.SMT_OPD_M_IPD_day = 0
+        self.SMT_OPD_NM_day = 0
+        self.SMT_OPD_NM_IPD_day = 0
+
         self.age = age
+        with open(params_file_path, 'r', encoding="UTF-8") as f:
+            params_data = json.load(f)
+        self.params_data = params_data
         self.age_group = self.set_age_group()
         self.contactperson_rate, self.seektreatment_rate = self.set_contactperson_seektreatment_rate()
-
         self.youth_contact_rate = self.set_contact_rate('youth')
         self.adult_contact_rate = self.set_contact_rate('adult')
         self.elder_contact_rate = self.set_contact_rate('elder')
@@ -23,17 +48,17 @@ class Person():
 
         # Initialization
         self.vaccine_status = self.set_vaccine_status()
+        self.infection_status = False
         self.set_initial_idx_case()
 
-        self.smt_IPD_rate, self.smt_opd_rate = self.set_smt_IPD_opd_rate()
-        self.SMT_IPD_Death_Rate, self.smt_IPD_recovery_rate = self.set_SMT_IPD_Death_Rate()
+        self.smt_ipd_rate, self.smt_opd_rate = self.set_smt_ipd_opd_rate()
+        self.smt_ipd_death_rate, self.smt_ipd_recovery_rate = self.set_smt_ipd_death_rate()
         self.smt_opd_medicine_rate, self.smt_opd_n_medicine_rate = self.set_smt_opd_medicineintake_rate()
-        self.SMT_OPD_M_IPD_Rate, self.smt_opd_m_recovery_rate = self.set_SMT_OPD_M_IPD_Rate()
-        self.SMT_OPD_M_IPD_Death_Rate, self.smt_opd_m_IPD_recovery_rate = self.set_SMT_OPD_M_IPD_Death_Rate()
-        self.SMT_OPD_NM_IPD_Rate, self.smt_opd_nm_recovery_rate = self.set_SMT_OPD_NM_IPD_Rate()
-        self.SMT_OPD_NM_IPD_Death_Rate, self.smt_opd_nm_recovery_rate = self.set_SMT_OPD_NM_IPD_Death_Rate()
+        self.smt_opd_m_ipd_rate, self.smt_opd_m_recovery_rate = self.set_smt_opd_m_ipd_rate()
+        self.smt_opd_m_ipd_death_rate, self.smt_opd_m_ipd_recovery_rate = self.set_smt_opd_m_ipd_death_rate()
+        self.smt_opd_nm_ipd_rate, self.smt_opd_nm_recovery_rate = self.set_smt_opd_nm_ipd_rate()
+        self.smt_opd_nm_ipd_death_rate, self.smt_opd_nm_ipd_recovery_rate = self.set_smt_opd_nm_ipd_death_rate()
         # self.infection_rate = self.set_infection_rate()
-        # self.infection_status = self.set_infection_status(initial_idx_case)
         #
         # self.seek_treatment_rate = self.set_seek_treatment_rate()
         #
@@ -54,16 +79,20 @@ class Person():
     # Initialization #
     ##################
     def set_vaccine_status(self):
-        if self.curr_status.value == 'in_model':
-            rand_dice = random.random() < self.vaccine_rate.value
-            if rand_dice:
-                self.vaccine_status = True
-            else:
+        if self.curr_status == CurrStatus.INITIAL:
+            if self.initial_idx_case == True:
                 self.vaccine_status = False
+            else:
+                rand_dice = random.random() < self.vaccine_rate
+                if rand_dice:
+                    self.vaccine_status = True
+                else:
+                    self.vaccine_status = False
 
     def set_initial_idx_case(self):
-        if self.curr_status.value == 'in_model':
+        if self.curr_status == CurrStatus.INITIAL:
             if self.initial_idx_case == True:
+                self.curr_status = CurrStatus.IN_TRANS_MODEL
                 self.infection_status = True
                 self.person_status[0] = 1
             else:
@@ -74,97 +103,113 @@ class Person():
     ##################
     def set_infection_status(self):
         # Only set infection status when it's false
-        if self.curr_status.value == 'in_model' and self.infection_status == False:
+        if self.infection_status == False:
             if self.initial_idx_case == True:
                 self.infection_status = True
+                self.curr_status = CurrStatus.IN_TRANS_MODEL
+                self.person_status[0] = 1
             else:
                 if self.vaccine_status == True:
-                    rand_dice = random.random() < self.vac_infection_rate.value
+                    rand_dice = random.random() < self.vac_infection_rate
                     if rand_dice:
                         self.infection_status = True
+                        self.curr_status = CurrStatus.IN_TRANS_MODEL
+                        self.person_status[0] = 1
                     else:
                         self.infection_status = False
                 else:
-                    rand_dice = random.random() < self.n_vac_infection_rate.value
+                    rand_dice = random.random() < self.n_vac_infection_rate
                     if rand_dice:
                         self.infection_status = True
+                        self.curr_status = CurrStatus.IN_TRANS_MODEL
+                        self.person_status[0] = 1
                     else:
                         self.infection_status = False
 
     ##################
     # All the infected people need to choose their route everytime
     ##################
-    def set_route_status(self):
+    def trans_people_set_route_status(self):
         # Only need to check when the person hasn't contact another person
-        if self.curr_status.value == 'in_model' and self.infection_status == True:
-            rand_dice = random.random() < self.contactperson_rate.value
+        if self.curr_status == CurrStatus.IN_TRANS_MODEL and self.person_status[0] == 1 and self.infection_status == True:
+            rand_dice = random.random() < self.contactperson_rate
             if rand_dice:
                 self.person_status[0] = 1
+                self.curr_status = CurrStatus.IN_TRANS_MODEL
             else:
                 self.person_status[0] = 0
+                self.curr_status = CurrStatus.IN_MED_MODEL
 
     ##################
     # After the infected people choose their route. Run their own path
     ##################
-    def contact_people(self):
-        if self.curr_status.value == 'in_model' and self.person_status[0] == 1:
-            infected_people_ls = []
-            non_infected_people_ls = []
-            for _ in range(6):
-                rand_age = np.random.choice(
-                            [ random.randint(0, 18), random.randint(19, 64), random.randint(65, 100)],
-                            1,
-                            p=[self.youth_contact_rate.value,self.adult_contact_rate.value, self.elder_contact_rate.value]
-                           )[0]
-                p = Person(rand_age)
-                # InfectionRate
-                p.set_infection_status()
-                if p.infection_status == True:
-                    infected_people_ls.append(p)
-                else:
-                    non_infected_people_ls.append(p)
-            return infected_people_ls, non_infected_people_ls
-        else:
-            return [], []
+    def contact_people(self, ave_contacted_people_num):
+        infected_people_ls = []
+        # non_infected_people_ls = []
+        for _ in range(ave_contacted_people_num):
+            rand_age = np.random.choice(
+                        [ random.randint(0, 18), random.randint(19, 64), random.randint(65, 100)],
+                        1,
+                        p=[self.youth_contact_rate,self.adult_contact_rate, self.elder_contact_rate]
+                       )[0]
+            p = Person(age=rand_age, params_file_path=self.params_file_path)
+            # InfectionRate
+            p.set_infection_status()
+            if p.infection_status == True:
+                infected_people_ls.append(p)
+            # else:
+            #     non_infected_people_ls.append(p)
+        return infected_people_ls
+            # , non_infected_people_ls
+
 
     def seek_medical_treatment(self):
-        if self.curr_status.value == 'in_model' and self.person_status[0] == 0:
-            death_ls = []
-            recovery_ls = []
-            reached_ls = []
+        # Only run for first timer!!!!
+        if self.curr_status == CurrStatus.IN_MED_MODEL and self.person_status[0] == 0:
+            # print("*** Inside seek_medical_treatment:!!!")
             self.set_smt_IPD_opd_status()
             if self.person_status[1] == 1:
+                # Patient is IPD
                 self.set_smt_IPD_death_status()
                 if self.person_status[2] == 1:
-                    self.death()
+                    # self.death()
+                    pass
                 elif self.person_status[2] == 0:
-                    self.recovery()
+                    # self.recovery()
+                    pass
             elif self.person_status[1] == 0:
+                # Patient is OPD
                 self.set_smt_opd_medicineintake_status()
                 if self.person_status[2] == 1:
                     self.set_smt_opd_m_IPD_status()
                     if self.person_status[3] == 1:
                         self.set_smt_opd_m_IPD_death_status()
                         if self.person_status[4] == 1:
-                            self.death()
+                            # self.death()
+                            pass
                         elif self.person_status[4] == 0:
-                            self.recovery()
+                            # self.recovery()
+                            pass
                     elif self.person_status[3] == 0:
-                        self.recovery()
+                        # self.recovery()
+                        pass
                 elif self.person_status[2] == 0:
                     self.set_smt_opd_nm_IPD_status()
                     if self.person_status[3] == 1:
                         self.set_smt_opd_nm_IPD_death_status()
                         if self.person_status[4] == 1:
-                            self.death()
+                            # self.death()
+                            pass
                         elif self.person_status[4] == 0:
-                            self.recovery()
+                            # self.recovery()
+                            pass
                     elif self.person_status[3] == 0:
-                        self.recovery()
+                        # self.recovery()
+                        pass
 
 
     def set_smt_IPD_opd_status(self):
-        rand_dice = random.random() < self.smt_IPD_rate.value
+        rand_dice = random.random() < self.smt_ipd_rate
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 1
@@ -173,7 +218,14 @@ class Person():
             self.person_status[1] = 0
 
     def set_smt_IPD_death_status(self):
-        rand_dice = random.random() < self.SMT_IPD_Death_Rate.value
+        rand_dice = random.random() < self.smt_ipd_death_rate
+        lower = SMT_IPD_DIST.SMT_IPD_DIST_LOWER.value
+        upper = SMT_IPD_DIST.SMT_IPD_DIST_UPPER.value
+        mu = SMT_IPD_DIST.SMT_IPD_DIST_MU.value
+        sigma = SMT_IPD_DIST.SMT_IPD_DIST_SIGMA.value
+        N = 1
+        self.SMT_IPD_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
+
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 1
@@ -184,7 +236,13 @@ class Person():
             self.person_status[2] = 0
 
     def set_smt_opd_medicineintake_status(self):
-        rand_dice = random.random() < self.smt_opd_medicine_rate.value
+        rand_dice = random.random() < self.smt_opd_medicine_rate
+        lower = SMT_OPD_DIST.SMT_OPD_DIST_LOWER.value
+        upper = SMT_OPD_DIST.SMT_OPD_DIST_UPPER.value
+        mu = SMT_OPD_DIST.SMT_OPD_DIST_MU.value
+        sigma = SMT_OPD_DIST.SMT_OPD_DIST_SIGMA.value
+        N = 1
+        self.SMT_OPD_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -195,7 +253,13 @@ class Person():
             self.person_status[2] = 0
 
     def set_smt_opd_m_IPD_status(self):
-        rand_dice = random.random() < self.SMT_OPD_M_IPD_Rate.value
+        rand_dice = random.random() < self.smt_opd_m_ipd_rate
+        lower = SMT_OPD_M_DIST.SMT_OPD_M_DIST_LOWER.value
+        upper = SMT_OPD_M_DIST.SMT_OPD_M_DIST_UPPER.value
+        mu = SMT_OPD_M_DIST.SMT_OPD_M_DIST_MU.value
+        sigma = SMT_OPD_M_DIST.SMT_OPD_M_DIST_SIGMA.value
+        N = 1
+        self.SMT_OPD_M_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -208,7 +272,14 @@ class Person():
             self.person_status[3] = 0
 
     def set_smt_opd_m_IPD_death_status(self):
-        rand_dice = random.random() < self.SMT_OPD_M_IPD_Death_Rate.value
+        rand_dice = random.random() < self.smt_opd_m_ipd_death_rate
+        lower = SMT_OPD_M_IPD_DIST.SMT_OPD_M_IPD_DIST_LOWER.value
+        upper = SMT_OPD_M_IPD_DIST.SMT_OPD_M_IPD_DIST_UPPER.value
+        mu = SMT_OPD_M_IPD_DIST.SMT_OPD_M_IPD_DIST_MU.value
+        sigma = SMT_OPD_M_IPD_DIST.SMT_OPD_M_IPD_DIST_SIGMA.value
+        N = 1
+        self.SMT_OPD_M_IPD_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
+        # print("### self.SMT_OPD_M_IPD_day: ", self.SMT_OPD_M_IPD_day)
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -223,7 +294,13 @@ class Person():
             self.person_status[4] = 0
 
     def set_smt_opd_nm_IPD_status(self):
-        rand_dice = random.random() < self.SMT_OPD_NM_IPD_Rate.value
+        rand_dice = random.random() < self.smt_opd_nm_ipd_rate
+        lower = SMT_OPD_NM_DIST.SMT_OPD_NM_DIST_LOWER.value
+        upper = SMT_OPD_NM_DIST.SMT_OPD_NM_DIST_UPPER.value
+        mu = SMT_OPD_NM_DIST.SMT_OPD_NM_DIST_MU.value
+        sigma = SMT_OPD_NM_DIST.SMT_OPD_NM_DIST_SIGMA.value
+        N = 1
+        self.SMT_OPD_NM_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -236,7 +313,13 @@ class Person():
             self.person_status[3] = 0
 
     def set_smt_opd_nm_IPD_death_status(self):
-        rand_dice = random.random() < self.SMT_OPD_NM_IPD_Death_Rate.value
+        rand_dice = random.random() < self.smt_opd_nm_ipd_death_rate
+        lower = SMT_OPD_NM_IPD_DIST.SMT_OPD_NM_IPD_DIST_LOWER.value
+        upper = SMT_OPD_NM_IPD_DIST.SMT_OPD_NM_IPD_DIST_UPPER.value
+        mu = SMT_OPD_NM_IPD_DIST.SMT_OPD_NM_IPD_DIST_MU.value
+        sigma = SMT_OPD_NM_IPD_DIST.SMT_OPD_NM_IPD_DIST_SIGMA.value
+        N = 1
+        self.SMT_OPD_NM_IPD_day = np.around(scipy.stats.truncnorm.rvs((lower-mu)/sigma,(upper-mu)/sigma,loc=mu,scale=sigma,size=N))
         if rand_dice:
             self.person_status[0] = 0
             self.person_status[1] = 0
@@ -250,6 +333,8 @@ class Person():
             self.person_status[3] = 1
             self.person_status[4] = 0
 
+    def trans_cycle_reached(self):
+        self.curr_status = CurrStatus.TRANS_CYCLE_REACHED
 
     def death(self):
         self.curr_status = CurrStatus.DEATH
@@ -260,295 +345,197 @@ class Person():
     ## static
     def set_contactperson_seektreatment_rate(self):
         if self.age <= 18:
-            return ContactPersonSeekTreatment_Rate.YOUTH_CP_RT, ContactPersonSeekTreatment_Rate.YOUTH_ST_RT
+            return self.params_data["CP_SMT_YOUTH_Rate_CP"], self.params_data["CP_SMT_YOUTH_Rate_ST"]
         elif self.age > 18 and self.age <65:
-            return ContactPersonSeekTreatment_Rate.ADULT_CP_RT, ContactPersonSeekTreatment_Rate.ADULT_ST_RT
+            return self.params_data["CP_SMT_ADULT_Rate_CP"], self.params_data["CP_SMT_ADULT_Rate_ST"]
         elif self.age >= 65:
-            return ContactPersonSeekTreatment_Rate.ELDER_CP_RT, ContactPersonSeekTreatment_Rate.ELDER_ST_RT
+            return self.params_data["CP_SMT_ELDER_Rate_CP"], self.params_data["CP_SMT_ELDER_Rate_ST"]
 
     ## static
     def set_age_group(self):
         if self.age <= 18:
-            return AgeGroup.YOUTH_GRP
+            return self.params_data["AGP_YOUTH_GRP"]
         elif self.age > 18 and self.age <65:
-            return AgeGroup.ADULT_GRP
+            return self.params_data["AGP_ADULT_GRP"]
         elif self.age >= 65:
-            return AgeGroup.ELDER_GRP
+            return self.params_data["AGP_ELDER_GRP"]
 
     ## static
     def set_contact_rate(self, category):
         if self.age <= 18:
             if category is 'youth':
-                return ContactGroup_Rate.SAME_GRP
+                return self.params_data["CR_SAME_GRP"]
             elif category is 'adult':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
             elif category is 'elder':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
         elif self.age > 18 and self.age <65:
             if category is 'youth':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
             elif category is 'adult':
-                return ContactGroup_Rate.SAME_GRP
+                return self.params_data["CR_SAME_GRP"]
             elif category is 'elder':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
         elif self.age >= 65:
             if category is 'youth':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
             elif category is 'adult':
-                return ContactGroup_Rate.DIFF_GRP
+                return self.params_data["CR_DIFF_GRP"]
             elif category is 'elder':
-                return ContactGroup_Rate.SAME_GRP
+                return self.params_data["CR_SAME_GRP"]
 
     def set_vaccine_rate(self):
         if self.age <= 18:
-            return Vaccine_Rate.YOUTH_V_RT, Vaccine_Rate.YOUTH_NV_RT
+            return self.params_data["Vac_YOUTH_Rate_V"], 1-self.params_data["Vac_YOUTH_Rate_V"]
         elif self.age > 18 and self.age <65:
-            return Vaccine_Rate.ADULT_V_RT, Vaccine_Rate.ADULT_NV_RT
+            return self.params_data["Vac_ADULT_Rate_V"], 1-self.params_data["Vac_ADULT_Rate_V"]
         elif self.age >= 65:
-            return Vaccine_Rate.ELDER_V_RT, Vaccine_Rate.ELDER_NV_RT
+            return self.params_data["Vac_ELDER_Rate_V"], 1-self.params_data["Vac_ELDER_Rate_V"]
 
     def set_vac_infection_rate(self):
         if self.age <= 18:
-            return Vac_Infection_Rate.YOUTH_V_I_RT, Vac_Infection_Rate.YOUTH_V_NI_RT
+            return self.params_data["Vac_Infection_YOUTH_Rate_V_I"], 1-self.params_data["Vac_Infection_YOUTH_Rate_V_I"]
         elif self.age > 18 and self.age <65:
-            return Vac_Infection_Rate.ADULT_V_I_RT, Vac_Infection_Rate.ADULT_V_NI_RT
+            return self.params_data["Vac_Infection_ADULT_Rate_V_I"], 1-self.params_data["Vac_Infection_ADULT_Rate_V_I"]
         elif self.age >= 65:
-            return Vac_Infection_Rate.ELDER_V_I_RT, Vac_Infection_Rate.ELDER_V_NI_RT
+            return self.params_data["Vac_Infection_ELDER_Rate_V_I"], 1-self.params_data["Vac_Infection_ELDER_Rate_V_I"]
 
     def set_n_vac_infection_rate(self):
         if self.age <= 18:
-            return NoVac_Infection_Rate.YOUTH_NV_I_RT, NoVac_Infection_Rate.YOUTH_NV_NI_RT
+            return self.params_data["NoVac_Infection_YOUTH_Rate_NV_I"], 1-self.params_data["NoVac_Infection_YOUTH_Rate_NV_I"]
         elif self.age > 18 and self.age <65:
-            return NoVac_Infection_Rate.ADULT_NV_I_RT, NoVac_Infection_Rate.ADULT_NV_NI_RT
+            return self.params_data["NoVac_Infection_ADULT_Rate_NV_I"], 1-self.params_data["NoVac_Infection_ADULT_Rate_NV_I"]
         elif self.age >= 65:
-            return NoVac_Infection_Rate.ELDER_NV_I_RT, NoVac_Infection_Rate.ELDER_NV_NI_RT
+            return self.params_data["NoVac_Infection_ELDER_Rate_NV_I"], 1-self.params_data["NoVac_Infection_ELDER_Rate_NV_I"]
 
-    def set_smt_IPD_opd_rate(self):
+    def set_smt_ipd_opd_rate(self):
         if self.age <= 18:
-            return SMT_IPDOPD_Rate.YOUTH_IPD_RT, SMT_IPDOPD_Rate.YOUTH_OPD_RT
+            return self.params_data["SMT_IPDOPD_YOUTH_Rate_IPD"], self.params_data["SMT_IPDOPD_YOUTH_Rate_OPD"]
         elif self.age > 18 and self.age <65:
-            return SMT_IPDOPD_Rate.ADULT_IPD_RT, SMT_IPDOPD_Rate.ADULT_OPD_RT
+            return self.params_data["SMT_IPDOPD_ADULT_Rate_IPD"], self.params_data["SMT_IPDOPD_ADULT_Rate_OPD"]
         elif self.age >= 65:
-            return SMT_IPDOPD_Rate.ELDER_IPD_RT, SMT_IPDOPD_Rate.ELDER_OPD_RT
+            return self.params_data["SMT_IPDOPD_ELDER_Rate_IPD"], self.params_data["SMT_IPDOPD_ELDER_Rate_OPD"]
 
-    def set_SMT_IPD_Death_Rate(self):
+    def set_smt_ipd_death_rate(self):
         if self.age <= 18:
-            return SMT_IPD_Death_Rate.YOUTH_IPD_D_RT, SMT_IPD_Death_Rate.YOUTH_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D"]
         elif self.age > 18 and self.age <65:
-            return SMT_IPD_Death_Rate.ADULT_IPD_D_RT, SMT_IPD_Death_Rate.ADULT_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D"]
         elif self.age >= 65:
-            return SMT_IPD_Death_Rate.ELDER_IPD_D_RT, SMT_IPD_Death_Rate.ELDER_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D"]
 
 
     def set_smt_opd_medicineintake_rate(self):
         if self.age <= 18:
-            return SMT_OPD_MedicineIntake_Rate.YOUTH_OPD_M_RT, SMT_OPD_MedicineIntake_Rate.YOUTH_OPD_NM_RT
+            return self.params_data["SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M"], 1-self.params_data["SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M"]
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_MedicineIntake_Rate.ADULT_OPD_M_RT, SMT_OPD_MedicineIntake_Rate.ADULT_OPD_NM_RT
+            return self.params_data["SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M"], 1-self.params_data["SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M"]
         elif self.age >= 65:
-            return SMT_OPD_MedicineIntake_Rate.ELDER_OPD_M_RT, SMT_OPD_MedicineIntake_Rate.ELDER_OPD_NM_RT
+            return self.params_data["SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M"], 1-self.params_data["SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M"]
 
-    def set_SMT_OPD_M_IPD_Rate(self):
+    def set_smt_opd_m_ipd_rate(self):
         if self.age <= 18:
-            return SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.YOUTH_OPD_M_R_RT
+            return self.params_data["SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD"], 1-self.params_data["SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD"]
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_M_IPD_Rate.ADULT_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.ADULT_OPD_M_R_RT
+            return self.params_data["SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD"], 1-self.params_data["SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD"]
         elif self.age >= 65:
-            return SMT_OPD_M_IPD_Rate.ELDER_OPD_M_IPD_RT, SMT_OPD_M_IPD_Rate.ELDER_OPD_M_R_RT
+            return self.params_data["SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD"], 1-self.params_data["SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD"]
 
-    def set_SMT_OPD_M_IPD_Death_Rate(self):
+    def set_smt_opd_m_ipd_death_rate(self):
         if self.age <= 18:
-            return SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.YOUTH_OPD_M_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D"]
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.ADULT_OPD_M_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D"]
         elif self.age >= 65:
-            return SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_D_RT, SMT_OPD_M_IPD_Death_Rate.ELDER_OPD_M_IPD_R_RT
+            return self.params_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D"], 1-self.params_data["SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D"]
 
-    def set_SMT_OPD_NM_IPD_Rate(self):
+    def set_smt_opd_nm_ipd_rate(self):
         if self.age <= 18:
-            return SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.YOUTH_OPD_NM_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD"], 1-self.params_data["SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD"]
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.ADULT_OPD_NM_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD"], 1-self.params_data["SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD"]
         elif self.age >= 65:
-            return SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_IPD_RT, SMT_OPD_NM_IPD_Rate.ELDER_OPD_NM_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD"], 1-self.params_data["SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD"]
 
-    def set_SMT_OPD_NM_IPD_Death_Rate(self):
+    def set_smt_opd_nm_ipd_death_rate(self):
         if self.age <= 18:
-            return SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.YOUTH_OPD_NM_IPD_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D"], 1-self.params_data["SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D"]
         elif self.age > 18 and self.age <65:
-            return SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D"], 1-self.params_data["SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D"]
         elif self.age >= 65:
-            return SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_D_RT, SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_R_RT
+            return self.params_data["SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D"], 1-self.params_data["SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D"]
 
     ##########################
     ## Outside Calling func ##
     ##########################
-    def day_preprocessing(self):
-        self.set_route_status()
+    def trans_gp_day_preprocessing(self):
+        self.in_trans_day += 1
+        if self.in_trans_day > 7:
+            self.trans_cycle_reached()
+        if self.curr_status == CurrStatus.TRANS_CYCLE_REACHED:
+            pass
+        if self.curr_status == CurrStatus.IN_TRANS_MODEL and self.person_status[0] == 1:
+            self.trans_people_set_route_status()
 
-    def day_postprocessing(self):
-        if self.curr_status.value == 'in_model':
-            self.set_infection_status()
-            self.day += 1
-            if self.day > 7:
-                self.curr_status = CurrStatus.CYCLE_REACHED
+    def seek_med_gp_day_preprocessing(self):
+        if self.curr_status == CurrStatus.IN_MED_MODEL and self.person_status[0] == 0:
+            pass
 
+    def trans_gp_day_postprocessing(self):
+        if self.curr_status == CurrStatus.IN_TRANS_MODEL and self.person_status[0] == 1:
+            #########################################
+            ### Transmission model one day pass!! ###
+            #########################################
+            self.in_trans_day += 1
+            if self.in_trans_day == 7:
+                self.trans_cycle_reached()
 
-    def day_passed(self):
-        if self.curr_status.value == 'in_model':
-            self.day += 1
-            # 1. Check whether the person get infected
-            self.set_infection_status()
-            # 2. Check whether the person go into transmission cycle
-            self.set_route_status()
-
-        # if self.day > 7:
-        #     self.cycle_reached()
-        # if self.curr_status is not CurrStatus.DEATH:
-        #     self.recovery()
-
-
-
-
-
-
-    # ## The status of this function is dynamic
-    # def set_vaccine_status(self):
-    #     if self.route_status is RouteStatus.TRANSMISSION:
-    #         rand_dice = random.random() < self.vaccine_rate.value
-    #         if rand_dice:
-    #             return True
-    #         else:
-    #             return False
+    # def seek_med_gp_day_postprocessing(self):
+    #     if self.curr_status == CurrStatus.IN_MED_MODEL and self.person_status[0] == 0:
+    #         print("*** Inside seek_med_gp_day_postprocessing:!!!")
+    #         ############################################
+    #         ### Medical seeking model one day pass!! ###
+    #         ############################################
+    #         if self.person_status[1] == 1:
+    #             # Patient is IPD
+    #             if self.in_med_day > self.SMT_IPD_day:
+    #                 if self.person_status[2] == 1:
+    #                     # Patient is IPD death
+    #                     self.death()
+    #                 elif self.person_status[2] == 0:
+    #                     # Patient is IPD recovery
+    #                     self.recovery()
     #
-    # ## dynamic
-    # def set_infection_rate(self):
-    #     if self.vaccine_status is True:
-    #         if self.age <= 18:
-    #             return InfectionRate.YOUTH_V_RT
-    #         elif self.age > 18 and self.age <65:
-    #             return InfectionRate.ADULT_V_RT
-    #         elif self.age >= 65:
-    #             return InfectionRate.ELDER_V_RT
-    #     elif self.vaccine_status is False:
-    #         if self.age <= 18:
-    #             return InfectionRate.YOUTH_NV_RT
-    #         elif self.age > 18 and self.age <65:
-    #             return InfectionRate.ADULT_NV_RT
-    #         elif self.age >= 65:
-    #             return InfectionRate.ELDER_NV_RT
-    #
-    # def set_infection_status(self, initial_idx_case):
-    #     if initial_idx_case is True:
-    #         return True
-    #     rand_dice = random.random() < self.infection_rate.value
-    #     if rand_dice:
-    #         return True
-    #     else:
-    #         return False
-    #
-    # ## static
-    # def set_medicine_intake_rate(self):
-    #     if self.age <= 18:
-    #         return MedicineIntakeRate.YOUTH_RT
-    #     elif self.age > 18 and self.age <65:
-    #         return MedicineIntakeRate.ADULT_RT
-    #     elif self.age >= 65:
-    #         return MedicineIntakeRate.ELDER_RT
-    #
-    # def set_medicine_intake_status(self):
-    #     if self.seek_treatment_status is True:
-    #         rand_dice = random.random() < self.medicine_intake_rate.value
-    #         if rand_dice:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         return False
-    #
-    # def set_severe_rate(self):
-    #     if self.medicine_intake_status is True:
-    #         if self.age <= 18:
-    #             return SevereRate.YOUTH_48_RT
-    #         elif self.age > 18 and self.age <65:
-    #             return SevereRate.ADULT_48_RT
-    #         elif self.age >= 65:
-    #             return SevereRate.ELDER_48_RT
-    #     elif self.medicine_intake_status is False:
-    #         if self.age <= 18:
-    #             return SevereRate.YOUTH_N48_RT
-    #         elif self.age > 18 and self.age <65:
-    #             return SevereRate.ADULT_N48_RT
-    #         elif self.age >= 65:
-    #             return SevereRate.ELDER_N48_RT
-    #
-    # def set_severe_status(self):
-    #     if self.seek_treatment_status is True:
-    #         rand_dice = random.random() < self.severe_rate.value
-    #         if rand_dice:
-    #             return True
-    #         else:
-    #             self.recovery()
-    #             return False
-    #     else:
-    #         return False
-    #
-    # def set_fatality_rate(self):
-    #     if self.age <= 18:
-    #         return FatalityRate.YOUTH_RT
-    #     elif self.age > 18 and self.age <65:
-    #         return FatalityRate.ADULT_RT
-    #     elif self.age >= 65:
-    #         return FatalityRate.ELDER_RT
-    #
-    # def in_model(self):
-    #     self.curr_status = CurrStatus.IN_MODEL
-    #
-    # def recovery(self):
-    #     self.curr_status = CurrStatus.RECOVERY
-    #
-    # def death(self):
-    #     self.curr_status = CurrStatus.DEATH
-    #
-    # def cycle_reached(self):
-    #     self.curr_status = CurrStatus.CYCLE_REACHED
-    #
-    # def set_current_status(self):
-    #     if self.route_status is RouteStatus.TRANSMISSION:
-    #         if self.day > 7:
-    #             self.cycle_reached()
-    #         else:
-    #             self.in_model()
-    #     elif self.route_status is RouteStatus.SEEKTREATMENT:
-    #         if self.severe_status:
-    #             rand_dice = random.random() < self.fatality_rate.value
-    #             if rand_dice:
-    #                 self.death()
-    #             else:
-    #                 self.recovery()
-    #         else:
-    #             self.recovery()
-    #
-    # ##########################
-    # ## Outside Calling func ##
-    # ##########################
-    # def day_passed(self):
-    #     self.day += 1
-    #     self.set_current_status()
-    #     # if self.day > 7:
-    #     #     self.cycle_reached()
-    #     # if self.curr_status is not CurrStatus.DEATH:
-    #     #     self.recovery()
-
-
-# def HealthPerson(Person):
-#     def __init__(self, age, vaccine_rate, affected_rate):
-#         Person(age, vaccine_rate, infection_rate)
-#
-# def IdxCasePerson(Person):
-#     def __init__(self, age, vaccine_rate, affected_rate, IPDp_status, sever_rate, mortality_rate, symptom):
-#         Person(age, vaccine_rate, infection_rate)
-#         self.IPDp_status = IPDp_status
-#         self.sever_rate = sever_rate
-#         self.mortality_rate = mortality_rate
-#         self.symptom = symptom
+    #         elif self.person_status[1] == 0:
+    #             # Patient is OPD
+    #             if self.in_med_day > self.SMT_OPD_day:
+    #                 if self.person_status[2] == 1:
+    #                     # Patient is OPD, medicine
+    #                     if self.in_med_day > self.SMT_OPD_day+self.SMT_OPD_M_day:
+    #                         if self.person_status[3] == 1:
+    #                             # Patient is OPD, medicine, IPD
+    #                             if self.in_med_day > self.SMT_OPD_day+self.SMT_OPD_M_day+self.SMT_OPD_M_IPD_day:
+    #                                 if self.person_status[4] == 1:
+    #                                     # Patient is OPD, medicine, IPD, death
+    #                                     self.death()
+    #                                 elif self.person_status[4] == 0:
+    #                                     # Patient is OPD, medicine, IPD, recovery
+    #                                     self.recovery()
+    #                         elif self.person_status[3] == 0:
+    #                             # Patient is OPD, medicine, recoveory
+    #                             self.recovery()
+    #                 elif self.person_status[2] == 0:
+    #                     # Patient is OPD, no medicine
+    #                     if self.in_med_day > self.SMT_OPD_day+self.SMT_OPD_NM_day:
+    #                         if self.person_status[3] == 1:
+    #                             # Patient is OPD, no medicine, IPD
+    #                             if self.in_med_day > self.SMT_OPD_day+self.SMT_OPD_NM_day+self.SMT_OPD_NM_IPD_day:
+    #                                 if self.person_status[4] == 1:
+    #                                     # Patient is OPD, no medicine, IPD, death
+    #                                     self.death()
+    #                                 elif self.person_status[4] == 0:
+    #                                     # Patient is OPD, no medicine, IPD, recovery
+    #                                     self.recovery()
+    #                         elif self.person_status[3] == 0:
+    #                             # Patient is OPD, no medicine, recovery
+    #                             self.recovery()

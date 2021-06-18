@@ -1,0 +1,37 @@
+@charset "UTF-8";
+/* line 3, ssd/Howard/vaccine-cost-model/main/static/main/style.scss */
+nav#list-example.col-sm-3 {
+  top: 20px;
+  position: fixed; }
+
+/* line 8, ssd/Howard/vaccine-cost-model/main/static/main/style.scss */
+div#list-item-1 {
+  padding-top: 200px;
+  padding-bottom: 200px; }
+
+/* line 12, ssd/Howard/vaccine-cost-model/main/static/main/style.scss */
+#content {
+  position: absolute;
+  bottom: 72px;
+  left: 72px;
+  width: 300px;
+  height: 100px; }
+
+/* line 19, ssd/Howard/vaccine-cost-model/main/static/main/style.scss */
+#blurredbackground {
+  position: absolute;
+  /*matches #content position*/
+  bottom: 72px;
+  left: 72px;
+  /*matches #content position*/
+  width: 300px;
+  /*matches #content width*/
+  height: 100px;
+  /*matches #content height*/
+  -webkit-filter: blur(10px);
+  filter: blur(10px);
+  z-index: -1; }
+
+/* line 135, ssd/Howard/vaccine-cost-model/main/static/main/style.scss */
+.force-UTF-8 {
+  content: "¡"; }

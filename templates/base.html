@@ -50,6 +50,9 @@
       	$( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
       	$( this ).parent( 'li' ).addClass( 'active' );
       });
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
       </script>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(#001205, #00290c);">
             <img src="{% static "images/vaccine.png" %}" alt="My image" height="30" width="30">
@@ -62,6 +65,9 @@
                     <!-- <li class="nav-item nav-middle">
                         <a class="nav-link" href={% url 'uploadSeq-upload' %}><i class="fas fa-upload"></i>&nbsp&nbspUpload Sequences &nbsp&nbsp&nbsp</a>
                     </li> -->
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href={% url 'main-find' %}><i class="fas fa-arrow-left"></i> Find Previous Analysis &nbsp&nbsp&nbsp<span class="sr-only">(current)</span></a>
+                    </li>
                     <li class="nav-item nav-middle">
                         <a class="nav-link" href={% url 'main-help' %}><i class="fas fa-question"></i> Help &nbsp&nbsp&nbsp<span class="sr-only">(current)</span></a>
                     </li>

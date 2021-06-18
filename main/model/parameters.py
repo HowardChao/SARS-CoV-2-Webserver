@@ -1,9 +1,9 @@
 from enum import Enum
 
-IDX_CASE_NUM = 5000
-SIMULATION_DAY = 3
-SIMULATION_TIME = 1000
+IDX_CASE_NUM = 50
+SIMULATION_DAY = 60
 CYCLE_DAYS = 7
+CONTACT_PEOPLE_NUM = 3
 
 HEALTH_LIFE_EXP = 71.2
 SEVERE_AVG_DEATH_AGE = 40
@@ -22,10 +22,18 @@ class RouteStatus(Enum):
     SEEKTREATMENT = 'seektreatment'
 
 class CurrStatus(Enum):
-    IN_MODEL = 'in_model'
+    # IN_MODEL = 'in_model'
+    # RECOVERY = 'recovery'
+    # DEATH = 'death'
+    # CYCLE_REACHED = 'cycle_reached'
+
+    INITIAL = 'initial'
+    IN_TRANS_MODEL = 'in_trans_model'
+    TRANS_CYCLE_REACHED = 'trans_cycle_reached'
+    IN_MED_MODEL = 'in_med_model'
     RECOVERY = 'recovery'
     DEATH = 'death'
-    CYCLE_REACHED = 'cycle_reached'
+
 
 class AliveDeath(Enum):
     ALIVE = 'alive'
@@ -52,6 +60,9 @@ class Vaccine_Rate(Enum):
     YOUTH_V_RT = 0.646
     ADULT_V_RT = 0.093
     ELDER_V_RT = 0.445
+    # YOUTH_V_RT = 0.999
+    # ADULT_V_RT = 0.999
+    # ELDER_V_RT = 0.999
     YOUTH_NV_RT = 1 - YOUTH_V_RT
     ADULT_NV_RT = 1 - ADULT_V_RT
     ELDER_NV_RT = 1 - ELDER_V_RT
@@ -68,6 +79,9 @@ class NoVac_Infection_Rate(Enum):
     YOUTH_NV_I_RT = 0.146
     ADULT_NV_I_RT = 0.037
     ELDER_NV_I_RT = 0.053
+    # YOUTH_NV_I_RT = 0.146
+    # ADULT_NV_I_RT = 0.157
+    # ELDER_NV_I_RT = 0.173
     YOUTH_NV_NI_RT = 1 - YOUTH_NV_I_RT
     ADULT_NV_NI_RT = 1 - ADULT_NV_I_RT
     ELDER_NV_NI_RT = 1 - ELDER_NV_I_RT
@@ -94,6 +108,9 @@ class SMT_IPD_Death_Rate(Enum):
     YOUTH_IPD_D_RT = 0.12
     ADULT_IPD_D_RT = 0.14
     ELDER_IPD_D_RT = 0.14
+    # YOUTH_IPD_D_RT = 0.62
+    # ADULT_IPD_D_RT = 0.64
+    # ELDER_IPD_D_RT = 0.64
     YOUTH_IPD_R_RT = 1 - YOUTH_IPD_D_RT
     ADULT_IPD_R_RT = 1 - ADULT_IPD_D_RT
     ELDER_IPD_R_RT = 1 - ELDER_IPD_D_RT
@@ -119,6 +136,9 @@ class SMT_OPD_M_IPD_Death_Rate(Enum):
     YOUTH_OPD_M_IPD_D_RT = 0.12
     ADULT_OPD_M_IPD_D_RT = 0.14
     ELDER_OPD_M_IPD_D_RT = 0.14
+    # YOUTH_OPD_M_IPD_D_RT = 0.62
+    # ADULT_OPD_M_IPD_D_RT = 0.64
+    # ELDER_OPD_M_IPD_D_RT = 0.64
     YOUTH_OPD_M_IPD_R_RT = 1 - YOUTH_OPD_M_IPD_D_RT
     ADULT_OPD_M_IPD_R_RT = 1 - ADULT_OPD_M_IPD_D_RT
     ELDER_OPD_M_IPD_R_RT = 1 - ELDER_OPD_M_IPD_D_RT
@@ -135,16 +155,77 @@ class SMT_OPD_NM_IPD_Death_Rate(Enum):
     YOUTH_OPD_NM_IPD_D_RT = 0.12
     ADULT_OPD_NM_IPD_D_RT = 0.14
     ELDER_OPD_NM_IPD_D_RT = 0.14
+    # YOUTH_OPD_NM_IPD_D_RT = 0.62
+    # ADULT_OPD_NM_IPD_D_RT = 0.64
+    # ELDER_OPD_NM_IPD_D_RT = 0.64
     YOUTH_OPD_NM_IPD_R_RT = 1 - YOUTH_OPD_NM_IPD_D_RT
     ADULT_OPD_NM_IPD_R_RT = 1 - ADULT_OPD_NM_IPD_D_RT
     ELDER_OPD_NM_IPD_R_RT = 1 - ELDER_OPD_NM_IPD_D_RT
 
 
+#############################################################
+######### Triangular Probability distribution Model #########
+#############################################################
+class SMT_IPD_DIST(Enum):
+    SMT_IPD_DIST_LOWER = 2
+    SMT_IPD_DIST_UPPER = 20
+    SMT_IPD_DIST_MU = 10
+    SMT_IPD_DIST_SIGMA = 2.5
+    # SMT_IPD_DIST_LOWER = 1
+    # SMT_IPD_DIST_UPPER = 3
+    # SMT_IPD_DIST_MU = 1
+    # SMT_IPD_DIST_SIGMA = 1
 
 
+class SMT_OPD_DIST(Enum):
+    SMT_OPD_DIST_LOWER = 1
+    SMT_OPD_DIST_UPPER = 5
+    SMT_OPD_DIST_MU = 2
+    SMT_OPD_DIST_SIGMA = 1
+    # SMT_OPD_DIST_LOWER = 1
+    # SMT_OPD_DIST_UPPER = 3
+    # SMT_OPD_DIST_MU = 1
+    # SMT_OPD_DIST_SIGMA = 1
 
+class SMT_OPD_M_DIST(Enum):
+    SMT_OPD_M_DIST_LOWER = 1
+    SMT_OPD_M_DIST_UPPER = 4
+    SMT_OPD_M_DIST_MU = 1.5
+    SMT_OPD_M_DIST_SIGMA = 1
+    # SMT_OPD_M_DIST_LOWER = 1
+    # SMT_OPD_M_DIST_UPPER = 3
+    # SMT_OPD_M_DIST_MU = 1
+    # SMT_OPD_M_DIST_SIGMA = 1
 
+class SMT_OPD_M_IPD_DIST(Enum):
+    SMT_OPD_M_IPD_DIST_LOWER = 2
+    SMT_OPD_M_IPD_DIST_UPPER = 20
+    SMT_OPD_M_IPD_DIST_MU = 10
+    SMT_OPD_M_IPD_DIST_SIGMA = 2.5
+    # SMT_OPD_M_IPD_DIST_LOWER = 1
+    # SMT_OPD_M_IPD_DIST_UPPER = 3
+    # SMT_OPD_M_IPD_DIST_MU = 1
+    # SMT_OPD_M_IPD_DIST_SIGMA = 1
 
+class SMT_OPD_NM_DIST(Enum):
+    SMT_OPD_NM_DIST_LOWER = 1
+    SMT_OPD_NM_DIST_UPPER = 4
+    SMT_OPD_NM_DIST_MU = 1.5
+    SMT_OPD_NM_DIST_SIGMA = 1
+    # SMT_OPD_NM_DIST_LOWER = 1
+    # SMT_OPD_NM_DIST_UPPER = 3
+    # SMT_OPD_NM_DIST_MU = 1
+    # SMT_OPD_NM_DIST_SIGMA = 1
+
+class SMT_OPD_NM_IPD_DIST(Enum):
+    SMT_OPD_NM_IPD_DIST_LOWER = 2
+    SMT_OPD_NM_IPD_DIST_UPPER = 20
+    SMT_OPD_NM_IPD_DIST_MU = 5
+    SMT_OPD_NM_IPD_DIST_SIGMA = 2.5
+    # SMT_OPD_NM_IPD_DIST_LOWER = 1
+    # SMT_OPD_NM_IPD_DIST_UPPER = 3
+    # SMT_OPD_NM_IPD_DIST_MU = 1
+    # SMT_OPD_NM_IPD_DIST_SIGMA = 1
 
 
 

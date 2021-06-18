@@ -8,7 +8,7 @@ from .model import model
 logger = logging.getLogger(__name__)
 
 def start_analysis(datadir, cycle_days):
-    # print("Inside start_analysis: ", start_analysis)
+    print("Inside start_analysis: ", start_analysis)
     # totalInfected_sz_file = os.path.join(datadir, "totalInfected_sz.json")
     # currentInfected_sz_file = os.path.join(datadir, "currentInfected_sz.json")
     # newInfected_sz_file = os.path.join(datadir, "newInfected_sz.json")
@@ -21,14 +21,18 @@ def start_analysis(datadir, cycle_days):
     #
     # labels_file = os.path.join(datadir, "labels.json")
     json_file = os.path.join(datadir, "data.json")
+    input_params_file = os.path.join(datadir, "input_params.json")
 
 
     labels = []
     labels.append("Day 0")
-    md = model.VaccineModel()
+    md = model.VaccineModel(params_file_path=input_params_file)
     totalInfected_sz = md.totalInfected
     currentInfected_sz = md.currentInfected
     newInfected_sz = md.newInfected
+    totalSeekMed_sz = md.totalSeekMed
+    currentSeekMed_sz = md.currentSeekMed
+    newSeekMed_sz = md.newSeekMed
     totalDeath_sz = md.totalDeath
     newDeath_sz = md.newDeath
     totalRecovery_sz = md.totalRecovery
@@ -41,6 +45,9 @@ def start_analysis(datadir, cycle_days):
         'totalInfected_sz': totalInfected_sz,
         'currentInfected_sz': currentInfected_sz,
         'newInfected_sz': newInfected_sz,
+        'totalSeekMed_sz': totalSeekMed_sz,
+        'currentSeekMed_sz': currentSeekMed_sz,
+        'newSeekMed_sz': newSeekMed_sz,
         'totalDeath_sz': totalDeath_sz,
         'newDeath_sz': newDeath_sz,
         'totalRecovery_sz': totalRecovery_sz,
@@ -54,18 +61,25 @@ def start_analysis(datadir, cycle_days):
         totalInfected_sz = md.totalInfected
         currentInfected_sz = md.currentInfected
         newInfected_sz = md.newInfected
+        totalSeekMed_sz = md.totalSeekMed
+        currentSeekMed_sz = md.currentSeekMed
+        newSeekMed_sz = md.newSeekMed
         totalDeath_sz = md.totalDeath
         newDeath_sz = md.newDeath
         totalRecovery_sz = md.totalRecovery
         newRecovery_sz = md.newRecovery
         totalReachDay_sz = md.totalReachDay
         newReachDay_sz =  md.newReachDay
+
         labels.append("Day "+str(i+1))
         json_data = {
             'labels': labels,
             'totalInfected_sz': totalInfected_sz,
             'currentInfected_sz': currentInfected_sz,
             'newInfected_sz': newInfected_sz,
+            'totalSeekMed_sz': totalSeekMed_sz,
+            'currentSeekMed_sz': currentSeekMed_sz,
+            'newSeekMed_sz': newSeekMed_sz,
             'totalDeath_sz': totalDeath_sz,
             'newDeath_sz': newDeath_sz,
             'totalRecovery_sz': totalRecovery_sz,

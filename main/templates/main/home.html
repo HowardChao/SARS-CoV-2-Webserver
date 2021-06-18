@@ -28,9 +28,13 @@
   </div>
 </div>
 
+<div id="analysis_code_canvas">
+</div>
+
 
 <div id="alert-holding-div">
 </div>
+
 
 <style>
   .node {
@@ -58,7 +62,6 @@
     font-weight: bold;
     fill: #9c9c9c;
   }
-
 </style>
 
 <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -90,10 +93,6 @@
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "-200 0 2250 750")
         .append("g")
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        //.attr("width", width + margin.right + margin.left)
-        //.attr("height", height + margin.top + margin.bottom)
 
     d3.json(display_file, function(error, tree_data) {
       root = tree_data;
@@ -108,12 +107,8 @@
         }
       }
 
-      // root.children.forEach(collapse);
       update(root);
     });
-    // root = flare;
-    // root.x0 = height / 2;
-    // root.y0 = 0;
 
     function collapse(d) {
         if (d.children) {
@@ -157,9 +152,6 @@
         nodeEnter.append("circle")
             .attr("r", 1e-6)
             .style("fill", function(d) { return d.color; });
-        //     .style("fill", function (d) {
-        //     return d._children ? "lightsteelblue" : "#fff";
-        // });
 
         nodeEnter.append("text")
             .attr("x", function (d) {
@@ -183,11 +175,12 @@
                 position = "middle";
               }
               return position
-            // return d.children || d._children ? "end" : "start";
           })
           .attr("dy", function (d) {
-            if (d.children == undefined) {
+            if (d.children == undefined && !d.name.includes("Person")) {
               position = ".35em";
+            } else if (d.name.includes("Person")) {
+              position = "-0.5em";
             } else {
               position = ".35em";
             }
@@ -195,7 +188,6 @@
               position = "-1em";
             }
             return position
-          // return d.children || d._children ? "end" : "start";
           })
           .attr("dx", function (d) {
             if (d.children == undefined) {
@@ -207,20 +199,8 @@
               position = "-3em";
             }
             return position
-          // return d.children || d._children ? "end" : "start";
           })
 
-        //   .attr("text-anchor", function (d) {
-        //     if (d.parent == 'null') {
-        //       return "end"
-        //     }
-        //   // return d.children || d._children ? "end" : "start";
-        // })
-          //   .attr("text-anchor", function (d) {
-          //   if (d.name== "Infected Individuals") {
-          //     return "end"
-          //   }
-          // })
             .style("fill-opacity", 1e-6)
             .text(function (d) {
             return d.name;
@@ -252,19 +232,12 @@
                 color = "green";
               }
             return color;
-            // return ( d.children == undefined)  ? "#4287f5" : "#00298f";
-            // return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? "#4287f5" : "#00298f";
           })
-          //   .attr("vector-effect", "non-scaling-stroke")
-          //   .style("border", "red")
-          //   .attr("fill", function (d) {
-          //   return (d.name.includes("Infected"))  ? "#fc7303" : "#00298f";
-          // })
             .style("font-size", function (d) {
               if (d.children == undefined && !d.name.includes("Person")) {
                 size = 15;
               } else if (d.name.includes("Person")) {
-                size = 23;
+                size = 30;
               } else {
                 size = 23;
               }
@@ -272,18 +245,7 @@
                 size = 23;
               }
             return size;
-            // return ( d.children == undefined)  ? 15 : 20;
-            // return ( d.name.includes("Death")  || d.name.includes("Recovery") || d.name.includes("Infected") || d.name.includes("Not infected"))  ? 15 : 20;
           });
-        // nodeEnter.append("text")
-        //   .attr("x", function (d) {
-        //     return d.children || d._children ? -13 : 13;
-        //   })
-        //   .attr("dy", "1.35em")
-        //   .text("line 2")
-          //   .style("font-weight", function (d) {
-          //   return (d.name == "Death" || d.name == "Recovery" || d.name == "Infected" || d.name == "Not infected")  ? "light" : "light";
-          // });
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
@@ -295,16 +257,9 @@
         nodeUpdate.select("circle")
             .attr("r", function(d) { return (d.children == undefined || d.parent == "null") ? 10 : 5;} ) //function(d) { return d._children.length == 0 ? 3 : 10;}
             .style("fill", function(d) { return d.color; });
-            // .attr("r", 4.5)
-        //     .style("fill", function (d) {
-        //     return d._children ? "lightsteelblue" : "#fff";
-        // });
 
         nodeUpdate.select("text")
             .style("fill-opacity", 1);
-          //   .attr("fill", function (d) {
-          //   return d.children == undefined ? "blue" : "black";
-          // });
 
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition()
@@ -379,26 +334,6 @@
             .text(function (d) {
               return d.target.pb;
             })
-        // linktext.append("text")
-        //     .attr("x", "-45px")
-        //     .attr("dy", "1.35em")
-        //     .attr("text-anchor", "middle")
-        //     .text(function (d) {
-        //     //console.log(d.target.name);
-        //       return "t2";
-        //     });
-
-        // linktext.enter()
-        //     .insert("g")
-        //     .attr("class", "link")
-        //     .append("text")
-        //     .attr("x", "-45px")
-        //     .attr("dy", "1.35em")
-        //     .attr("text-anchor", "middle")
-        //     .text(function (d) {
-        //     //console.log(d.target.name);
-        //     return "t2";
-        // });
 
         linktext.transition()
             .duration(duration)
@@ -416,23 +351,6 @@
             d.x0 = d.x;
             d.y0 = d.y;
         });
-
-        // // Try to add new link
-        // var line = d3.svg.line()
-        //     .x(function(d) {
-        //         return d.y; // because tree is horizontal
-        //     })
-        //     .y(function(d) {
-        //         return d.x; // because tree is horizontal
-        //     });
-        // console.log("line: ", line);
-        // Enter the links.
-        // link.enter().insert("path", "g")
-        //     .attr("class", "link")
-        //     .attr("d", function(d) {
-        //         return line([d.source, d.target]);
-        //     });
-
     }
     // Toggle children on click.
     function click(d) {
@@ -446,24 +364,23 @@
         update(d);
     }
   }
-
 </script>
 
 
 <div style="margin: 40px">
-  <div id="current_day_show" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+  <div id="current_day_title" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
   </div>
-  <div id="chart_title_show" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+  <div id="chart_pannel_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
   </div>
   <div id="chart_pannel_container" style="margin-bottom: 30px;">
   </div>
-  <div id="groups_model_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+  <div id="age_groups_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
   </div>
-  <div id="model_pannel_container" style="margin-bottom: 30px;">
+  <div id="age_groups_container" style="margin-bottom: 30px;">
   </div>
-  <div id="model_params_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+  <div id="model_input_params_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
   </div>
-  <div id="model_params_result">
+  <div id="model_intput_params_result">
   </div>
 
 
@@ -484,6 +401,18 @@
         var backgroundColor = 'rgba(255, 99, 132, 0.2)'
         var borderColor = 'rgba(255,99,132,1)'
         var label = "New Infected"
+      } else if (chart_id == "totalSeekMed") {
+        var backgroundColor = 'rgba(190, 107, 207, 0.2)'
+        var borderColor = 'rgba(190, 107, 207,1)'
+        var label = "Total Medical Treatment"
+      } else if (chart_id == "currentSeekMed") {
+        var backgroundColor = 'rgba(190, 107, 207, 0.2)'
+        var borderColor = 'rgba(190, 107, 207,1)'
+        var label = "Current Medical Treatment"
+      } else if (chart_id == "newSeekMed") {
+        var backgroundColor = 'rgba(190, 107, 207, 0.2)'
+        var borderColor = 'rgba(190, 107, 207,1)'
+        var label = "New Medical Treatment"
       } else if (chart_id == "newDeath") {
         var backgroundColor = 'rgba(54, 162, 235, 0.2)'
         var borderColor = 'rgba(54, 162, 235, 1)'
@@ -568,6 +497,9 @@
           setChart(current_data, "totalInfected");
           setChart(current_data, "currentInfected");
           setChart(current_data, "newInfected");
+          setChart(current_data, "totalSeekMed");
+          setChart(current_data, "currentSeekMed");
+          setChart(current_data, "newSeekMed");
           setChart(current_data, "totalDeath");
           setChart(current_data, "newDeath");
           setChart(current_data, "totalRecovery");
@@ -590,12 +522,7 @@
                   var form_wrapper = document.getElementById('form_wrapper');
                   if (form_wrapper != null) {
                     form_wrapper.remove();
-
-
-
-
-
-                    var model_pannel_content = `
+                    var age_groups_content = `
                     <div id="model_pannel" style="border: 3px solid #a8a8a8;">
                       <div class="card" >
                         <div class="card-header" id="youth_card_header">
@@ -645,8 +572,8 @@
                         </div>
                       </div>
                       `
-                      console.log("8. model_pannel_content !!!: ", model_pannel_content)
-                    document.getElementById("model_pannel_container").insertAdjacentHTML('afterbegin', model_pannel_content)
+                      console.log("8. age_groups_content !!!: ", age_groups_content)
+                    document.getElementById("age_groups_container").insertAdjacentHTML('afterbegin', age_groups_content)
 
                     var pannel_content = `
                     <div id="chart_pannel" style="border: 3px solid #a8a8a8;">
@@ -680,7 +607,37 @@
                           </div>
                         </div>
                       </div>
-
+                      
+                      <div class="card" >
+                        <div class="card-header" id="medical_card_header">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#medical_card_collapse" aria-expanded="true" aria-controls="medical_card_collapse" style="text-decoration: none; color:rgba(190, 107, 207, 1); font-weight:700; font-size:20px">
+                              <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Medical Treatment Line Chart
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="medical_card_collapse" class="collapse show" aria-labelledby="medical_card_header" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="totalSeekMed"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="currentSeekMed"></canvas>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="chart-container" style="height:300px">
+                                  <canvas id="newSeekMed"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="card" >
                         <div class="card-header" id="death_card_header">
@@ -707,7 +664,6 @@
                           </div>
                         </div>
                       </div>
-
 
                       <div class="card" >
                         <div class="card-header" id="recovery_card_header">
@@ -781,14 +737,19 @@
                   }
                   if (data.labels != null) {
                     var current_day = data.labels[data.labels.length - 1];
-                    document.getElementById("current_day_show").innerHTML = '<i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp;' + current_day;
+                    document.getElementById("current_day_title").innerHTML = '<i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp;' + current_day;
                   }
 
-                  if ($('#chart_title_show').children().length == 0) {
-                    document.getElementById("chart_title_show").innerHTML = '<i class="fas fa-pen" style="margin-left: 10px"></i> &nbsp; Simulation Charts';
+                  if ("{{analysis_code}}") {
+                    document.getElementById("analysis_code_canvas").innerHTML = '<div class="alert alert-info alert-dismissible fade show" role="alert" style="margin-top:-30px; text-align: center; font-size: 18px">Your analysis_code is &nbsp &nbsp <strong style="font-size: 22px">{{analysis_code}}</strong></div>'
                   }
-                  if ($('#groups_model_title').children().length == 0) {
-                    document.getElementById("groups_model_title").innerHTML = '<i class="fas fa-network-wired" style="margin-left: 10px"></i> &nbsp; Age Groups Models';
+
+
+                  if ($('#chart_pannel_title').children().length == 0) {
+                    document.getElementById("chart_pannel_title").innerHTML = '<i class="fas fa-pen" style="margin-left: 10px"></i> &nbsp; Simulation Charts';
+                  }
+                  if ($('#age_groups_title').children().length == 0) {
+                    document.getElementById("age_groups_title").innerHTML = '<i class="fas fa-network-wired" style="margin-left: 10px"></i> &nbsp; Age Groups Models';
                   }
                   console.log("$('#youth_model').children().length == 0", $('#youth_model').children().length == 0)
                   console.log("$('#adult_model').children().length == 0", $('#adult_model').children().length == 0)
@@ -807,17 +768,17 @@
                   }
                   // tree("#adult_model", "{{ADULT_json_file}}")
                   // tree("#elder_model", "{{ELDER_json_file}}")
-                  if ($('#model_params_title').children().length == 0) {
-                    document.getElementById("model_params_title").innerHTML = '<i class="fa fa-keyboard" style="margin-left: 10px"></i> &nbsp; Input Parameters';
+                  if ($('#model_input_params_title').children().length == 0) {
+                    document.getElementById("model_input_params_title").innerHTML = '<i class="fa fa-keyboard" style="margin-left: 10px"></i> &nbsp; Input Parameters';
                   }
 
-                  if ($('#model_params_result').children().length == 0) {
+                  if ($('#model_intput_params_result').children().length == 0) {
                     $.ajax({
                         method: 'GET',
                         url: 'api-params-data/{{analysis_code}}',
                         success: function(params_data){
                             // current_data = Object.assign({}, data);
-                            var load_model_params_result = `
+                            var model_intput_params_result_content = `
                               <div style="border: 3px solid #a8a8a8;">
                                 <div class="card">
                                   <div class="card-header" id="basic_para_card_header">
@@ -835,7 +796,7 @@
                                           <div class="row">
                                             <div class="col">
                                               <div class="form-group row">
-                                                <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number:</label>
+                                                <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Index case number:</label>
                                                 <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
                                                   params_data.BMP_IDX_CASE_NUM +
                                                 `</p></div>
@@ -851,21 +812,33 @@
                                             </div>
                                             <div class="col">
                                               <div class="form-group row">
-                                                <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times:</label>
-                                                <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
-                                                  params_data.BMP_SIMULATION_TIME +
-                                                `</p></div>
-                                              </div>
-                                            </div>
-                                            <div class="col">
-                                              <div class="form-group row">
-                                                <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days:</label>
+                                                <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days: </label>
                                                 <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
                                                   params_data.BMP_CYCLE_DAYS +
                                                 `</p></div>
                                               </div>
                                             </div>
+                                            <div class="col">
+                                            </div>
                                           </div>
+                                          <div class="row">
+                                            <div class="col">
+                                              <div class="form-group row">
+                                                <label style="text-align: right" for="BMP_CONTACT_PEOPLE_NUM" class="col-7 col-form-label">Average number of contacted people: </label>
+                                                <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
+                                                  params_data.BMP_CONTACT_PEOPLE_NUM +
+                                                `</p></div>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                            </div>
+                                            <div class="col">
+                                            </div>
+                                            <div class="col">
+                                            </div>
+                                          </div>
+
+
                                           <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Age group percentage</h4>
                                           <div class="row">
                                             <div class="col">
@@ -914,7 +887,7 @@
                                     <div class="card-body">
                                       <div id="trans_para_model">
                                         <div style="margin-left: 50px">
-                                          <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact rate</h4>
+                                          <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact age group rate</h4>
                                           <div class="row">
                                             <div class="col">
                                               <div class="form-group row">
@@ -1045,11 +1018,11 @@
                                     <div class="card-body">
                                       <div id="med_para_model">
                                         <div style="margin-left: 50px">
-                                          <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Seek medical treatment rate</h4>
+                                          <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact people rate (CPR) &nbsp & &nbsp seek medical treatment rate (SMTR)</h4>
                                           <div class="row">
                                             <div class="col">
                                               <div class="form-group row">
-                                                <label style="text-align: right" for="CP_SMT_YOUTH_Rate_CP" class="col-7 col-form-label"> ≤ 18: </label>
+                                                <label style="text-align: right" for="CP_SMT_YOUTH_Rate_CP" class="col-7 col-form-label"> ≤ 18 &nbsp CPR: </label>
                                                 <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
                                                   params_data.CP_SMT_YOUTH_Rate_CP +
                                                 `</p></div>
@@ -1057,7 +1030,7 @@
                                             </div>
                                             <div class="col">
                                               <div class="form-group row">
-                                                <label style="text-align: right" for="CP_SMT_ADULT_Rate_CP" class="col-7 col-form-label"> 19 - 64:  </label>
+                                                <label style="text-align: right" for="CP_SMT_ADULT_Rate_CP" class="col-7 col-form-label"> 19 - 64 &nbsp CPR:  </label>
                                                 <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
                                                   params_data.CP_SMT_ADULT_Rate_CP +
                                                 `</p></div>
@@ -1065,7 +1038,7 @@
                                             </div>
                                             <div class="col">
                                               <div class="form-group row">
-                                                <label style="text-align: right" for="CP_SMT_ELDER_Rate_CP" class="col-7 col-form-label">  ≥ 65: </label>
+                                                <label style="text-align: right" for="CP_SMT_ELDER_Rate_CP" class="col-7 col-form-label">  ≥ 65 &nbsp CPR: </label>
                                                 <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
                                                   params_data.CP_SMT_ELDER_Rate_CP +
                                                 `</p></div>
@@ -1074,6 +1047,40 @@
                                             <div class="col">
                                             </div>
                                           </div>
+
+                                          <div class="row">
+                                            <div class="col">
+                                              <div class="form-group row">
+                                                <label style="text-align: right" for="CP_SMT_YOUTH_Rate_ST" class="col-7 col-form-label"> ≤ 18 &nbsp SMTR: </label>
+                                                <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
+                                                  params_data.CP_SMT_YOUTH_Rate_ST +
+                                                `</p></div>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                              <div class="form-group row">
+                                                <label style="text-align: right" for="CP_SMT_ADULT_Rate_ST" class="col-7 col-form-label"> 19 - 64 &nbsp SMTR:  </label>
+                                                <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
+                                                  params_data.CP_SMT_ADULT_Rate_ST +
+                                                `</p></div>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                              <div class="form-group row">
+                                                <label style="text-align: right" for="CP_SMT_ELDER_Rate_ST" class="col-7 col-form-label">  ≥ 65 &nbsp SMTR: </label>
+                                                <div class="col-5"><p style="margin-top:8px; text-decoration: underline;">`+
+                                                  params_data.CP_SMT_ELDER_Rate_ST +
+                                                `</p></div>
+                                              </div>
+                                            </div>
+                                            <div class="col">
+                                            </div>
+                                          </div>
+
+
+
+
+
                                           <br>
                                           <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; 1<small>st</small> visit IPD & OPD rate</h4>
                                           <div class="row">
@@ -1879,7 +1886,7 @@
 
                               </div>
                             `
-                            document.getElementById("model_params_result").insertAdjacentHTML('beforeend', load_model_params_result)
+                            document.getElementById("model_intput_params_result").insertAdjacentHTML('beforeend', model_intput_params_result_content)
                         },
                         error: function(error_data){
                           console.log('error');
@@ -1894,7 +1901,7 @@
                   update_chart_pannel()
 
                   var alert_holding_html = `
-                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top:-30px; text-align: center; font-size: 20px">
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top:-15px; text-align: center; font-size: 20px">
                     <strong>Simulation is finished successfully!</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -1975,6 +1982,7 @@
             </button>
           </h5>
         </div>
+
         <div id="basic_para_collapse" class="collapse" aria-labelledby="basic_para_card_header" data-parent="#accordion">
           <div class="card-body">
             <div id="basic_para_model">
@@ -1983,7 +1991,7 @@
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Idex case number</label>
+                      <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Index case number <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The initial infected people in the model."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{BMP_IDX_CASE_NUM}}" id="BMP_IDX_CASE_NUM" name="BMP_IDX_CASE_NUM">
                       </div>
@@ -1991,7 +1999,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day</label>
+                      <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The number of days that the model is going to simulate."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{BMP_SIMULATION_DAY}}" id="BMP_SIMULATION_DAY" name="BMP_SIMULATION_DAY">
                       </div>
@@ -1999,26 +2007,36 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="BMP_SIMULATION_TIME" class="col-7 col-form-label">Simulation times</label>
-                      <div class="col-5">
-                        <input class="form-control" type="number" value="{{BMP_SIMULATION_TIME}}" id="BMP_SIMULATION_TIME" name="BMP_SIMULATION_TIME">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group row">
-                      <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days</label>
+                      <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The maximum number of days that an infected person will stay in the transmission model."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{BMP_CYCLE_DAYS}}" id="BMP_CYCLE_DAYS" name="BMP_CYCLE_DAYS">
                       </div>
                     </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="BMP_CONTACT_PEOPLE_NUM" class="col-7 col-form-label">Average number of contacted people <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The average number of people with whom an infected person will contact every day."></i></label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{BMP_CONTACT_PEOPLE_NUM}}" id="BMP_CONTACT_PEOPLE_NUM" name="BMP_CONTACT_PEOPLE_NUM">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                  </div>
+                  <div class="col">
+                  </div>
+                  <div class="col">
                   </div>
                 </div>
                 <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Age group percentage</h4>
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 </label>
+                      <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18 <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people under the age of 18."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{AGP_YOUTH_GRP}}" step="0.01" id="AGP_YOUTH_GRP" name="AGP_YOUTH_GRP">
                       </div>
@@ -2026,7 +2044,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64  </label>
+                      <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64 <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people whose age is between 19 and 64."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{AGP_ADULT_GRP}}" step="0.01" id="AGP_ADULT_GRP" name="AGP_ADULT_GRP">
                       </div>
@@ -2034,7 +2052,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 </label>
+                      <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65 <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people over the age of 65."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{AGP_ELDER_GRP}}" step="0.01" id="AGP_ELDER_GRP" name="AGP_ELDER_GRP">
                       </div>
@@ -2061,11 +2079,11 @@
           <div class="card-body">
             <div id="trans_para_model">
               <div style="margin-left: 50px">
-                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact rate</h4>
+                <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact age group rate  <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The chance of an infected person contacts with people in different age groups. "></i></h4>
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group </label>
+                      <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="For each infected person and his new contacted person, the chance of they are in the same age group."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{CR_SAME_GRP}}" step="0.01" id="CR_SAME_GRP" name="CR_SAME_GRP">
                       </div>
@@ -2073,7 +2091,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group  </label>
+                      <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="For each infected person and his new contacted person, the chance of they are in the different age group."></i></label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{CR_DIFF_GRP}}" step="0.01" id="CR_DIFF_GRP" name="CR_DIFF_GRP">
                       </div>
@@ -2086,11 +2104,11 @@
                 </div>
                 <br>
 
-                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate</h4>
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get vacincated. It can also be interpreted as the chance of a person who gets vaccinated."></i></h4>
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18 </label>
+                      <label style="text-align: right" for="Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18</label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{Vac_YOUTH_Rate_V}}" step="0.001" id="Vac_YOUTH_Rate_V" name="Vac_YOUTH_Rate_V">
                       </div>
@@ -2098,7 +2116,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64  </label>
+                      <label style="text-align: right" for="Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64</label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{Vac_ADULT_Rate_V}}" step="0.001" id="Vac_ADULT_Rate_V" name="Vac_ADULT_Rate_V">
                       </div>
@@ -2106,7 +2124,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65 </label>
+                      <label style="text-align: right" for="Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65</label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{Vac_ELDER_Rate_V}}" step="0.001" id="Vac_ELDER_Rate_V" name="Vac_ELDER_Rate_V">
                       </div>
@@ -2117,7 +2135,7 @@
                 </div>
                 <br>
 
-                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Infection rate</h4>
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Infection rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get infected with or without being vaccinated. It can also be interpreted as the chance of a person who gets infected with or without being vaccinated."></i></h4>
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
@@ -2192,11 +2210,11 @@
           <div class="card-body">
             <div id="med_para_model">
               <div style="margin-left: 50px">
-                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Seek medical treatment rate</h4>
+                <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact people rate (CPR) &nbsp & &nbsp seek medical treatment rate (SMTR) <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Every day, an infected person might contacts with more people and continues the transmission (in the Transmission Model) or goes to the medical center seeking for medical treatment (in the Medical Treatment Model). CPR is the chance that an infected person stays in the transmission model; SMTR is the chance that an infected person switches to the Medical Treatment Model. CPR + SMTR = 1"></i></h4>
                 <div class="row">
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="CP_SMT_YOUTH_Rate_CP" class="col-7 col-form-label"> ≤ 18 </label>
+                      <label style="text-align: right" for="CP_SMT_YOUTH_Rate_CP" class="col-7 col-form-label"> ≤ 18 &nbsp CPR </label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{CP_SMT_YOUTH_Rate_CP}}" step="0.01" id="CP_SMT_YOUTH_Rate_CP" name="CP_SMT_YOUTH_Rate_CP">
                       </div>
@@ -2204,7 +2222,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="CP_SMT_ADULT_Rate_CP" class="col-7 col-form-label"> 19 - 64  </label>
+                      <label style="text-align: right" for="CP_SMT_ADULT_Rate_CP" class="col-7 col-form-label"> 19 - 64 &nbsp CPR </label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{CP_SMT_ADULT_Rate_CP}}" step="0.01" id="CP_SMT_ADULT_Rate_CP" name="CP_SMT_ADULT_Rate_CP">
                       </div>
@@ -2212,7 +2230,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group row">
-                      <label style="text-align: right" for="CP_SMT_ELDER_Rate_CP" class="col-7 col-form-label">  ≥ 65 </label>
+                      <label style="text-align: right" for="CP_SMT_ELDER_Rate_CP" class="col-7 col-form-label">  ≥ 65 &nbsp CPR </label>
                       <div class="col-5">
                         <input class="form-control" type="number" value="{{CP_SMT_ELDER_Rate_CP}}" step="0.01" id="CP_SMT_ELDER_Rate_CP" name="CP_SMT_ELDER_Rate_CP">
                       </div>
@@ -2221,6 +2239,69 @@
                   <div class="col">
                   </div>
                 </div>
+
+
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CP_SMT_YOUTH_Rate_ST" class="col-7 col-form-label"> ≤ 18 &nbsp SMTR </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CP_SMT_YOUTH_Rate_ST}}" readonly id="CP_SMT_YOUTH_Rate_ST" name="CP_SMT_YOUTH_Rate_ST">
+                      </div>
+                    </div>
+                    <script>
+                      var ev1 = document.getElementById('CP_SMT_YOUTH_Rate_CP');
+                      var outv1 = document.getElementById('CP_SMT_YOUTH_Rate_ST');
+                      ev1.addEventListener('input', function(event) {
+                        window.setTimeout(function() {
+                          outv1.value = 1 - event.target.value;
+                        }, 1);
+                      });
+                    </script>
+                  </div>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CP_SMT_ADULT_Rate_ST" class="col-7 col-form-label"> 19 - 64 &nbsp SMTR </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CP_SMT_ADULT_Rate_ST}}" readonly id="CP_SMT_ADULT_Rate_ST" name="CP_SMT_ADULT_Rate_ST">
+                      </div>
+                    </div>
+                  </div>
+                  <script>
+                    var ev2 = document.getElementById('CP_SMT_ADULT_Rate_CP');
+                    var outv2 = document.getElementById('CP_SMT_ADULT_Rate_ST');
+                    ev2.addEventListener('input', function(event) {
+                      window.setTimeout(function() {
+                        outv2.value = 1 - event.target.value;
+                      }, 1);
+                    });
+                  </script>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label style="text-align: right" for="CP_SMT_ELDER_Rate_ST" class="col-7 col-form-label">  ≥ 65 &nbsp SMTR </label>
+                      <div class="col-5">
+                        <input class="form-control" type="number" value="{{CP_SMT_ELDER_Rate_ST}}" readonly id="CP_SMT_ELDER_Rate_ST" name="CP_SMT_ELDER_Rate_ST">
+                      </div>
+                    </div>
+                  </div>
+                  <script>
+                    var ev3 = document.getElementById('CP_SMT_ELDER_Rate_CP');
+                    var outv3 = document.getElementById('CP_SMT_ELDER_Rate_ST');
+                    ev3.addEventListener('input', function(event) {
+                      window.setTimeout(function() {
+                        outv3.value = 1 - event.target.value;
+                      }, 1);
+                    });
+                  </script>
+                  <div class="col">
+                  </div>
+                </div>
+
+
+
+
+
                 <br>
                 <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; 1<small>st</small> visit IPD & OPD rate</h4>
                 <div class="row">
@@ -2467,26 +2548,6 @@
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <div class="card" >
         <div class="card-header" id="cost_para_card_header">
@@ -3084,74 +3145,4 @@
     </form>
   </div>
 </div>
-
-
-<!-- class FatalityRate(Enum):
-    YOUTH_RT = 0.12
-    ADULT_RT = 0.14
-    ELDER_RT = 0.14
-
-class effectiveness(Enum):
-    MILD = (-0.88)*7/365
-    SEVERE = (-0.88)*7/365 + (-0.98)*5.4/365
-    DEATH = (-0.88)*7/365 + (-0.98)*5.4/365 + (-1)*(HEALTH_LIFE_EXP-SEVERE_AVG_DEATH_AGE)
-
-class VaccineExpen(Enum):
-    YOUTH_TRIVALENT_VAC = 500
-    ADULT_TRIVALENT_VAC = 500
-    ELDER_TRIVALENT_VAC = 500
-    YOUTH_HIGH_DOSE_VAC = 0
-    ADULT_HIGH_DOSE_VAC = 0
-    ELDER_HIGH_DOSE_VAC = 1656
-    YOUTH_ADJUVANTED_VAC = 0
-    ADULT_ADJUVANTED_VAC = 0
-    ELDER_ADJUVANTED_VAC = 1696
-
-class HealthExpen(Enum):
-    YOUTH_OUTPATIENT = 371
-    ADULT_OUTPATIENT = 372
-    ELDER_OUTPATIENT = 401
-    YOUTH_ANTI_VIRUS = 950
-    ADULT_ANTI_VIRUS = 950
-    ELDER_ANTI_VIRUS = 950
-    YOUTH_HOSPITALIZED = 45935
-    ADULT_HOSPITALIZED = 45935
-    ELDER_HOSPITALIZED = 45935
-
-
-
-More:
-HEALTH_LIFE_EXP = 71.2
-SEVERE_AVG_DEATH_AGE = 40
-IDX_SEEK_TREATMENT_PROB = 0.1 -->
-
-
-
-
-<!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{% static "images/phylo_tree.png" %}" alt="Slide show - 1 (Maybe we can put current tree)" class="d-block w-100"  height="400" width="42" style="background-image: url('/static/images/main-background.png'); background-position: center center;  background-repeat: no-repeat;">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static "images/workflow.png" %}" alt="Slide show - 2 (Maybe we can put workflow)" class="d-block w-100"  height="400" width="42" style="background-image: url('/static/images/main-background.png'); background-position: center center;  background-repeat: no-repeat;">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static "images/Others.jpg" %}" alt="Slide show - 3 (Others)" class="d-block w-100"  height="400" width="42" style="background-image: url('/static/images/main-background.png'); background-position: center center;  background-repeat: no-repeat;">
-        </div>
-    </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div> -->
 {% endblock content %}

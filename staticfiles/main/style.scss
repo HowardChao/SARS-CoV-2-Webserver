@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 nav.col-sm-3#list-example {
     top: 20px;
     position: fixed;
@@ -128,4 +130,8 @@ body {
   100% {
     top: 0;
   }
+}
+
+.force-UTF-8{
+    content: "¡";
 }

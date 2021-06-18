@@ -7,30 +7,30 @@
   "children":[
     {
       "parent":"Index Case [Infected Individual]",
-      "name":"Contact another 6 people",
-      "id":"Contact another 6 people",
-      "pb":"[1 - Seek Medical Treatment Rate]",
+      "name":"Contact another <N> people",
+      "id":"Contact another <N> people",
+      "pb":"[Contact people rate]",
       "color":"gray",
       "children":[
         {
-          "parent":"Contact another 6 people",
+          "parent":"Contact another <N> people",
           "name":"Person 1",
           "id":"Person 1",
-          "pb":"[Contact Rate]",
+          "pb":"Number of contacted people = 1",
           "color":"gray",
           "children":[
             {
-              "parent":"Contact another 6 people",
+              "parent":"Contact another <N> people",
               "name":"Vaccinated",
               "id":"Vaccinated",
-              "pb":"[Vaccine Rate]",
+              "pb":"[Vaccination Rate]",
               "color":"gray",
               "children":[
                 {
                   "parent":"Vaccinated",
                   "name":"Infected (vaccinated) ==> Back to Model (Root)",
                   "id":"Infected (vaccinated)",
-                  "pb":"[Infection rate]",
+                  "pb":"[Infection rate (vac)]",
                   "color":"#fc7303",
                   "children":[
                   ]
@@ -39,7 +39,7 @@
                   "parent":"Vaccinated",
                   "name":"Not infected (vaccinated) ==> Leave Model",
                   "id":"Not infected (vaccinated) ==> Leave Model",
-                  "pb":"[1 - Infection rate]",
+                  "pb":"[1 - Infection rate (vac)]",
                   "color":"#44ab00",
                   "children":[
                   ]
@@ -47,7 +47,7 @@
               ]
             },
             {
-              "parent":"Contact another 6 people",
+              "parent":"Contact another <N> people",
               "name":"Not vaccinated",
               "id":"Not vaccinated",
               "pb":"[1 - Vaccine Rate]",
@@ -57,7 +57,7 @@
                   "parent":"Not vaccinated",
                   "name":"Infected (not vaccinated) ==> Back to Model (Root)",
                   "id":"Infected (not vaccinated)",
-                  "pb":"[Infection rate]",
+                  "pb":"[Infection rate (no vac)]",
                   "color":"#fc7303",
                   "children":[
                   ]
@@ -66,58 +66,13 @@
                   "parent":"Not vaccinated",
                   "name":"Not infected (not vaccinated) ==> Leave Model",
                   "id":"Not infected (not vaccinated) ==> Leave Model",
-                  "pb":"[1 - Infection rate]",
+                  "pb":"[1 - Infection rate (no vac)]",
                   "color":"#44ab00",
                   "children":[
                   ]
                 }
               ]
             }
-          ]
-        },
-        {
-          "parent":"Contact another 6 people",
-          "name":"Person 2",
-          "id":"Person 2",
-          "pb":"[Contact Rate]",
-          "color":"gray",
-          "children":[
-          ]
-        },
-        {
-          "parent":"Contact another 6 people",
-          "name":"Person 3",
-          "id":"Person 3",
-          "pb":"[Contact Rate]",
-          "color":"gray",
-          "children":[
-          ]
-        },
-        {
-          "parent":"Contact another 6 people",
-          "name":"Person 4",
-          "id":"Person 4",
-          "pb":"[Contact Rate]",
-          "color":"gray",
-          "children":[
-          ]
-        },
-        {
-          "parent":"Contact another 6 people",
-          "name":"Person 5",
-          "id":"Person 5",
-          "pb":"[Contact Rate]",
-          "color":"gray",
-          "children":[
-          ]
-        },
-        {
-          "parent":"Contact another 6 people",
-          "name":"Person 6",
-          "id":"Person 6",
-          "pb":"[Contact Rate]",
-          "color":"gray",
-          "children":[
           ]
         }
       ]
@@ -126,7 +81,7 @@
       "parent":"Index Case [Infected Individual]",
       "name":"Seek medical treatment",
       "id":"Seek medical treatment",
-      "pb":"[Seek Medical Treatment Rate]",
+      "pb":"[Seek medical treatment rate]",
       "color":"gray",
       "children":[
         {
