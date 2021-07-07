@@ -1,0 +1,2022 @@
+{% load static %}
+<script type="text/javascript" analysis_code="{{analysis_code}}" src="{% static 'js/post_groups_switching.js' %}"></script>
+
+
+<div id="chart_pannel_container" style="margin-bottom: 30px;">
+  <div id="experiment_chart_pannel" style="border: 3px solid #a8a8a8; margin-bottom: 50px">
+    <div class="card" >
+      <div class="card-header" id="experiment_chart_card_header" style="background-color: #d4d4d4">
+        <h5 class="mb-0">
+          <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#experiment_chart_collapse" aria-expanded="true" aria-controls="experiment_chart_collapse" style="text-decoration: none; color:#000; font-weight:bolder; font-size:30px;text-align:center;">
+            <i class="fas fa-pen" style="margin-left: 10px"></i> &nbsp; Simulation Charts
+          </button>
+        </h5>
+      </div>
+
+      <div id="experiment_chart_collapse" class="collapse show" aria-labelledby="experiment_chart_collapse" data-parent="#accordion">
+        <div class="card-body" style="margin-top: 25px">
+          <nav style="font-size: 25px; border-width: 3px;">
+            <div class="nav nav-tabs" id="nav_tab" role="tablist" style=" ">
+
+              <a class="nav-item nav-link active" id="trans_gp_1" data-toggle="tab" href="#trans_gp_1_content" role="tab" aria-controls="trans_gp_1_content" aria-selected="true" style="display:block; border-width: 3px;"><i class="fa fa-object-group""></i> &nbsp Group 1 &nbsp </a>
+              <!-- onclick="update_chart_pannel(1, true) -->
+              <a class="nav-item nav-link" id="trans_gp_2" data-toggle="tab" href="#trans_gp_2_content" role="tab" aria-controls="trans_gp_2_content" aria-selected="false" style="display:none; border-width: 3px;"><i class="fa fa-object-group"></i> &nbsp Group 2 &nbsp </a>
+              <a class="nav-item nav-link" id="trans_gp_3" data-toggle="tab" href="#trans_gp_3_content" role="tab" aria-controls="trans_gp_3_content" aria-selected="false" style="display:none; border-width: 3px;"><i class="fa fa-object-group"></i> &nbsp Group 3 &nbsp </a>
+              <a class="nav-item nav-link" id="trans_gp_4" data-toggle="tab" href="#trans_gp_4_content" role="tab" aria-controls="trans_gp_4_content" aria-selected="false" style="display:none; border-width: 3px;"><i class="fa fa-object-group"></i> &nbsp Group 4 &nbsp </a>
+
+            </div>
+          </nav>
+
+
+          <div class="tab-content" id="nav-tabContent" style="border-style: solid; border-width: 0px 3px 3px 3px; border-color: #DEE2E6;">
+            <br>
+            <div class="tab-pane fade show active" id="trans_gp_1_content" role="tabpanel" aria-labelledby="trans_gp_1_content-tab" style="background-color: white;">
+              <div id="g1_current_day_title" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+                <i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp; 0
+              </div>
+
+
+              <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get vacincated. It can also be interpreted as the chance of a person who gets vaccinated."></i> &nbsp (G1)</h4>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G1_Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G1_Vac_YOUTH_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G1_Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G1_Vac_ADULT_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G1_Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G1_Vac_ELDER_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+              </div>
+              <br>
+
+
+              <div class="card" >
+                <div class="card-header" id="g1_infected_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_infected_card_collapse" aria-expanded="true" aria-controls="g1_infected_card_collapse" style="text-decoration: none; color:rgba(255, 99, 132, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Infected Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_infected_card_collapse" class="collapse show" aria-labelledby="g1_infected_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_totalInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_currentInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_newInfected"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g1_medical_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_medical_card_collapse" aria-expanded="true" aria-controls="g1_medical_card_collapse" style="text-decoration: none; color:rgba(190, 107, 207, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Medical Treatment Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_medical_card_collapse" class="collapse show" aria-labelledby="g1_medical_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_totalSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_currentSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_newSeekMed"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g1_death_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_death_card_collapse" aria-expanded="true" aria-controls="g1_death_card_collapse" style="text-decoration: none; color:rgba(54, 162, 235, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Death Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_death_card_collapse" class="collapse show" aria-labelledby="g1_death_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_totalDeath"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_newDeath"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g1_recovery_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_recovery_card_collapse" aria-expanded="true" aria-controls="g1_recovery_card_collapse" style="text-decoration: none; color:rgba(255, 206, 86, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Recovery Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_recovery_card_collapse" class="collapse show" aria-labelledby="g1_recovery_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_totalRecovery"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_newRecovery"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="card" >
+                <div class="card-header" id="g1_reachday_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_reachday_card_collapse" aria-expanded="true" aria-controls="g1_reachday_card_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Days Reached Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_reachday_card_collapse" class="collapse show" aria-labelledby="g1_reachday_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_totalReachDay"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_newReachDay"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="card" >
+                <div class="card-header" id="g1_cost_results_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g1_cost_results_collapse" aria-expanded="true" aria-controls="g1_cost_results_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Cost Results Bar Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g1_cost_results_collapse" class="collapse show" aria-labelledby="g1_cost_results_collapse" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row justify-content-md-center">
+                      <div class="col-10">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g1_cost_results"></canvas>
+                        </div>
+                      </div>
+                      <h3 id="g1_total_expense_result" style="text-align: center; margin-top: 20px"></h3>
+                      <!-- <div class="col-6">
+
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="trans_gp_2_content" role="tabpanel" aria-labelledby="trans_gp_2_content-tab" style="background-color: white;">
+              <div id="g2_current_day_title" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+                <i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp; 0
+              </div>
+
+
+              <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get vacincated. It can also be interpreted as the chance of a person who gets vaccinated."></i> &nbsp (G2)</h4>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G2_Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G2_Vac_YOUTH_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G2_Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G2_Vac_ADULT_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G2_Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G2_Vac_ELDER_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="card" >
+                <div class="card-header" id="g2_infected_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_infected_card_collapse" aria-expanded="true" aria-controls="g2_infected_card_collapse" style="text-decoration: none; color:rgba(255, 99, 132, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Infected Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_infected_card_collapse" class="collapse show" aria-labelledby="g2_infected_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_totalInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_currentInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_newInfected"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g2_medical_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_medical_card_collapse" aria-expanded="true" aria-controls="g2_medical_card_collapse" style="text-decoration: none; color:rgba(190, 107, 207, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Medical Treatment Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_medical_card_collapse" class="collapse show" aria-labelledby="g2_medical_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_totalSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_currentSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_newSeekMed"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g2_death_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_death_card_collapse" aria-expanded="true" aria-controls="g2_death_card_collapse" style="text-decoration: none; color:rgba(54, 162, 235, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Death Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_death_card_collapse" class="collapse show" aria-labelledby="g2_death_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_totalDeath"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_newDeath"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g2_recovery_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_recovery_card_collapse" aria-expanded="true" aria-controls="g2_recovery_card_collapse" style="text-decoration: none; color:rgba(255, 206, 86, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Recovery Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_recovery_card_collapse" class="collapse show" aria-labelledby="g2_recovery_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_totalRecovery"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_newRecovery"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="card" >
+                <div class="card-header" id="g2_reachday_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_reachday_card_collapse" aria-expanded="true" aria-controls="g2_reachday_card_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Days Reached Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_reachday_card_collapse" class="collapse show" aria-labelledby="g2_reachday_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_totalReachDay"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_newReachDay"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="card" >
+                <div class="card-header" id="g2_cost_results_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g2_cost_results_collapse" aria-expanded="true" aria-controls="g2_cost_results_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Cost Results Bar Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g2_cost_results_collapse" class="collapse show" aria-labelledby="g2_cost_results_collapse" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row justify-content-md-center">
+                      <div class="col-10">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g2_cost_results"></canvas>
+                        </div>
+                      </div>
+                      <h3 id="g2_total_expense_result" style="text-align: center; margin-top: 20px"></h3>
+
+                      <!-- <div class="col-6">
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="tab-pane fade" id="trans_gp_3_content" role="tabpanel" aria-labelledby="trans_gp_3_content-tab" style="background-color: white;">
+              <div id="g3_current_day_title" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+                <i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp; 0
+              </div>
+
+
+              <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get vacincated. It can also be interpreted as the chance of a person who gets vaccinated."></i> &nbsp (G3)</h4>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G3_Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G3_Vac_YOUTH_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G3_Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G3_Vac_ADULT_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G3_Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G3_Vac_ELDER_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="card" >
+                <div class="card-header" id="g3_infected_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_infected_card_collapse" aria-expanded="true" aria-controls="g3_infected_card_collapse" style="text-decoration: none; color:rgba(255, 99, 132, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Infected Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_infected_card_collapse" class="collapse show" aria-labelledby="g3_infected_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_totalInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_currentInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_newInfected"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g3_medical_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_medical_card_collapse" aria-expanded="true" aria-controls="g3_medical_card_collapse" style="text-decoration: none; color:rgba(190, 107, 207, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Medical Treatment Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_medical_card_collapse" class="collapse show" aria-labelledby="g3_medical_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_totalSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_currentSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_newSeekMed"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g3_death_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_death_card_collapse" aria-expanded="true" aria-controls="g3_death_card_collapse" style="text-decoration: none; color:rgba(54, 162, 235, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Death Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_death_card_collapse" class="collapse show" aria-labelledby="g3_death_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_totalDeath"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_newDeath"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g3_recovery_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_recovery_card_collapse" aria-expanded="true" aria-controls="g3_recovery_card_collapse" style="text-decoration: none; color:rgba(255, 206, 86, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Recovery Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_recovery_card_collapse" class="collapse show" aria-labelledby="g3_recovery_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_totalRecovery"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_newRecovery"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="card" >
+                <div class="card-header" id="g3_reachday_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_reachday_card_collapse" aria-expanded="true" aria-controls="g3_reachday_card_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Days Reached Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_reachday_card_collapse" class="collapse show" aria-labelledby="g3_reachday_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_totalReachDay"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_newReachDay"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="card" >
+                <div class="card-header" id="g3_cost_results_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g3_cost_results_collapse" aria-expanded="true" aria-controls="g3_cost_results_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Cost Results Bar Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g3_cost_results_collapse" class="collapse show" aria-labelledby="g3_cost_results_collapse" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row justify-content-md-center">
+                      <div class="col-10">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g3_cost_results"></canvas>
+                        </div>
+                      </div>
+                      <h3 id="g3_total_expense_result" style="text-align: center; margin-top: 20px"></h3>
+                      <!-- <div class="col-6">
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+            <div class="tab-pane fade" id="trans_gp_4_content" role="tabpanel" aria-labelledby="trans_gp_4_content-tab" style="background-color: white;">
+              <div id="g4_current_day_title" style="font-size: 40px; margin-bottom: 25px; font-weight: 1000; text-align: center; color:#de8212">
+                <i class="fas fa-sun" style="margin-left: 10px"></i> &nbsp; 0
+              </div>
+
+
+              <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Vaccination rate <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of people who get vacincated. It can also be interpreted as the chance of a person who gets vaccinated."></i> &nbsp (G4)</h4>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G4_Vac_YOUTH_Rate_V" class="col-7 col-form-label"> ≤ 18</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G4_Vac_YOUTH_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G4_Vac_ADULT_Rate_V" class="col-7 col-form-label"> 19 - 64</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G4_Vac_ADULT_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group row">
+                    <label style="text-align: right" for="G4_Vac_ELDER_Rate_V" class="col-7 col-form-label">  ≥ 65</label>
+                    <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="G4_Vac_ELDER_Rate_V_txt">
+                    </p></div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="card" >
+                <div class="card-header" id="g4_infected_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_infected_card_collapse" aria-expanded="true" aria-controls="g4_infected_card_collapse" style="text-decoration: none; color:rgba(255, 99, 132, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Infected Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_infected_card_collapse" class="collapse show" aria-labelledby="g4_infected_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_totalInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_currentInfected"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_newInfected"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g4_medical_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_medical_card_collapse" aria-expanded="true" aria-controls="g4_medical_card_collapse" style="text-decoration: none; color:rgba(190, 107, 207, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Medical Treatment Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_medical_card_collapse" class="collapse show" aria-labelledby="g4_medical_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_totalSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_currentSeekMed"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_newSeekMed"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g4_death_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_death_card_collapse" aria-expanded="true" aria-controls="g4_death_card_collapse" style="text-decoration: none; color:rgba(54, 162, 235, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Death Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_death_card_collapse" class="collapse show" aria-labelledby="g4_death_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_totalDeath"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_newDeath"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="g4_recovery_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_recovery_card_collapse" aria-expanded="true" aria-controls="g4_recovery_card_collapse" style="text-decoration: none; color:rgba(255, 206, 86, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Recovery Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_recovery_card_collapse" class="collapse show" aria-labelledby="g4_recovery_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_totalRecovery"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_newRecovery"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="card" >
+                <div class="card-header" id="g4_reachday_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_reachday_card_collapse" aria-expanded="true" aria-controls="g4_reachday_card_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Days Reached Line Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_reachday_card_collapse" class="collapse show" aria-labelledby="g4_reachday_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_totalReachDay"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_newReachDay"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="card" >
+                <div class="card-header" id="g4_cost_results_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#g4_cost_results_collapse" aria-expanded="true" aria-controls="g4_cost_results_collapse" style="text-decoration: none; color:rgba(75, 192, 192, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp; Cost Results Bar Chart
+                    </button>
+                  </h5>
+                </div>
+                <div id="g4_cost_results_collapse" class="collapse show" aria-labelledby="g4_cost_results_collapse" data-parent="#accordion">
+                  <div class="card-body">
+                    <div class="row justify-content-md-center">
+                      <div class="col-10">
+                        <div class="chart-container" style="height:300px">
+                          <canvas id="g4_cost_results"></canvas>
+                        </div>
+                      </div>
+                      <h3 id="g4_total_expense_result" style="text-align: center; margin-top: 20px"></h3>
+                      <!-- <div class="col-6">
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="icer_pannel_container" style="margin-bottom: 30px;">
+  <div id="icer_pannel" style="border: 3px solid #a8a8a8; margin-bottom: 50px">
+    <div class="card" >
+      <div class="card-header" id="icer_pannel_card_header" style="background-color: #d4d4d4">
+        <h5 class="mb-0">
+          <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#icer_collapse" aria-expanded="true" aria-controls="icer_collapse" style="text-decoration: none; color:#000; font-weight:bolder; font-size:30px;text-align:center;">
+            <div id="age_groups_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+              <i class="fas fa-dollar-sign" style="margin-left: 10px"></i> &nbsp; Cost Effectiveness Analysis Result
+            </div>
+          </button>
+        </h5>
+      </div>
+
+      <div id="icer_collapse" class="collapse show" aria-labelledby="icer_collapse" data-parent="#accordion">
+        <div class="card-body" style="margin-top: 25px">
+          <div id="age_groups_container" style="margin-bottom: 0;">
+
+            <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; ICER Score Matrix <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="We use number of infected patients as our E."></i> </h4>
+            <h5>
+              \[ICER = {C_1 - C_0 \over E_1 - E_0}.\]
+            </h5>
+            <div id="tester" style="width:850px;height:850px; margin: auto;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="age_groups_model_pannel_container" style="margin-bottom: 30px;">
+  <div id="age_groups_model_pannel" style="border: 3px solid #a8a8a8; margin-bottom: 50px">
+    <div class="card" >
+
+      <div class="card-header" id="age_groups_model_card_header" style="background-color: #d4d4d4">
+        <h5 class="mb-0">
+          <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#age_groups_model_collapse" aria-expanded="true" aria-controls="age_groups_model_collapse" style="text-decoration: none; color:#000; font-weight:bolder; font-size:30px;text-align:center;">
+            <div id="age_groups_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+              <i class="fas fa-network-wired" style="margin-left: 10px"></i> &nbsp; Age Groups Models
+            </div>
+          </button>
+        </h5>
+      </div>
+
+      <div id="age_groups_model_collapse" class="collapse show" aria-labelledby="age_groups_model_collapse" data-parent="#accordion">
+        <div class="card-body" style="margin-top: 25px">
+          <div id="age_groups_container" style="margin-bottom: 0;">
+            <div id="age_group_model_pannel" style="border: 3px solid #dee2e6;">
+              <div class="card" >
+                <div class="card-header" id="youth_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#youth_card_collapse" aria-expanded="true" aria-controls="youth_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; ≤ 18 Age Group Model
+                    </button>
+                  </h5>
+                </div>
+                <div id="youth_card_collapse" class="collapse" aria-labelledby="youth_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="youth_model">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="adult_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#adult_card_collapse" aria-expanded="true" aria-controls="adult_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; 19 - 64 Age Group Model
+                    </button>
+                  </h5>
+                </div>
+                <div id="adult_card_collapse" class="collapse" aria-labelledby="adult_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="adult_model">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="edler_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#elder_card_collapse" aria-expanded="true" aria-controls="elder_card_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:20px">
+                      <i class="fa fa-dot-circle" aria-hidden="true"></i>&nbsp; ≥ 65 Age Group Model
+                    </button>
+                  </h5>
+                </div>
+                <div id="elder_card_collapse" class="collapse" aria-labelledby="elder_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="elder_model">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="model_input_param_pannel_container" style="margin-bottom: 30px;">
+  <div id="model_input_param_pannel" style="border: 3px solid #a8a8a8; margin-bottom: 50px">
+    <div class="card" >
+
+      <div class="card-header" id="model_input_param_card_header" style="background-color: #d4d4d4">
+        <h5 class="mb-0">
+          <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#model_input_param_collapse" aria-expanded="true" aria-controls="model_input_param_collapse" style="text-decoration: none; color:#000; font-weight:bolder; font-size:30px;text-align:center;">
+
+            <div id="model_input_params_title" style="font-size: 28px; margin-bottom: 10px; font-weight: 700;">
+              <i class="fa fa-keyboard" style="margin-left: 10px"></i> &nbsp; Input Parameters
+            </div>
+
+          </button>
+        </h5>
+      </div>
+
+      <div id="model_input_param_collapse" class="collapse show" aria-labelledby="model_input_param_collapse" data-parent="#accordion">
+        <div class="card-body" style="margin-top: 25px">
+          <div id="model_intput_params_result">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div style="border: 3px solid #a8a8a8;">
+              <div class="card">
+                <div class="card-header" id="basic_para_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#basic_para_collapse" aria-expanded="true" aria-controls="basic_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+                      <i class="fas fa-dot-circle"></i> &nbsp; Basic Model Parameters
+                    </button>
+                  </h5>
+                </div>
+                <div id="basic_para_collapse" class="collapse" aria-labelledby="basic_para_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="basic_para_model">
+                      <div style="margin-left: 50px">
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Initial simulation parameters</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="BMP_IDX_CASE_NUM" class="col-7 col-form-label">Index case number:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="BMP_IDX_CASE_NUM_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="BMP_SIMULATION_DAY" class="col-7 col-form-label">Simulation day:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="BMP_SIMULATION_DAY_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="BMP_CYCLE_DAYS" class="col-7 col-form-label">Cycle days: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="BMP_CYCLE_DAYS_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="BMP_CONTACT_PEOPLE_NUM" class="col-7 col-form-label">Average number of contacted people: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="BMP_CONTACT_PEOPLE_NUM_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                          <div class="col">
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+
+
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Age group percentage</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="AGP_YOUTH_GRP" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="AGP_YOUTH_GRP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="AGP_ADULT_GRP" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="AGP_ADULT_GRP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="AGP_ELDER_GRP" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="AGP_ELDER_GRP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                // console.log("***** params_data: ", params_data)
+              </script>
+
+              <div class="card" >
+                <div class="card-header" id="tran_para_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#trans_para_collapse" aria-expanded="true" aria-controls="trans_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+                      <i class="fas fa-dot-circle"></i> &nbsp; Transmission Model Parameters
+                    </button>
+                  </h5>
+                </div>
+                <div id="trans_para_collapse" class="collapse" aria-labelledby="tran_para_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="trans_para_model">
+                      <div style="margin-left: 50px">
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact age group rate</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CR_SAME_GRP" class="col-7 col-form-label"> Same age group: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CR_SAME_GRP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CR_DIFF_GRP" class="col-7 col-form-label"> Different age group:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CR_DIFF_GRP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Infection rate</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="Vac_Infection_YOUTH_Rate_V_I" class="col-7 col-form-label"> ≤ 18 with vaccine: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="Vac_Infection_YOUTH_Rate_V_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="Vac_Infection_ADULT_Rate_V_I" class="col-7 col-form-label"> 19 - 64 with vaccine: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="Vac_Infection_ADULT_Rate_V_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="Vac_Infection_ELDER_Rate_V_I" class="col-7 col-form-label">  ≥ 65 with vaccine:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="Vac_Infection_ELDER_Rate_V_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="NoVac_Infection_YOUTH_Rate_NV_I" class="col-7 col-form-label"> ≤ 18 no vaccine: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="NoVac_Infection_YOUTH_Rate_NV_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="NoVac_Infection_ADULT_Rate_NV_I" class="col-7 col-form-label"> 19 - 64 no vaccine: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="NoVac_Infection_ADULT_Rate_NV_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="NoVac_Infection_ELDER_Rate_NV_I" class="col-7 col-form-label">  ≥ 65 no vaccine:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="NoVac_Infection_ELDER_Rate_NV_I_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card" >
+                <div class="card-header" id="med_para_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#med_para_collapse" aria-expanded="true" aria-controls="med_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+                      <i class="fas fa-dot-circle"></i> &nbsp; Medical treatment Model Parameters
+                    </button>
+                  </h5>
+                </div>
+                <div id="med_para_collapse" class="collapse" aria-labelledby="med_para_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="med_para_model">
+                      <div style="margin-left: 50px">
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Contact people rate (CPR) &nbsp & &nbsp seek medical treatment rate (SMTR)</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_YOUTH_Rate_CP" class="col-7 col-form-label"> ≤ 18 &nbsp CPR: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_YOUTH_Rate_CP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_ADULT_Rate_CP" class="col-7 col-form-label"> 19 - 64 &nbsp CPR:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_ADULT_Rate_CP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_ELDER_Rate_CP" class="col-7 col-form-label">  ≥ 65 &nbsp CPR: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_ELDER_Rate_CP_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_YOUTH_Rate_ST" class="col-7 col-form-label"> ≤ 18 &nbsp SMTR: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_YOUTH_Rate_ST_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_ADULT_Rate_ST" class="col-7 col-form-label"> 19 - 64 &nbsp SMTR:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_ADULT_Rate_ST_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="CP_SMT_ELDER_Rate_ST" class="col-7 col-form-label">  ≥ 65 &nbsp SMTR: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="CP_SMT_ELDER_Rate_ST_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+
+
+
+
+
+                        <br>
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; 1<small>st</small> visit IPD & OPD rate</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_YOUTH_Rate_IPD" class="col-7 col-form-label"> ≤ 18 &nbsp IPD: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_YOUTH_Rate_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_ADULT_Rate_IPD" class="col-7 col-form-label"> 19 - 64 &nbsp IPD: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_ADULT_Rate_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_ELDER_Rate_IPD" class="col-7 col-form-label">  ≥ 65 &nbsp IPD:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_ELDER_Rate_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_YOUTH_Rate_OPD" class="col-7 col-form-label"> ≤ 18 &nbsp OPD: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_YOUTH_Rate_OPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_ADULT_Rate_OPD" class="col-7 col-form-label"> 19 - 64 &nbsp OPD: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_ADULT_Rate_OPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_IPDOPD_ELDER_Rate_OPD" class="col-7 col-form-label">  ≥ 65 &nbsp OPD:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_IPDOPD_ELDER_Rate_OPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Antiviral drugs intake rate [after OPD]</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_MedicineIntake_YOUTH_Rate_OPD_M_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_MedicineIntake_ADULT_Rate_OPD_M_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_MedicineIntake_ELDER_Rate_OPD_M_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; IPD rate [after OPD]</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD" class="col-7 col-form-label"> ≤ 18 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_YOUTH_Rate_OPD_M_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD" class="col-7 col-form-label"> 19 - 64 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_ADULT_Rate_OPD_M_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD" class="col-7 col-form-label">  ≥ 65 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_ELDER_Rate_OPD_M_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD" class="col-7 col-form-label"> ≤ 18 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_YOUTH_Rate_OPD_NM_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD" class="col-7 col-form-label"> 19 - 64 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_ADULT_Rate_OPD_NM_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD" class="col-7 col-form-label">  ≥ 65 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_ELDER_Rate_OPD_NM_IPD_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                        <h4 style="margin-bottom:20px; border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality rate [after IPD]</h4>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D" class="col-7 col-form-label"> ≤ 18 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_Death_YOUTH_Rate_OPD_M_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D" class="col-7 col-form-label"> 19 - 64 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_Death_ADULT_Rate_OPD_M_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D" class="col-7 col-form-label">  ≥ 65 with drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_M_IPD_Death_ELDER_Rate_OPD_M_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D" class="col-7 col-form-label"> ≤ 18 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_Death_YOUTH_Rate_OPD_NM_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D" class="col-7 col-form-label"> 19 - 64 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D" class="col-7 col-form-label">  ≥ 65 without drug:</label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" >
+                <div class="card-header" id="cost_para_card_header">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#cost_para_collapse" aria-expanded="true" aria-controls="cost_para_collapse" style="text-decoration: none; color:rgba(0, 0, 0, 1); font-weight:700; font-size:24px" type="button">
+                      <i class="fas fa-dot-circle"></i> &nbsp; Cost-effectiveness Model Parameters
+                    </button>
+                  </h5>
+                </div>
+                <div id="cost_para_collapse" class="collapse" aria-labelledby="cost_para_card_header" data-parent="#accordion">
+                  <div class="card-body">
+                    <div id="cost_para_model">
+                      <div style="margin-left: 50px">
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Mortality cost</h4>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Earning lost per death
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="MC_YOUTH_EARN_LOST_PER_DEATH_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="MC_YOUTH_EARN_LOST_PER_DEATH_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="MC_ADULT_EARN_LOST_PER_DEATH_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="MC_ADULT_EARN_LOST_PER_DEATH_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="MC_ELDER_EARN_LOST_PER_DEATH_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="MC_ELDER_EARN_LOST_PER_DEATH_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total hospitalization cost</h4>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Average length of stay (d)
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_YOUTH_AVE_STAY_DAY_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_YOUTH_AVE_STAY_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ADULT_AVE_STAY_DAY_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ADULT_AVE_STAY_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ELDER_AVE_STAY_DAY_Rate" class="col-7 col-form-label">  ≥ 65:s </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ELDER_AVE_STAY_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Cost per bed per day
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_YOUTH_COST_PER_BED_PER_DAY_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_YOUTH_COST_PER_BED_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ADULT_COST_PER_BED_PER_DAY_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ADULT_COST_PER_BED_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ELDER_COST_PER_BED_PER_DAY_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ELDER_COST_PER_BED_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Hospitalization loss per day
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_YOUTH_HOS_LOSS_PER_DAY_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_YOUTH_HOS_LOSS_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ADULT_HOS_LOSS_PER_DAY_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ADULT_HOS_LOSS_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ELDER_HOS_LOSS_PER_DAY_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ELDER_HOS_LOSS_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Transportation cost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_YOUTH_TRANS_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_YOUTH_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ADULT_TRANS_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ADULT_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TIC_ELDER_TRANS_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TIC_ELDER_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total outpatient cost</h4>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Average days lost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_YOUTH_AVE_DAY_LOST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_YOUTH_AVE_DAY_LOST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ADULT_AVE_DAY_LOST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ADULT_AVE_DAY_LOST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ELDER_AVE_DAY_LOST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ELDER_AVE_DAY_LOST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Treatment cost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_YOUTH_TREAT_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_YOUTH_TREAT_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ADULT_TREAT_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ADULT_TREAT_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ELDER_TREAT_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ELDER_TREAT_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Outpatient value loss per day
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_YOUTH_OPD_LOST_PER_DAY_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_YOUTH_OPD_LOST_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ADULT_OPD_LOST_PER_DAY_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ADULT_OPD_LOST_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ELDER_OPD_LOST_PER_DAY_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ELDER_OPD_LOST_PER_DAY_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Transportation cost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_YOUTH_TRANS_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_YOUTH_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ADULT_TRANS_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ADULT_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TOC_ELDER_TRANS_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TOC_ELDER_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total vaccination cost</h4>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Cost of vaccine
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_YOUTH_VAC_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_YOUTH_VAC_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ADULT_VAC_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ADULT_VAC_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ELDER_VAC_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ELDER_VAC_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Vaccination value loss per hour
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_YOUTH_VAC_LOST_PER_HOUR_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_YOUTH_VAC_LOST_PER_HOUR_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ADULT_VAC_LOST_PER_HOUR_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ADULT_VAC_LOST_PER_HOUR_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ELDER_VAC_LOST_PER_HOUR_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ELDER_VAC_LOST_PER_HOUR_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Transportation cost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_YOUTH_TRANS_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_YOUTH_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ADULT_TRANS_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ADULT_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ELDER_TRANS_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ELDER_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Vaccine effectiveness (%)
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_YOUTH_EFF" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_YOUTH_EFF_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ADULT_EFF" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ADULT_EFF_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVC_ELDER_EFF" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVC_ELDER_EFF_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+
+                        <h4 style="margin-bottom:20px;  border-left: 5px solid #8a8a8a; background-color: #f0f0f0; padding: 10px"><i class="fa fa-dot-circle"></i> &nbsp; Total costs of vaccine side effects</h4>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Side effects rate (%)
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_YOUTH_SIDE_EFF_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_YOUTH_SIDE_EFF_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ADULT_SIDE_EFF_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ADULT_SIDE_EFF_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ELDER_SIDE_EFF_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ELDER_SIDE_EFF_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Mean OPD frequency
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_YOUTH_MEAN_OPD_FREQ_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_YOUTH_MEAN_OPD_FREQ_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ADULT_MEAN_OPD_FREQ_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ADULT_MEAN_OPD_FREQ_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ELDER_MEAN_OPD_FREQ_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ELDER_MEAN_OPD_FREQ_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Direct cost Fee per OPD
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_YOUTH_DIR_OPD_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_YOUTH_DIR_OPD_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ADULT_DIR_OPD_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ADULT_DIR_OPD_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ELDER_DIR_OPD_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ELDER_DIR_OPD_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Production loss due to SE
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_YOUTH_PROD_OPD_LOSS_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_YOUTH_PROD_OPD_LOSS_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ADULT_PROD_OPD_LOSS_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ADULT_PROD_OPD_LOSS_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ELDER_PROD_OPD_LOSS_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ELDER_PROD_OPD_LOSS_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h5 style="margin-left:60px">
+                              Transportation cost
+                            </h5>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_YOUTH_TRANS_COST_Rate" class="col-7 col-form-label"> ≤ 18: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_YOUTH_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ADULT_TRANS_COST_Rate" class="col-7 col-form-label"> 19 - 64:  </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ADULT_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group row">
+                              <label style="text-align: right" for="TVSEC_ELDER_TRANS_COST_Rate" class="col-7 col-form-label">  ≥ 65: </label>
+                              <div class="col-5"><p style="margin-top:8px; text-decoration: underline;" id="TVSEC_ELDER_TRANS_COST_Rate_txt">
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript" analysis_code="{{analysis_code}}" homepage_status="{{homepage_status}}" YOUTH_json_file="{{YOUTH_json_file}}" ADULT_json_file="{{ADULT_json_file}}" ELDER_json_file="{{ELDER_json_file}}" src="{% static 'js/running.js' %}"></script>

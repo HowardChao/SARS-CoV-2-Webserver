@@ -1,14 +1,12 @@
 from django import forms
-
-# class ParametersForm(forms.Form):
-            # <input class="form-control" type="number" value="5000" id="BMP_IDX_CASE_NUM">
-
+from django.forms.formsets import BaseFormSet
 
 class AnalysisCodeForm(forms.Form):
     your_analysis_code = forms.CharField(max_length=100)
 
 class RunModelForm(forms.Form):
     # try_ = forms.IntegerField()
+    GROUP_NUM = forms.IntegerField()
 
     BMP_IDX_CASE_NUM = forms.IntegerField()
     BMP_SIMULATION_DAY = forms.IntegerField()
@@ -22,9 +20,21 @@ class RunModelForm(forms.Form):
     CR_SAME_GRP = forms.FloatField()
     CR_DIFF_GRP = forms.FloatField()
 
-    Vac_YOUTH_Rate_V = forms.FloatField()
-    Vac_ADULT_Rate_V = forms.FloatField()
-    Vac_ELDER_Rate_V = forms.FloatField()
+    G1_Vac_YOUTH_Rate_V = forms.FloatField()
+    G1_Vac_ADULT_Rate_V = forms.FloatField()
+    G1_Vac_ELDER_Rate_V = forms.FloatField()
+
+    G2_Vac_YOUTH_Rate_V = forms.FloatField()
+    G2_Vac_ADULT_Rate_V = forms.FloatField()
+    G2_Vac_ELDER_Rate_V = forms.FloatField()
+
+    G3_Vac_YOUTH_Rate_V = forms.FloatField()
+    G3_Vac_ADULT_Rate_V = forms.FloatField()
+    G3_Vac_ELDER_Rate_V = forms.FloatField()
+
+    G4_Vac_YOUTH_Rate_V = forms.FloatField()
+    G4_Vac_ADULT_Rate_V = forms.FloatField()
+    G4_Vac_ELDER_Rate_V = forms.FloatField()
 
     Vac_Infection_YOUTH_Rate_V_I = forms.FloatField()
     Vac_Infection_ADULT_Rate_V_I = forms.FloatField()
@@ -72,9 +82,9 @@ class RunModelForm(forms.Form):
     SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D = forms.FloatField()
     SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D = forms.FloatField()
 
-    MC_YOUTH_EARN_LOST_PER_DAY_Rate = forms.FloatField()
-    MC_ADULT_EARN_LOST_PER_DAY_Rate = forms.FloatField()
-    MC_ELDER_EARN_LOST_PER_DAY_Rate = forms.FloatField()
+    MC_YOUTH_EARN_LOST_PER_DEATH_Rate = forms.FloatField()
+    MC_ADULT_EARN_LOST_PER_DEATH_Rate = forms.FloatField()
+    MC_ELDER_EARN_LOST_PER_DEATH_Rate = forms.FloatField()
 
     TIC_YOUTH_AVE_STAY_DAY_Rate = forms.FloatField()
     TIC_ADULT_AVE_STAY_DAY_Rate = forms.FloatField()

@@ -1,0 +1,325 @@
+from enum import Enum
+
+IDX_CASE_NUM = 50
+SIMULATION_DAY = 60
+CYCLE_DAYS = 7
+CONTACT_PEOPLE_NUM = 3
+
+HEALTH_LIFE_EXP = 71.2
+SEVERE_AVG_DEATH_AGE = 40
+
+# IDX_SEEK_TREATMENT_PROB = 0.1
+# IDX_INTAKE_MED_48_PROB = 0.5
+
+
+class AgeGroupPerc(Enum):
+    YOUTH_GRP = 0.15
+    ADULT_GRP = 0.70
+    ELDER_GRP = 0.15
+
+class RouteStatus(Enum):
+    TRANSMISSION = 'transmission'
+    SEEKTREATMENT = 'seektreatment'
+
+class CurrStatus(Enum):
+    # IN_MODEL = 'in_model'
+    # RECOVERY = 'recovery'
+    # DEATH = 'death'
+    # CYCLE_REACHED = 'cycle_reached'
+
+    INITIAL = 'initial'
+    IN_TRANS_MODEL = 'in_trans_model'
+    TRANS_CYCLE_REACHED = 'trans_cycle_reached'
+    IN_MED_MODEL = 'in_med_model'
+    RECOVERY = 'recovery'
+    DEATH = 'death'
+
+
+class AliveDeath(Enum):
+    ALIVE = 'alive'
+    DEATH = 'death'
+
+class AgeGroup(Enum):
+    YOUTH_GRP = 'youth'
+    ADULT_GRP = 'adult'
+    ELDER_GRP = 'elder'
+
+class ContactPersonSeekTreatment_Rate(Enum):
+    YOUTH_CP_RT = 0.8
+    ADULT_CP_RT = 0.8
+    ELDER_CP_RT = 0.8
+    YOUTH_ST_RT = 1 - YOUTH_CP_RT
+    ADULT_ST_RT = 1 - ADULT_CP_RT
+    ELDER_ST_RT = 1 - ELDER_CP_RT
+
+class ContactGroup_Rate(Enum):
+    SAME_GRP = 0.6
+    DIFF_GRP = 0.2
+
+class Vaccine_Rate(Enum):
+    YOUTH_V_RT = 0.646
+    ADULT_V_RT = 0.553
+    ELDER_V_RT = 0.445
+    # YOUTH_V_RT = 0.999
+    # ADULT_V_RT = 0.999
+    # ELDER_V_RT = 0.999
+    YOUTH_NV_RT = 1 - YOUTH_V_RT
+    ADULT_NV_RT = 1 - ADULT_V_RT
+    ELDER_NV_RT = 1 - ELDER_V_RT
+
+class Vac_Infection_Rate(Enum):
+    # YOUTH_V_I_RT = 0.088
+    # ADULT_V_I_RT = 0.022
+    # ELDER_V_I_RT = 0.032
+    YOUTH_V_I_RT = 0.018
+    ADULT_V_I_RT = 0.012
+    ELDER_V_I_RT = 0.022
+    YOUTH_V_NI_RT = 1 - YOUTH_V_I_RT
+    ADULT_V_NI_RT = 1 - ADULT_V_I_RT
+    ELDER_V_NI_RT = 1 - ELDER_V_I_RT
+
+class NoVac_Infection_Rate(Enum):
+    # YOUTH_NV_I_RT = 0.086
+    # ADULT_NV_I_RT = 0.097
+    # ELDER_NV_I_RT = 0.053
+    YOUTH_NV_I_RT = 0.146
+    ADULT_NV_I_RT = 0.157
+    ELDER_NV_I_RT = 0.173
+    YOUTH_NV_NI_RT = 1 - YOUTH_NV_I_RT
+    ADULT_NV_NI_RT = 1 - ADULT_NV_I_RT
+    ELDER_NV_NI_RT = 1 - ELDER_NV_I_RT
+
+# # Should be removed
+# class InfectionRate(Enum):
+#     YOUTH_NV_RT = 0.146
+#     ADULT_NV_RT = 0.037
+#     ELDER_NV_RT = 0.053
+#     YOUTH_V_RT = 0.088
+#     ADULT_V_RT = 0.022
+#     ELDER_V_RT = 0.032
+
+
+class SMT_IPDOPD_Rate(Enum):
+    YOUTH_IPD_RT = 0.1
+    ADULT_IPD_RT = 0.1
+    ELDER_IPD_RT = 0.1
+    YOUTH_OPD_RT = 1 - YOUTH_IPD_RT
+    ADULT_OPD_RT = 1 - YOUTH_IPD_RT
+    ELDER_OPD_RT = 1 - ELDER_IPD_RT
+
+class SMT_IPD_Death_Rate(Enum):
+    YOUTH_IPD_D_RT = 0.12
+    ADULT_IPD_D_RT = 0.14
+    ELDER_IPD_D_RT = 0.14
+    # YOUTH_IPD_D_RT = 0.62
+    # ADULT_IPD_D_RT = 0.64
+    # ELDER_IPD_D_RT = 0.64
+    YOUTH_IPD_R_RT = 1 - YOUTH_IPD_D_RT
+    ADULT_IPD_R_RT = 1 - ADULT_IPD_D_RT
+    ELDER_IPD_R_RT = 1 - ELDER_IPD_D_RT
+
+# This should be renamed
+class SMT_OPD_MedicineIntake_Rate(Enum):
+    YOUTH_OPD_M_RT = 0.5
+    ADULT_OPD_M_RT = 0.5
+    ELDER_OPD_M_RT = 0.5
+    YOUTH_OPD_NM_RT = 1 - YOUTH_OPD_M_RT
+    ADULT_OPD_NM_RT = 1 - ADULT_OPD_M_RT
+    ELDER_OPD_NM_RT = 1 - ELDER_OPD_M_RT
+
+class SMT_OPD_M_IPD_Rate(Enum):
+    YOUTH_OPD_M_IPD_RT = 0.000075
+    ADULT_OPD_M_IPD_RT = 0.000425
+    ELDER_OPD_M_IPD_RT = 0.0016
+    YOUTH_OPD_M_R_RT = 1 - YOUTH_OPD_M_IPD_RT
+    ADULT_OPD_M_R_RT = 1 - ADULT_OPD_M_IPD_RT
+    ELDER_OPD_M_R_RT = 1 - ELDER_OPD_M_IPD_RT
+
+class SMT_OPD_M_IPD_Death_Rate(Enum):
+    YOUTH_OPD_M_IPD_D_RT = 0.12
+    ADULT_OPD_M_IPD_D_RT = 0.14
+    ELDER_OPD_M_IPD_D_RT = 0.14
+    # YOUTH_OPD_M_IPD_D_RT = 0.62
+    # ADULT_OPD_M_IPD_D_RT = 0.64
+    # ELDER_OPD_M_IPD_D_RT = 0.64
+    YOUTH_OPD_M_IPD_R_RT = 1 - YOUTH_OPD_M_IPD_D_RT
+    ADULT_OPD_M_IPD_R_RT = 1 - ADULT_OPD_M_IPD_D_RT
+    ELDER_OPD_M_IPD_R_RT = 1 - ELDER_OPD_M_IPD_D_RT
+
+class SMT_OPD_NM_IPD_Rate(Enum):
+    YOUTH_OPD_NM_IPD_RT = 0.000225
+    ADULT_OPD_NM_IPD_RT = 0.001275
+    ELDER_OPD_NM_IPD_RT = 0.0048
+    YOUTH_OPD_NM_R_RT = 1 - YOUTH_OPD_NM_IPD_RT
+    ADULT_OPD_NM_R_RT = 1 - ADULT_OPD_NM_IPD_RT
+    ELDER_OPD_NM_R_RT = 1 - ELDER_OPD_NM_IPD_RT
+
+class SMT_OPD_NM_IPD_Death_Rate(Enum):
+    YOUTH_OPD_NM_IPD_D_RT = 0.12
+    ADULT_OPD_NM_IPD_D_RT = 0.14
+    ELDER_OPD_NM_IPD_D_RT = 0.14
+    # YOUTH_OPD_NM_IPD_D_RT = 0.62
+    # ADULT_OPD_NM_IPD_D_RT = 0.64
+    # ELDER_OPD_NM_IPD_D_RT = 0.64
+    YOUTH_OPD_NM_IPD_R_RT = 1 - YOUTH_OPD_NM_IPD_D_RT
+    ADULT_OPD_NM_IPD_R_RT = 1 - ADULT_OPD_NM_IPD_D_RT
+    ELDER_OPD_NM_IPD_R_RT = 1 - ELDER_OPD_NM_IPD_D_RT
+
+
+#############################################################
+######### Triangular Probability distribution Model #########
+#############################################################
+class SMT_IPD_DIST(Enum):
+    SMT_IPD_DIST_LOWER = 2
+    SMT_IPD_DIST_UPPER = 20
+    SMT_IPD_DIST_MU = 10
+    SMT_IPD_DIST_SIGMA = 2.5
+    # SMT_IPD_DIST_LOWER = 1
+    # SMT_IPD_DIST_UPPER = 3
+    # SMT_IPD_DIST_MU = 1
+    # SMT_IPD_DIST_SIGMA = 1
+
+
+class SMT_OPD_DIST(Enum):
+    SMT_OPD_DIST_LOWER = 1
+    SMT_OPD_DIST_UPPER = 5
+    SMT_OPD_DIST_MU = 2
+    SMT_OPD_DIST_SIGMA = 1
+    # SMT_OPD_DIST_LOWER = 1
+    # SMT_OPD_DIST_UPPER = 3
+    # SMT_OPD_DIST_MU = 1
+    # SMT_OPD_DIST_SIGMA = 1
+
+class SMT_OPD_M_DIST(Enum):
+    SMT_OPD_M_DIST_LOWER = 1
+    SMT_OPD_M_DIST_UPPER = 4
+    SMT_OPD_M_DIST_MU = 1.5
+    SMT_OPD_M_DIST_SIGMA = 1
+    # SMT_OPD_M_DIST_LOWER = 1
+    # SMT_OPD_M_DIST_UPPER = 3
+    # SMT_OPD_M_DIST_MU = 1
+    # SMT_OPD_M_DIST_SIGMA = 1
+
+class SMT_OPD_M_IPD_DIST(Enum):
+    SMT_OPD_M_IPD_DIST_LOWER = 2
+    SMT_OPD_M_IPD_DIST_UPPER = 20
+    SMT_OPD_M_IPD_DIST_MU = 10
+    SMT_OPD_M_IPD_DIST_SIGMA = 2.5
+    # SMT_OPD_M_IPD_DIST_LOWER = 1
+    # SMT_OPD_M_IPD_DIST_UPPER = 3
+    # SMT_OPD_M_IPD_DIST_MU = 1
+    # SMT_OPD_M_IPD_DIST_SIGMA = 1
+
+class SMT_OPD_NM_DIST(Enum):
+    SMT_OPD_NM_DIST_LOWER = 1
+    SMT_OPD_NM_DIST_UPPER = 4
+    SMT_OPD_NM_DIST_MU = 1.5
+    SMT_OPD_NM_DIST_SIGMA = 1
+    # SMT_OPD_NM_DIST_LOWER = 1
+    # SMT_OPD_NM_DIST_UPPER = 3
+    # SMT_OPD_NM_DIST_MU = 1
+    # SMT_OPD_NM_DIST_SIGMA = 1
+
+class SMT_OPD_NM_IPD_DIST(Enum):
+    SMT_OPD_NM_IPD_DIST_LOWER = 2
+    SMT_OPD_NM_IPD_DIST_UPPER = 20
+    SMT_OPD_NM_IPD_DIST_MU = 5
+    SMT_OPD_NM_IPD_DIST_SIGMA = 2.5
+    # SMT_OPD_NM_IPD_DIST_LOWER = 1
+    # SMT_OPD_NM_IPD_DIST_UPPER = 3
+    # SMT_OPD_NM_IPD_DIST_MU = 1
+    # SMT_OPD_NM_IPD_DIST_SIGMA = 1
+
+
+
+class effectiveness(Enum):
+    MILD = (-0.88)*7/365
+    SEVERE = (-0.88)*7/365 + (-0.98)*5.4/365
+    DEATH = (-0.88)*7/365 + (-0.98)*5.4/365 + (-1)*(HEALTH_LIFE_EXP-SEVERE_AVG_DEATH_AGE)
+
+class VaccineExpen(Enum):
+    YOUTH_TRIVALENT_VAC = 500
+    ADULT_TRIVALENT_VAC = 500
+    ELDER_TRIVALENT_VAC = 500
+    YOUTH_HIGH_DOSE_VAC = 0
+    ADULT_HIGH_DOSE_VAC = 0
+    ELDER_HIGH_DOSE_VAC = 1656
+    YOUTH_ADJUVANTED_VAC = 0
+    ADULT_ADJUVANTED_VAC = 0
+    ELDER_ADJUVANTED_VAC = 1696
+
+class HealthExpen(Enum):
+    YOUTH_OUTPATIENT = 371
+    ADULT_OUTPATIENT = 372
+    ELDER_OUTPATIENT = 401
+    YOUTH_ANTI_VIRUS = 950
+    ADULT_ANTI_VIRUS = 950
+    ELDER_ANTI_VIRUS = 950
+    YOUTH_IPD = 45935
+    ADULT_IPD = 45935
+    ELDER_IPD = 45935
+
+
+class Mortality_Cost(Enum):
+    YOUTH_EARN_LOST_PER_DAY_RT = 50000;
+    ADULT_EARN_LOST_PER_DAY_RT = 50000;
+    ELDER_EARN_LOST_PER_DAY_RT = 50000;
+
+class Total_Inpatient_Cost(Enum):
+    YOUTH_AVE_STAY_DAY_RT = 5;
+    ADULT_AVE_STAY_DAY_RT = 4;
+    ELDER_AVE_STAY_DAY_RT = 8;
+    YOUTH_COST_PER_BED_PER_DAY_RT = 4000;
+    ADULT_COST_PER_BED_PER_DAY_RT = 4000;
+    ELDER_COST_PER_BED_PER_DAY_RT = 5000;
+    YOUTH_HOS_LOSS_PER_DAY_RT = 0*8;
+    ADULT_HOS_LOSS_PER_DAY_RT = 400*8;
+    ELDER_HOS_LOSS_PER_DAY_RT = 100*8;
+    YOUTH_TRANS_COST_RT = 60;
+    ADULT_TRANS_COST_RT = 60;
+    ELDER_TRANS_COST_RT = 60;
+
+class Total_Outpatient_Cost(Enum):
+    YOUTH_AVE_DAY_LOST_RT = 2;
+    ADULT_AVE_DAY_LOST_RT = 1;
+    ELDER_AVE_DAY_LOST_RT = 3;
+    YOUTH_TREAT_COST_RT = 150;
+    ADULT_TREAT_COST_RT = 150;
+    ELDER_TREAT_COST_RT = 150;
+    YOUTH_OPD_LOST_PER_DAY_RT = 0*8;
+    ADULT_OPD_LOST_PER_DAY_RT = 400*8;
+    ELDER_OPD_LOST_PER_DAY_RT = 100*4;
+    YOUTH_TRANS_COST_RT = 60;
+    ADULT_TRANS_COST_RT = 60;
+    ELDER_TRANS_COST_RT = 60;
+
+class Total_Vaccination_Cost(Enum):
+    YOUTH_VAC_COST_RT = 600;
+    ADULT_VAC_COST_RT = 600;
+    ELDER_VAC_COST_RT = 600;
+    YOUTH_VAC_LOST_PER_HOUR_RT = 0;
+    ADULT_VAC_LOST_PER_HOUR_RT = 400;
+    ELDER_VAC_LOST_PER_HOUR_RT = 100;
+    YOUTH_TRANS_COST_RT = 60;
+    ADULT_TRANS_COST_RT = 60;
+    ELDER_TRANS_COST_RT = 60;
+    YOUTH_EFF = 0.75;
+    ADULT_EFF = 0.75;
+    ELDER_EFF = 0.75;
+
+class Total_Vaccination_Side_Effects_Cost(Enum):
+    YOUTH_SIDE_EFF_RT = 0.15;
+    ADULT_SIDE_EFF_RT = 0.15;
+    ELDER_SIDE_EFF_RT = 0.15;
+    YOUTH_MEAN_OPD_FREQ_RT = 2;
+    ADULT_MEAN_OPD_FREQ_RT = 2;
+    ELDER_MEAN_OPD_FREQ_RT = 3;
+    YOUTH_DIR_OPD_COST_RT = 150;
+    ADULT_DIR_OPD_COST_RT = 150;
+    ELDER_DIR_OPD_COST_RT = 150;
+    YOUTH_PROD_OPD_LOSS_RT = 0;
+    ADULT_PROD_OPD_LOSS_RT = 400*4;
+    ELDER_PROD_OPD_LOSS_RT = 100*4;
+    YOUTH_TRANS_COST_RT = 60;
+    ADULT_TRANS_COST_RT = 60;
+    ELDER_TRANS_COST_RT = 60;

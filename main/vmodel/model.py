@@ -48,6 +48,21 @@ class VaccineModel:
 
         self.initial_model()
 
+        self.totalExpanse = 0
+        self.vac_cost = 0
+        self.vac_side_effect_cost = 0
+        self.mortality_cost = 0
+        self.hospitalization_cost = 0
+        self.outpatient_cost = 0
+
+        # Mortality cost
+        # Transportation cost + Total hospitalization cost
+        # Transportation cost + Total outpatient cost
+
+
+
+
+
     # Day 1
     def initial_model(self):
         print("##################")
@@ -138,14 +153,14 @@ class VaccineModel:
                 # _p.seek_medical_treatment()
                 new_seek_med_num += 1
                 trans_gp_2_seek_med_gp.append(_p)
-            print('%%%%%% in_trans_day       : ', _p.in_trans_day)
-            print('%%%%%% in_med_day         : ', _p.in_med_day)
-            print('%%%%%% SMT_IPD_day        : ', _p.SMT_IPD_day)
-            print('%%%%%% SMT_OPD_day        : ', _p.SMT_OPD_day)
-            print('%%%%%% SMT_OPD_M_day      : ', _p.SMT_OPD_M_day)
-            print('%%%%%% SMT_OPD_M_IPD_day  : ', _p.SMT_OPD_M_IPD_day)
-            print('%%%%%% SMT_OPD_NM_day     : ', _p.SMT_OPD_NM_day)
-            print('%%%%%% SMT_OPD_NM_IPD_day : ', _p.SMT_OPD_NM_IPD_day)
+            # print('%%%%%% in_trans_day       : ', _p.in_trans_day)
+            # print('%%%%%% in_med_day         : ', _p.in_med_day)
+            # print('%%%%%% SMT_IPD_day        : ', _p.SMT_IPD_day)
+            # print('%%%%%% SMT_OPD_day        : ', _p.SMT_OPD_day)
+            # print('%%%%%% SMT_OPD_M_day      : ', _p.SMT_OPD_M_day)
+            # print('%%%%%% SMT_OPD_M_IPD_day  : ', _p.SMT_OPD_M_IPD_day)
+            # print('%%%%%% SMT_OPD_NM_day     : ', _p.SMT_OPD_NM_day)
+            # print('%%%%%% SMT_OPD_NM_IPD_day : ', _p.SMT_OPD_NM_IPD_day)
 
 
             ## Day post-processing
@@ -165,12 +180,24 @@ class VaccineModel:
             # print('*** _p.in_med_day: ', _p.in_med_day)
             if _p.in_med_day == 1:
                 _p.seek_medical_treatment()
+
+        # self.totalExpanse = 0
+        # self.vac_cost = 0
+        # self.vac_side_effect_cost = 0
+        # self.mortality_cost = 0
+        # self.hospitalization_cost = 0
+        # self.outpatient_cost = 0
+
             if _p.person_status[1] == 1:
                 # Patient is IPD
                 if _p.in_med_day > _p.SMT_IPD_day:
+                    # Cost for IPD
+                    self.hospitalization_cost += _p.SMT_IPD_day*(_p.tic_cost_per_bed_per_day_rate+_p.tic_hos_loss_per_day_rate)+ _p.tic_trans_cost_rate
+                    self.outpatient_cost += 0
                     if _p.person_status[2] == 1:
                         # Patient is IPD death
                         _p.death()
+
                     elif _p.person_status[2] == 0:
                         # Patient is IPD recovery
                         _p.recovery()
@@ -184,6 +211,10 @@ class VaccineModel:
                             if _p.person_status[3] == 1:
                                 # Patient is OPD, medicine, IPD
                                 if _p.in_med_day > _p.SMT_OPD_day+_p.SMT_OPD_M_day+_p.SMT_OPD_M_IPD_day:
+
+                                    self.hospitalization_cost += _p.SMT_OPD_M_IPD_day*(_p.tic_cost_per_bed_per_day_rate+_p.tic_hos_loss_per_day_rate)+ _p.tic_trans_cost_rate
+                                    self.outpatient_cost += _p.toc_treat_cost_rate + _p.SMT_OPD_day*_p.toc_opd_lost_per_day_rate + _p.toc_trans_cost_rate
+
                                     if _p.person_status[4] == 1:
                                         # Patient is OPD, medicine, IPD, death
                                         _p.death()
@@ -192,13 +223,22 @@ class VaccineModel:
                                         _p.recovery()
                             elif _p.person_status[3] == 0:
                                 # Patient is OPD, medicine, recoveory
+                                self.hospitalization_cost += 0
+                                self.outpatient_cost += _p.toc_treat_cost_rate + _p.SMT_OPD_day*_p.toc_opd_lost_per_day_rate + _p.toc_trans_cost_rate
                                 _p.recovery()
+
                     elif _p.person_status[2] == 0:
                         # Patient is OPD, no medicine
                         if _p.in_med_day > _p.SMT_OPD_day+_p.SMT_OPD_NM_day:
                             if _p.person_status[3] == 1:
                                 # Patient is OPD, no medicine, IPD
                                 if _p.in_med_day > _p.SMT_OPD_day+_p.SMT_OPD_NM_day+_p.SMT_OPD_NM_IPD_day:
+
+                                    self.hospitalization_cost += _p.SMT_OPD_M_IPD_day*(_p.tic_cost_per_bed_per_day_rate+_p.tic_hos_loss_per_day_rate)+ _p.tic_trans_cost_rate
+                                    self.outpatient_cost += _p.toc_treat_cost_rate + _p.SMT_OPD_day*_p.toc_opd_lost_per_day_rate + _p.toc_trans_cost_rate
+
+                                    # print("_p.tic_cost_per_bed_per_day_rate: ", _p.tic_cost_per_bed_per_day_rate)
+
                                     if _p.person_status[4] == 1:
                                         # Patient is OPD, no medicine, IPD, death
                                         _p.death()
@@ -207,22 +247,33 @@ class VaccineModel:
                                         _p.recovery()
                             elif _p.person_status[3] == 0:
                                 # Patient is OPD, no medicine, recovery
+                                self.hospitalization_cost += 0
+                                self.outpatient_cost += _p.toc_treat_cost_rate + _p.SMT_OPD_day*_p.toc_opd_lost_per_day_rate + _p.toc_trans_cost_rate
                                 _p.recovery()
+
 
             if _p.curr_status == CurrStatus.IN_MED_MODEL and _p.person_status[0] == 0:
                 new_seek_med_gp.append(_p)
             elif _p.curr_status == CurrStatus.DEATH:
+                # Cost for IPD
+                self.vac_cost += _p.vac_cost
+                self.vac_side_effect_cost += _p.vac_side_effect_cost
                 new_death_gp.append(_p)
+                # Cost for death
+                self.mortality_cost += _p.mc_earn_lost_per_death_rate
             elif _p.curr_status == CurrStatus.RECOVERY:
+                # Cost for IPD
+                self.vac_cost += _p.vac_cost
+                self.vac_side_effect_cost += _p.vac_side_effect_cost
                 new_recovery_gp.append(_p)
-            print('&&&&&& in_trans_day       : ', _p.in_trans_day)
-            print('&&&&&& in_med_day         : ', _p.in_med_day)
-            print('&&&&&& SMT_IPD_day        : ', _p.SMT_IPD_day)
-            print('&&&&&& SMT_OPD_day        : ', _p.SMT_OPD_day)
-            print('&&&&&& SMT_OPD_M_day      : ', _p.SMT_OPD_M_day)
-            print('&&&&&& SMT_OPD_M_IPD_day  : ', _p.SMT_OPD_M_IPD_day)
-            print('&&&&&& SMT_OPD_NM_day     : ', _p.SMT_OPD_NM_day)
-            print('&&&&&& SMT_OPD_NM_IPD_day : ', _p.SMT_OPD_NM_IPD_day)
+            # print('&&&&&& in_trans_day       : ', _p.in_trans_day)
+            # print('&&&&&& in_med_day         : ', _p.in_med_day)
+            # print('&&&&&& SMT_IPD_day        : ', _p.SMT_IPD_day)
+            # print('&&&&&& SMT_OPD_day        : ', _p.SMT_OPD_day)
+            # print('&&&&&& SMT_OPD_M_day      : ', _p.SMT_OPD_M_day)
+            # print('&&&&&& SMT_OPD_M_IPD_day  : ', _p.SMT_OPD_M_IPD_day)
+            # print('&&&&&& SMT_OPD_NM_day     : ', _p.SMT_OPD_NM_day)
+            # print('&&&&&& SMT_OPD_NM_IPD_day : ', _p.SMT_OPD_NM_IPD_day)
 
 
         self.seek_med_gp = new_seek_med_gp
@@ -230,33 +281,13 @@ class VaccineModel:
         self.recovery_gp = self.recovery_gp + new_recovery_gp
         self.cycle_reached_gp = self.cycle_reached_gp + new_cycle_reached_gp
         self.day += 1
-
-
-            # if _p.curr_status == CurrStatus.IN_MED_MODEL and _p.person_status[0] == 0:
-            #     _p.seek_medical_treatment()
-            # ## Day post-processing
-            # _p.seek_med_gp_day_postprocessing()
-            #
-            # ## Filter out reached people
-            # if _p.curr_status == CurrStatus.IN_TRANS_MODEL:
-            #     pass
-            # elif _p.curr_status == CurrStatus.IN_MED_MODEL:
-            #     pass
-            # elif _p.curr_status == CurrStatus.CYCLE_REACHED:
-            #     new_cycle_reached_gp.append(_p)
-            # elif _p.curr_status == CurrStatus.DEATH:
-            #     new_death_gp.append(_p)
-            # elif _p.curr_status == CurrStatus.RECOVERY:
-            #     new_recovery_gp.append(_p)
-
-
-    # INITIAL = 'initial'
-    # IN_TRANS_MODEL = 'in_trans_model'
-    # TRANS_CYCLE_REACHED = 'trans_cycle_reached'
-    # IN_MED_MODEL = 'in_med_model'
-    # RECOVERY = 'recovery'
-    # DEATH = 'death'
-
+        self.totalExpanse = self.vac_cost + self.vac_side_effect_cost + self.mortality_cost + self.hospitalization_cost + self.outpatient_cost
+        print("$$ self.vac_cost             : ", self.vac_cost)
+        print("$$ self.vac_side_effect_cost : ", self.vac_side_effect_cost)
+        print("$$ self.mortality_cost       : ", self.mortality_cost)
+        print("$$ self.hospitalization_cost : ", self.hospitalization_cost)
+        print("$$ self.outpatient_cost      : ", self.outpatient_cost)
+        print("$$ self.totalExpanse         : ", self.totalExpanse)
 
         # print('     new_transmission_gp size      : ', len(new_transmission_gp))
         # print('         self.transmission_gp size : ', len(self.transmission_gp))
@@ -290,89 +321,19 @@ class VaccineModel:
         self.totalReachDay.append(len(self.cycle_reached_gp))
         self.newReachDay.append(len(new_cycle_reached_gp))
 
-        print('     totalInfected size        : ', self.totalInfected)
-        print('     currentInfected size      : ', self.currentInfected)
-        print('     newInfected size          : ', self.newInfected)
-
-        print('     totalSeekMed size         : ', self.totalSeekMed)
-        print('     currentSeekMed size       : ', self.currentSeekMed)
-        print('     newSeekMed size           : ', self.newSeekMed)
-
-        print('     totalDeath size           : ', self.totalDeath)
-        print('     newDeath size             : ', self.newDeath)
-
-        print('     totalRecovery size        : ', self.totalRecovery)
-        print('     newRecovery size          : ', self.newRecovery)
-
-        print('     totalReachDay size        : ', self.totalReachDay)
-        print('     newReachDay size          : ', self.newReachDay)
-
-
-
-
-    # def one_day_passed(self):
-    #     print("##################")
-    #     print("## Day ", str(self.day), " ##")
-    #     print("##################")
-    #     print('@@ Starting transmission_gp size: ', len(self.transmission_gp))
-    #     # print('treatment_gp size: ', len(self.treatment_gp))
-    #
-    #     ## Step 1: choose route option
-    #     Ori_transmission_gp = []
-    #     new_transmission_gp = []
-    #     new_death_gp = []
-    #     new_recovery_gp = []
-    #     new_cycle_reached_gp = []
-    #     for _p in self.transmission_gp:
-    #         _p.choose_route()
-    #         if _p.route_status is RouteStatus.TRANSMISSION:
-    #             for contact_idx in range(6):
-    #                 rand_age = np.random.choice(
-    #                             [ random.randint(0, 18), random.randint(19, 64), random.randint(65, 100)],
-    #                             1,
-    #                             p=[_p.youth_contact_rate.value,
-    #                             _p.adult_contact_rate.value, _p.elder_contact_rate.value]
-    #                            )[0]
-    #                 p = Person(rand_age)
-    #                 # InfectionRate
-    #                 if p.infection_status is True and _p.curr_status == CurrStatus.IN_MODEL:
-    #                     p.day_passed()
-    #                     new_transmission_gp.append(p)
-    #                     # self.transmission_gp.append(p)
-    #
-    #             _p.day_passed()
-    #             if _p.curr_status == CurrStatus.IN_MODEL:
-    #                 Ori_transmission_gp.append(_p)
-    #
-    #             elif _p.curr_status == CurrStatus.CYCLE_REACHED:
-    #                 new_cycle_reached_gp.append(_p)
-    #                 # self.transmission_gp.remove(_p)
-    #
-    #         elif _p.route_status is RouteStatus.SEEKTREATMENT:
-    #             _p.day_passed()
-    #             if _p.curr_status == CurrStatus.DEATH:
-    #                 new_death_gp.append(_p)
-    #             elif _p.curr_status == CurrStatus.RECOVERY:
-    #                 new_recovery_gp.append(_p)
-    #             # self.transmission_gp.remove(_p)
-    #     self.transmission_gp = Ori_transmission_gp + new_transmission_gp
-    #     self.death_gp = self.death_gp + new_death_gp
-    #     self.recovery_gp = self.recovery_gp + new_recovery_gp
-    #     self.cycle_reached_gp = self.cycle_reached_gp + new_cycle_reached_gp
-    #
-    #     print('     Ori_transmission_gp size      : ', len(Ori_transmission_gp))
-    #     print('     new_transmission_gp size      : ', len(new_transmission_gp))
-    #
-    #     print('         self.transmission_gp size : ', len(self.transmission_gp))
-    #
-    #     print('     new_death_gp                  : ', len(new_death_gp))
-    #     print('         self.death_gp size        : ', len(self.death_gp))
-    #     print('     new_recovery_gp               : ', len(new_recovery_gp))
-    #     print('         self.recovery_gp size     : ', len(self.recovery_gp))
-    #     print('     new_cycle_reached_gp          : ', len(new_cycle_reached_gp))
-    #     print('         self.cycle_reached_gp size: ', len(self.cycle_reached_gp))
-    #     self.day += 1
-    #
-
-        # for _p in self.transmission_gp:
-        #     if _p
+        # print('     totalInfected size        : ', self.totalInfected)
+        # print('     currentInfected size      : ', self.currentInfected)
+        # print('     newInfected size          : ', self.newInfected)
+        #
+        # print('     totalSeekMed size         : ', self.totalSeekMed)
+        # print('     currentSeekMed size       : ', self.currentSeekMed)
+        # print('     newSeekMed size           : ', self.newSeekMed)
+        #
+        # print('     totalDeath size           : ', self.totalDeath)
+        # print('     newDeath size             : ', self.newDeath)
+        #
+        # print('     totalRecovery size        : ', self.totalRecovery)
+        # print('     newRecovery size          : ', self.newRecovery)
+        #
+        # print('     totalReachDay size        : ', self.totalReachDay)
+        # print('     newReachDay size          : ', self.newReachDay)

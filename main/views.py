@@ -5,17 +5,18 @@ from django.views.generic import View
 from django.conf import settings
 
 from . import utils_func
-from . import tasks
+from . import jobs
 from .forms import RunModelForm, AnalysisCodeForm
 
-from .model import parameters
-from .model import person
-from .model import vaccine
-from .model import model
+from .vmodel import parameters
+from .vmodel import person
+from .vmodel import vaccine
+from .vmodel import model
 
 import json
 import os
 from django_q.tasks import async_task, result, fetch, AsyncTask, result_group, result
+from django_q.brokers import get_broker
 import django_q
 
 import inspect
@@ -35,7 +36,7 @@ def iterate(group, input_json, data):
     # elif in_nput_json['id'] == "Vaccinated":
     #     in_nput_json['pb'] = str(data["VR_"+group+"_RT"])
     # elif in_nput_json['id'] == "Infected (vaccinated)":
-    #     in_nput_json['pb'] = str(data["IR_"+group+"_V_RT"])
+    #     in_nput_json['pb'] = str(data["IR_"+group+"_Vg1_input_param_file_RT"])
     # elif in_nput_json['id'] == "Not infected (vaccinated)":
     #     in_nput_json['pb'] = str(1 - float(data["IR_"+group+"_V_RT"]))
     # elif in_nput_json['id'] == "Not vaccinated":
@@ -100,9 +101,10 @@ def home(request):
     template = "main/home.html"
     # analysis_code = utils_func.analysis_code_generator()
     # print("analysis_code: ", analysis_code)
+    ## These values are default inputs.
     content = {
         'analysis_code': "Empty",
-        'button_clicked': "False",
+        'homepage_status': "pre_running_state",
         'BMP_IDX_CASE_NUM': parameters.IDX_CASE_NUM,
         'BMP_SIMULATION_DAY': parameters.SIMULATION_DAY,
         'BMP_CYCLE_DAYS': parameters.CYCLE_DAYS,
@@ -122,12 +124,21 @@ def home(request):
         'CR_SAME_GRP': parameters.ContactGroup_Rate.SAME_GRP.value,
         'CR_DIFF_GRP': parameters.ContactGroup_Rate.DIFF_GRP.value,
 
-        'Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
-        'Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
-        'Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
-        'Vac_YOUTH_Rate_NV': parameters.Vaccine_Rate.YOUTH_NV_RT.value,
-        'Vac_ADULT_Rate_NV': parameters.Vaccine_Rate.ADULT_NV_RT.value,
-        'Vac_ELDER_Rate_NV': parameters.Vaccine_Rate.ELDER_NV_RT.value,
+        'G1_Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
+        'G1_Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
+        'G1_Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
+
+        'G2_Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
+        'G2_Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
+        'G2_Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
+
+        'G3_Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
+        'G3_Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
+        'G3_Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
+
+        'G4_Vac_YOUTH_Rate_V': parameters.Vaccine_Rate.YOUTH_V_RT.value,
+        'G4_Vac_ADULT_Rate_V': parameters.Vaccine_Rate.ADULT_V_RT.value,
+        'G4_Vac_ELDER_Rate_V': parameters.Vaccine_Rate.ELDER_V_RT.value,
 
         'Vac_Infection_YOUTH_Rate_V_I': parameters.Vac_Infection_Rate.YOUTH_V_I_RT.value,
         'Vac_Infection_ADULT_Rate_V_I': parameters.Vac_Infection_Rate.ADULT_V_I_RT.value,
@@ -192,9 +203,9 @@ def home(request):
         'SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_R': parameters.SMT_OPD_NM_IPD_Death_Rate.ADULT_OPD_NM_IPD_R_RT.value,
         'SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_R': parameters.SMT_OPD_NM_IPD_Death_Rate.ELDER_OPD_NM_IPD_R_RT.value,
 
-        'MC_YOUTH_EARN_LOST_PER_DAY_Rate': parameters.Mortality_Cost.YOUTH_EARN_LOST_PER_DAY_RT.value,
-        'MC_ADULT_EARN_LOST_PER_DAY_Rate': parameters.Mortality_Cost.ADULT_EARN_LOST_PER_DAY_RT.value,
-        'MC_ELDER_EARN_LOST_PER_DAY_Rate': parameters.Mortality_Cost.ELDER_EARN_LOST_PER_DAY_RT.value,
+        'MC_YOUTH_EARN_LOST_PER_DEATH_Rate': parameters.Mortality_Cost.YOUTH_EARN_LOST_PER_DAY_RT.value,
+        'MC_ADULT_EARN_LOST_PER_DEATH_Rate': parameters.Mortality_Cost.ADULT_EARN_LOST_PER_DAY_RT.value,
+        'MC_ELDER_EARN_LOST_PER_DEATH_Rate': parameters.Mortality_Cost.ELDER_EARN_LOST_PER_DAY_RT.value,
 
         'TIC_YOUTH_AVE_STAY_DAY_Rate': parameters.Total_Inpatient_Cost.YOUTH_AVE_STAY_DAY_RT.value,
         'TIC_ADULT_AVE_STAY_DAY_Rate': parameters.Total_Inpatient_Cost.ADULT_AVE_STAY_DAY_RT.value,
@@ -258,11 +269,10 @@ def home(request):
             analysis_code = utils_func.analysis_code_generator()
             content = {
                 'analysis_code': analysis_code,
-                'button_clicked': "False",
+                'homepage_status': "pre_running_state",
             }
             utils_func.create_sample_directory(analysis_code)
             datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', analysis_code)
-
             json_file = os.path.join(datadir, "data.json")
             # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
             # labels_file = os.path.join(datadir, "labels.json")
@@ -296,11 +306,13 @@ def home(request):
             #     json.dump([], f)
             print("run_model!")
             form = RunModelForm(request.POST)
-            print(form)
+            # print(form)
             print(form.is_valid())
             if form.is_valid():
                 input_params_json_file = os.path.join(datadir, "input_params.json")
                 print("Form is valid")
+
+                GROUP_NUM = form.cleaned_data["GROUP_NUM"]
                 BMP_IDX_CASE_NUM = form.cleaned_data["BMP_IDX_CASE_NUM"]
                 BMP_SIMULATION_DAY = form.cleaned_data["BMP_SIMULATION_DAY"]
                 BMP_CYCLE_DAYS = form.cleaned_data["BMP_CYCLE_DAYS"]
@@ -313,9 +325,22 @@ def home(request):
                 CR_SAME_GRP = form.cleaned_data["CR_SAME_GRP"]
                 CR_DIFF_GRP = form.cleaned_data["CR_DIFF_GRP"]
 
-                Vac_YOUTH_Rate_V = form.cleaned_data["Vac_YOUTH_Rate_V"]
-                Vac_ADULT_Rate_V = form.cleaned_data["Vac_ADULT_Rate_V"]
-                Vac_ELDER_Rate_V = form.cleaned_data["Vac_ELDER_Rate_V"]
+                G1_Vac_YOUTH_Rate_V = form.cleaned_data["G1_Vac_YOUTH_Rate_V"]
+                G1_Vac_ADULT_Rate_V = form.cleaned_data["G1_Vac_ADULT_Rate_V"]
+                G1_Vac_ELDER_Rate_V = form.cleaned_data["G1_Vac_ELDER_Rate_V"]
+
+                G2_Vac_YOUTH_Rate_V = form.cleaned_data["G2_Vac_YOUTH_Rate_V"]
+                G2_Vac_ADULT_Rate_V = form.cleaned_data["G2_Vac_ADULT_Rate_V"]
+                G2_Vac_ELDER_Rate_V = form.cleaned_data["G2_Vac_ELDER_Rate_V"]
+
+                G3_Vac_YOUTH_Rate_V = form.cleaned_data["G3_Vac_YOUTH_Rate_V"]
+                G3_Vac_ADULT_Rate_V = form.cleaned_data["G3_Vac_ADULT_Rate_V"]
+                G3_Vac_ELDER_Rate_V = form.cleaned_data["G3_Vac_ELDER_Rate_V"]
+
+                G4_Vac_YOUTH_Rate_V = form.cleaned_data["G4_Vac_YOUTH_Rate_V"]
+                G4_Vac_ADULT_Rate_V = form.cleaned_data["G4_Vac_ADULT_Rate_V"]
+                G4_Vac_ELDER_Rate_V = form.cleaned_data["G4_Vac_ELDER_Rate_V"]
+
 
                 Vac_Infection_YOUTH_Rate_V_I = form.cleaned_data["Vac_Infection_YOUTH_Rate_V_I"]
                 Vac_Infection_ADULT_Rate_V_I = form.cleaned_data["Vac_Infection_ADULT_Rate_V_I"]
@@ -363,9 +388,9 @@ def home(request):
                 SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D = form.cleaned_data["SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D"]
                 SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D = form.cleaned_data["SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D"]
 
-                MC_YOUTH_EARN_LOST_PER_DAY_Rate = form.cleaned_data["MC_YOUTH_EARN_LOST_PER_DAY_Rate"]
-                MC_ADULT_EARN_LOST_PER_DAY_Rate = form.cleaned_data["MC_ADULT_EARN_LOST_PER_DAY_Rate"]
-                MC_ELDER_EARN_LOST_PER_DAY_Rate = form.cleaned_data["MC_ELDER_EARN_LOST_PER_DAY_Rate"]
+                MC_YOUTH_EARN_LOST_PER_DEATH_Rate = form.cleaned_data["MC_YOUTH_EARN_LOST_PER_DEATH_Rate"]
+                MC_ADULT_EARN_LOST_PER_DEATH_Rate = form.cleaned_data["MC_ADULT_EARN_LOST_PER_DEATH_Rate"]
+                MC_ELDER_EARN_LOST_PER_DEATH_Rate = form.cleaned_data["MC_ELDER_EARN_LOST_PER_DEATH_Rate"]
 
                 TIC_YOUTH_AVE_STAY_DAY_Rate = form.cleaned_data["TIC_YOUTH_AVE_STAY_DAY_Rate"]
                 TIC_ADULT_AVE_STAY_DAY_Rate = form.cleaned_data["TIC_ADULT_AVE_STAY_DAY_Rate"]
@@ -444,11 +469,13 @@ def home(request):
                 with open(ELDER_json_file, 'w', encoding="UTF-8") as f:
                     json.dump(ELDER_json_new, f, ensure_ascii=False)
 
+                # This is for the final input parameter storage!!
                 with open(input_params_json_file, 'w', encoding="UTF-8") as f:
                     json.dump({
                         "YOUTH_json_file": YOUTH_json_file,
                         "ADULT_json_file": ADULT_json_file,
                         "ELDER_json_file": ELDER_json_file,
+                        "GROUP_NUM": GROUP_NUM,
                         "BMP_IDX_CASE_NUM": BMP_IDX_CASE_NUM,
                         "BMP_SIMULATION_DAY": BMP_SIMULATION_DAY,
                         "BMP_CYCLE_DAYS": BMP_CYCLE_DAYS,
@@ -461,9 +488,25 @@ def home(request):
                         "CR_SAME_GRP": CR_SAME_GRP,
                         "CR_DIFF_GRP": CR_DIFF_GRP,
 
-                        "Vac_YOUTH_Rate_V": Vac_YOUTH_Rate_V,
-                        "Vac_ADULT_Rate_V": Vac_ADULT_Rate_V,
-                        "Vac_ELDER_Rate_V": Vac_ELDER_Rate_V,
+
+
+                        "G1_Vac_YOUTH_Rate_V": G1_Vac_YOUTH_Rate_V,
+                        "G1_Vac_ADULT_Rate_V": G1_Vac_ADULT_Rate_V,
+                        "G1_Vac_ELDER_Rate_V": G1_Vac_ELDER_Rate_V,
+
+                        "G2_Vac_YOUTH_Rate_V": G2_Vac_YOUTH_Rate_V,
+                        "G2_Vac_ADULT_Rate_V": G2_Vac_ADULT_Rate_V,
+                        "G2_Vac_ELDER_Rate_V": G2_Vac_ELDER_Rate_V,
+
+                        "G3_Vac_YOUTH_Rate_V": G3_Vac_YOUTH_Rate_V,
+                        "G3_Vac_ADULT_Rate_V": G3_Vac_ADULT_Rate_V,
+                        "G3_Vac_ELDER_Rate_V": G3_Vac_ELDER_Rate_V,
+
+                        "G4_Vac_YOUTH_Rate_V": G4_Vac_YOUTH_Rate_V,
+                        "G4_Vac_ADULT_Rate_V": G4_Vac_ADULT_Rate_V,
+                        "G4_Vac_ELDER_Rate_V": G4_Vac_ELDER_Rate_V,
+
+
 
                         "Vac_Infection_YOUTH_Rate_V_I": Vac_Infection_YOUTH_Rate_V_I,
                         "Vac_Infection_ADULT_Rate_V_I": Vac_Infection_ADULT_Rate_V_I,
@@ -511,9 +554,9 @@ def home(request):
                         "SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D": SMT_OPD_NM_IPD_Death_ADULT_Rate_OPD_NM_IPD_D,
                         "SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D": SMT_OPD_NM_IPD_Death_ELDER_Rate_OPD_NM_IPD_D,
 
-                        "MC_YOUTH_EARN_LOST_PER_DAY_Rate": MC_YOUTH_EARN_LOST_PER_DAY_Rate,
-                        "MC_ADULT_EARN_LOST_PER_DAY_Rate": MC_ADULT_EARN_LOST_PER_DAY_Rate,
-                        "MC_ELDER_EARN_LOST_PER_DAY_Rate": MC_ELDER_EARN_LOST_PER_DAY_Rate,
+                        "MC_YOUTH_EARN_LOST_PER_DEATH_Rate": MC_YOUTH_EARN_LOST_PER_DEATH_Rate,
+                        "MC_ADULT_EARN_LOST_PER_DEATH_Rate": MC_ADULT_EARN_LOST_PER_DEATH_Rate,
+                        "MC_ELDER_EARN_LOST_PER_DEATH_Rate": MC_ELDER_EARN_LOST_PER_DEATH_Rate,
 
                         "TIC_YOUTH_AVE_STAY_DAY_Rate": TIC_YOUTH_AVE_STAY_DAY_Rate,
                         "TIC_ADULT_AVE_STAY_DAY_Rate": TIC_ADULT_AVE_STAY_DAY_Rate,
@@ -572,16 +615,25 @@ def home(request):
                         "TVSEC_ELDER_TRANS_COST_Rate": TVSEC_ELDER_TRANS_COST_Rate,
                     }, f, ensure_ascii=False)
 
-                a = async_task(tasks.start_analysis, datadir, BMP_SIMULATION_DAY, task_name="id_"+analysis_code)
-                print("!!!! A: ", a)
+                for group_idx in range(1, GROUP_NUM+1):
+                    a = async_task(jobs.start_analysis, datadir, BMP_SIMULATION_DAY, group_idx, task_name="id_"+analysis_code+"_"+str(group_idx))
+                    print("Group ", group_idx)
+                    print("!!!! A: ", a)
+
                 content = {
                     'analysis_code': analysis_code,
-                    'button_clicked': "True",
+                    'homepage_status': "running_state",
                     "YOUTH_json_file": os.path.join('media', 'tmp', analysis_code, "YOUTH.json"),
                     "ADULT_json_file": os.path.join('media', 'tmp', analysis_code, "ADULT.json"),
                     "ELDER_json_file": os.path.join('media', 'tmp', analysis_code, "ELDER.json"),
                 }
     return render(request, template, content)
+
+
+# # hooks.py
+# def print_result(task):
+#     print("&&&&&& THIS IS THE RESULT !!!: ", task.result)
+
 
 # def check_task_status(analysis_code):
 
@@ -611,29 +663,27 @@ def find_view(request):
     if form.is_valid():
         # print("*** form['your_analysis_code'].value: ", form['your_analysis_code'].value())
         analysis_code = form['your_analysis_code'].value()
-        task_result = fetch('id_' + analysis_code)
-        # print("@@@@@ task_result: ", task_result)
-        if task_result != None:
+        # task_result = fetch('id_' + analysis_code)
+        # # print("@@@@@ task_result: ", task_result)
+        # if task_result != None:
+        datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', form['your_analysis_code'].value())
+        data_json_file = os.path.join(datadir, "data.json")
+        input_params_json_file = os.path.join(datadir, "input_params.json")
+        if os.path.isfile(data_json_file) and os.path.isfile(input_params_json_file):
             print("Not None!!!")
-            datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', form['your_analysis_code'].value())
-            json_file = os.path.join(datadir, "data.json")
+            template = "main/home.html"
 
-            if os.path.isfile(json_file):
-                template = "main/home.html"
-                with open(json_file, encoding="UTF-8") as f:
-                    data = json.load(f)
-                    # json.dump({}, f)
-            # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
-            # labels_file = os.path.join(datadir, "labels.json")
         else:
             print("None!!!")
         print("&&&&& data: ", data)
     content = {
         'analysis_code': analysis_code,
-        'button_clicked': "True",
-        'show_prev_data': "True",
-        'data': data
+        'homepage_status': "post_running_state",
+        "YOUTH_json_file": os.path.join('media', 'tmp', analysis_code, "YOUTH.json"),
+        "ADULT_json_file": os.path.join('media', 'tmp', analysis_code, "ADULT.json"),
+        "ELDER_json_file": os.path.join('media', 'tmp', analysis_code, "ELDER.json"),
     }
+
     return render(request, template, content)
 
 
@@ -658,49 +708,60 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
     # labels = ["Red", "Blue", "Yellow", "Green", "Purple"]
     datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', slug_analysis_code)
 
-    json_file = os.path.join(datadir, "data.json")
+    g1_input_param_file = os.path.join(datadir, "input_params.json")
+
+    if os.path.isfile(g1_input_param_file):
+        with open(g1_input_param_file, encoding="UTF-8") as f:
+            input_param_data = json.load(f)
+        group_num = input_param_data["GROUP_NUM"]
+        # print("&&&& group_num: ", group_num)
+
+    json_files = []
+    all_data = {}
+    if group_num >= 1:
+        g1_json_file = os.path.join(datadir, "G1_data.json")
+        json_files.append(g1_json_file)
+    if group_num >= 2:
+        g2_json_file = os.path.join(datadir, "G2_data.json")
+        json_files.append(g2_json_file)
+    if group_num >= 3:
+        g3_json_file = os.path.join(datadir, "G3_data.json")
+        json_files.append(g3_json_file)
+    if group_num >= 4:
+        g4_json_file = os.path.join(datadir, "G4_data.json")
+        json_files.append(g4_json_file)
 
     # transmission_gp_sz_file = os.path.join(datadir, "transmission_gp_sz.json")
     # labels_file = os.path.join(datadir, "labels.json")
 
-    if os.path.isfile(json_file):
-        with open(json_file, encoding="UTF-8") as f:
-            data = json.load(f)
+    for gp_idx, json_file in enumerate(json_files):
+        if os.path.isfile(json_file):
+            with open(json_file, encoding="UTF-8") as f:
+                data = json.load(f)
             # json.dump({}, f)
-    else:
-        data = {
-            'labels': [],
-            'totalInfected_sz': [],
-            'currentInfected_sz': [],
-            'newInfected_sz': [],
-            'totalSeekMed_sz': [],
-            'currentSeekMed_sz': [],
-            'newSeekMed_sz': [],
-            'totalDeath_sz': [],
-            'newDeath_sz': [],
-            'totalRecovery_sz': [],
-            'newRecovery_sz': [],
-            'totalReachDay_sz': [],
-            'newReachDay_sz': [],
-        }
+        else:
+            data = {
+                'labels': [],
+                'totalInfected_sz': [],
+                'currentInfected_sz': [],
+                'newInfected_sz': [],
+                'totalSeekMed_sz': [],
+                'currentSeekMed_sz': [],
+                'newSeekMed_sz': [],
+                'totalDeath_sz': [],
+                'newDeath_sz': [],
+                'totalRecovery_sz': [],
+                'newRecovery_sz': [],
+                'totalReachDay_sz': [],
+                'newReachDay_sz': [],
+            }
+        all_data["Group_"+str(gp_idx+1)] = data
 
-    # if os.path.isfile(transmission_gp_sz_file):
-    #     with open(transmission_gp_sz_file) as f:
-    #         data = json.load(f)
-    # else:
-    #     data = []
-    #
-    # if os.path.isfile(labels_file):
-    #     with open(labels_file) as f:
-    #         labels = json.load(f)
-    # else:
-    #     labels = []
+    # print("^^^^^^ slug_analysis_code: ", slug_analysis_code)
+    # print("^^^^^^ data: ", all_data)
 
-    print("slug_analysis_code: ", slug_analysis_code)
-    print("data: ", data)
-
-    data['analysis_code'] = slug_analysis_code
-    print("new data: ", data)
+    all_data['analysis_code'] = slug_analysis_code
+    # print("^^^^^^ new data: ", all_data)
 
     # print("django_q_tasks.objects(): ", django_q_tasks.Success)
 
@@ -708,13 +769,21 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
     # print("$$$$$$$$$$$$", "267d724c903f49cba48c9d0f835a70e5", "   ", taskr)
     success = django_q.models.Success.objects
     success_all = success.all()
-    task_status = False
-    for success_itr in success_all:
-        if ("id_"+slug_analysis_code == success_itr.name):
-            task_status = True
-            break
-    data['task_status'] = task_status
-    print("task_status: ", task_status)
+    task_status_ls = []
+
+    for group_idx in range(1, group_num+1):
+        task_status = False
+        for success_itr in success_all:
+            if ("id_"+slug_analysis_code+"_"+str(group_idx) == success_itr.name):
+                task_status = True
+                break
+            else:
+                task_status = False
+        task_status_ls.append(task_status)
+
+    print("task_status_ls: ", task_status_ls)
+    all_data['task_status'] = all(task_status_ls)
+    print("task_status: ", all(task_status_ls))
 
     # check_task_status(slug_analysis_code)
 
@@ -723,7 +792,7 @@ def get_data(request, slug_analysis_code, *args, **kwargs):
     #     'data': data,
     #     'labels': labels,
     # }
-    return JsonResponse(data)
+    return JsonResponse(all_data)
 
 def get_params_data(request, slug_analysis_code, *args, **kwargs):
     datadir = os.path.join(settings.MEDIA_ROOT, 'tmp', slug_analysis_code)
